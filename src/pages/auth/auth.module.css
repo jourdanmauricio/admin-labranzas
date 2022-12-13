@@ -1,0 +1,145 @@
+.container {
+	display: flex;
+	justify-content: center;
+	height: 100vh;
+	width: 100%;
+	background-color: var(--gray-80);
+}
+
+.login__container {
+	text-align: center;
+	margin-top: 90px;
+	height: max-content;
+	padding: 50px 40px 20px;
+	max-width: 320px;
+	background: var(--gray-90);
+	border-radius: 4px;
+	border: 1px solid var(--gray-70);
+	animation: popup 0.4s cubic-bezier(0.68, -0.55, 0.27, 1.55);
+}
+
+.title__container {
+	color: #fff;
+	font-size: 24px;
+	text-align: center;
+	font-weight: bold;
+}
+
+.label {
+	display: block;
+	font-size: 14px;
+	color: var(--gray-30);
+}
+
+.form__forgot {
+	display: block;
+	text-decoration: none;
+	margin-top: 2.5em;
+	width: fit-content;
+	margin-left: auto;
+	font-size: 0.8em;
+	color: var(--gray-30);
+}
+
+.form__group {
+	position: relative;
+	padding: 1em 0;
+	text-align: left;
+}
+
+.input {
+	margin-top: 2px;
+	padding: 10px 8px;
+	width: 100%;
+	font-size: 16px;
+	border: 1px solid var(--gray-30);
+	background: var(--gray-70);
+	color: var(--gray-30);
+	border-radius: 4px;
+	outline: none;
+}
+
+.input__icons {
+	position: absolute;
+	right: 0;
+	padding: 15px;
+	min-width: 40px;
+	color: var(--gray-30);
+}
+
+.msg {
+	position: absolute;
+	display: block;
+	padding-top: 3px;
+	font-size: 12px;
+	color: var(--error);
+	opacity: 0;
+	transition: all 800ms ease;
+	transition: visibility 0s, opacity 0.5s linear;
+	/* animation: show-message 1s 1 normal 0s ease-out both; */
+}
+
+.msg.msg__error {
+	opacity: 1;
+}
+
+.input__error {
+	border: 1px solid var(--error);
+}
+
+.form__button {
+	margin-top: 2em;
+	padding: 10px 18px;
+	font-size: 15px;
+	background: var(--purple-80);
+	width: 100%;
+	border: none;
+	border-radius: 4px;
+	color: #fff;
+	transition: all 0.2s ease;
+}
+.form__button:hover {
+	opacity: 0.9;
+	cursor: pointer;
+}
+.form__button:focus {
+	box-shadow: 0px 0px 0px 3px black;
+}
+
+.form__forgot:hover {
+	text-decoration: underline;
+}
+
+.form__msg {
+	padding-top: 3px;
+	font-size: 14px;
+	opacity: 0;
+	transition: all 800ms ease;
+	transition: visibility 0s, opacity 0.5s linear;
+}
+
+.formMsg__forgot {
+	height: 50px;
+	color: #fff;
+}
+
+.form__msg.form__error {
+	color: var(--error);
+	opacity: 1;
+}
+
+.form__msg.form__success {
+	color: var(--success);
+	opacity: 1;
+}
+
+@keyframes popup {
+	0% {
+		transform: scale(0.2);
+		opacity: 0;
+	}
+	100% {
+		transform: scale(1);
+		opacity: 1;
+	}
+}

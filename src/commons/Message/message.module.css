@@ -1,0 +1,28 @@
+.message {
+  position: relative;
+  text-align: center;
+  background-color: var(--error);
+}
+
+.message__close {
+  position: absolute;
+  border: none;
+  background: none;
+  top: 1rem;
+  right: 1rem;
+  font-size: 1.5em;
+  color: var(--gray-10);
+  cursor: pointer;
+  transition: transform 0.3s ease-out;
+}
+
+.message__paragraph {
+  padding: 1rem;
+  margin-bottom: 1rem;
+  color: var(--gray-10);
+  font-weight: bold;
+}
+
+.message__close:hover {
+  transform: scale(1.1);
+}

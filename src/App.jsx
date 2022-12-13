@@ -1,33 +1,82 @@
-import {useState} from 'react';
-import reactLogo from './assets/react.svg';
+import React, {Suspense} from 'react';
+import {Provider, useSelector} from 'react-redux';
+import {
+	BrowserRouter as Router,
+	Navigate,
+	Route,
+	Routes,
+} from 'react-router-dom';
+import {PersistGate} from 'redux-persist/integration/react';
+import {persistor, store} from './store';
 import './App.css';
+import Login from './pages/auth/Login/Login';
+const ForgotPassword = React.lazy(() =>
+	import('./pages/auth/ForgotPassword/ForgotPassword')
+);
+const RecoveryPassword = React.lazy(() =>
+	import('./pages/auth/RecoveryPassword/RecoveryPassword')
+);
+const Profile = React.lazy(() => import('./pages/Profile/Profile'));
+const Error404 = React.lazy(() => import('./pages/Error404/Error404'));
+const Dashboard = React.lazy(() => import('./pages/Dashboard/Dashboard'));
+const Users = React.lazy(() => import('./pages/Users/Users'));
+
+const AuthRoute = props => {
+	let user = useSelector(state => state.user.user);
+	if (user?.role !== 'admin' && user?.role !== 'superadmin') {
+		return <Navigate to='/' />;
+	}
+	return props.children;
+};
+
+const AuthSuperadminRoute = props => {
+	let user = useSelector(state => state.user.user);
+	if (user.role !== 'superadmin') {
+		return <Navigate to='/' />;
+	}
+	return props.children;
+};
 
 function App() {
-	const [count, setCount] = useState(0);
-
 	return (
-		<div className='App'>
-			<div>
-				<a href='https://vitejs.dev' target='_blank' rel='noreferrer'>
-					<img src='/vite.svg' className='logo' alt='Vite logo' />
-				</a>
-				<a href='https://reactjs.org' target='_blank' rel='noreferrer'>
-					<img src={reactLogo} className='logo react' alt='React logo' />
-				</a>
-			</div>
-			<h1>Vite + React</h1>
-			<div className='card'>
-				<button onClick={() => setCount(count => count + 1)}>
-					count is {count}
-				</button>
-				<p>
-					Edit <code>src/App.jsx</code> and save to test HMR
-				</p>
-			</div>
-			<p className='read-the-docs'>
-				Click on the Vite and React logos to learn more
-			</p>
-		</div>
+		<Router>
+			<Provider store={store}>
+				<PersistGate loading={null} persistor={persistor}>
+					<Suspense fallback={<div />}>
+						<Routes>
+							<Route path='/' element={<Login />} />
+							<Route path='/forgot-password' element={<ForgotPassword />} />
+							<Route path='/recovery-password' element={<RecoveryPassword />} />
+							<Route
+								path='/dashboard'
+								element={
+									<AuthRoute>
+										<Dashboard />
+									</AuthRoute>
+								}
+							/>
+							<Route
+								path='/profile'
+								element={
+									<AuthRoute>
+										<Profile />
+									</AuthRoute>
+								}
+							/>
+							<Route
+								path='/users'
+								element={
+									<AuthSuperadminRoute>
+										<Users />
+									</AuthSuperadminRoute>
+								}
+							/>
+							<Route path='*' element={<Error404 />} />
+						</Routes>
+					</Suspense>
+				</PersistGate>
+			</Provider>
+		</Router>
 	);
 }
 
