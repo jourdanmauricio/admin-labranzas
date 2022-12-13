@@ -1,25 +1,30 @@
-import {useState} from 'react';
+import {useEffect, useState} from 'react';
 import {useDispatch, useSelector} from 'react-redux';
-import {NavLink, useNavigate} from 'react-router-dom';
-import {FaPowerOff, FaBars} from 'react-icons/fa';
+import {NavLink, useLocation, useNavigate} from 'react-router-dom';
+import {logOut} from '@/store/user';
 import logo from '@/assets/logos/logo2.svg';
 import {
+	FaGlobe,
+	FaQuestionCircle,
+	FaStore,
 	FaUserCog,
 	FaCog,
 	FaRegCalendarAlt,
 	FaUsers,
 	FaTh,
+	FaPowerOff,
+	FaBars,
 } from 'react-icons/fa';
-
-import {logOut} from '@/store/user';
 
 import './nav.css';
 
 const Nav = () => {
 	const [mobileMenu, setMobileMenu] = useState(true);
+	let [page, setPage] = useState([]);
 	let user = useSelector(state => state.user.user);
 	let dispatch = useDispatch();
 	let navigate = useNavigate();
+	let location = useLocation();
 
 	const handleMobileMenu = () => {
 		setMobileMenu(!mobileMenu);
@@ -30,6 +35,30 @@ const Nav = () => {
 		navigate('/');
 	};
 
+	useEffect(() => {
+		switch (true) {
+			case location.pathname.includes('/settings'):
+				setPage([
+					{
+						id: 1,
+						title: 'Preguntas',
+						icon: FaQuestionCircle,
+						to: '/settings/SettingsQuestions',
+					},
+					{id: 2, title: 'Web', icon: FaGlobe, to: '/settings/settingsWeb'},
+					{
+						id: 3,
+						title: 'Ml',
+						icon: FaStore,
+						to: '/settings/settingsMl',
+					},
+				]);
+				break;
+			default:
+				setPage([]);
+		}
+	}, [location]);
+
 	return (
 		<nav>
 			<div className='menu'>
@@ -37,15 +66,30 @@ const Nav = () => {
 			</div>
 			<div className='navbar'>
 				<img src={logo} alt='logo' className='logo' />
-				<ul>
-					<li>
-						{user && (
-							<button className='navbar__logout' onClick={handleLogout}>
-								<FaPowerOff />
-							</button>
-						)}
-					</li>
+				<ul className='navbar__items'>
+					{page.map(e => (
+						<li className='navbar__item' key={e.id}>
+							<NavLink
+								to={e.to}
+								className={({isActive}) => (isActive ? 'nav__active' : '')}>
+								<button className='btn btn__primary'>
+									<span>
+										<e.icon className='material__icon' />
+									</span>
+									<span className='icon-text'>{e.title}</span>
+								</button>
+							</NavLink>
+						</li>
+					))}
 				</ul>
+
+				<span className='navbar__items'>
+					{user && (
+						<button className='navbar__logout' onClick={handleLogout}>
+							<FaPowerOff />
+						</button>
+					)}
+				</span>
 			</div>
 			<div
 				className={`mobile-menu ${mobileMenu && 'inactive'}`}

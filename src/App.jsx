@@ -19,6 +19,17 @@ const RecoveryPassword = React.lazy(() =>
 const Profile = React.lazy(() => import('./pages/Profile/Profile'));
 const Error404 = React.lazy(() => import('./pages/Error404/Error404'));
 const Dashboard = React.lazy(() => import('./pages/Dashboard/Dashboard'));
+const Settings = React.lazy(() => import('./pages/Settings/Settings'));
+const SettingsWeb = React.lazy(() =>
+	import('./pages/Settings/SettingsWeb/SettingsWeb')
+);
+const SettingsMl = React.lazy(() =>
+	import('./pages/Settings/SettingsMl/SettingsMl')
+);
+const SettingsQuestions = React.lazy(() =>
+	import('./pages/Settings/SettingsQuestions/SettingsQuestions')
+);
+
 const Users = React.lazy(() => import('./pages/Users/Users'));
 
 const AuthRoute = props => {
@@ -71,6 +82,39 @@ function App() {
 									</AuthSuperadminRoute>
 								}
 							/>
+							<Route
+								path='/settings'
+								element={
+									<AuthSuperadminRoute>
+										<Settings />
+									</AuthSuperadminRoute>
+								}>
+								<Route
+									path='settingsQuestions'
+									element={
+										<AuthSuperadminRoute>
+											<SettingsQuestions />
+										</AuthSuperadminRoute>
+									}
+								/>
+								<Route
+									path='settingsWeb'
+									element={
+										<AuthSuperadminRoute>
+											<SettingsWeb />
+										</AuthSuperadminRoute>
+									}
+								/>
+								<Route
+									path='settingsMl'
+									element={
+										<AuthSuperadminRoute>
+											<SettingsMl />
+										</AuthSuperadminRoute>
+									}
+								/>
+							</Route>
+
 							<Route path='*' element={<Error404 />} />
 						</Routes>
 					</Suspense>

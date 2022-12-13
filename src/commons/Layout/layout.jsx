@@ -1,7 +1,7 @@
 import {useState} from 'react';
 import {NavLink} from 'react-router-dom';
 import {
-	// FaCog,
+	FaCog,
 	FaRegCalendarAlt,
 	FaAngleLeft,
 	FaAngleRight,
@@ -45,7 +45,7 @@ const Layout = props => {
 						<FaTh className='material__icon' />
 						<span className='icon-text'>Dashboard</span>
 					</NavLink>
-					{/* {user.role === 'superadmin' && (
+					{user.role === 'superadmin' && (
 						<>
 							<br />
 							<NavLink
@@ -57,7 +57,7 @@ const Layout = props => {
 								<span className='icon-text'>Configuración</span>
 							</NavLink>
 						</>
-					)} */}
+					)}
 					<br />
 					<NavLink
 						className={({isActive}) =>

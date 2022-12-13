@@ -14,7 +14,8 @@ hr {
 	border: thin solid var(--gray-80);
 	border-radius: 0.25rem;
 	padding: 0.3rem 1rem;
-	margin: 0 0.5rem 0 0;
+	/* margin: 0 0.5rem 0 0; */
+	margin: 0;
 	display: inline-block;
 	width: fit-content;
 	background-color: #eee;
@@ -108,6 +109,7 @@ hr {
 	font-size: 14px;
 	margin-bottom: 3px;
 	color: var(--gray-80);
+	text-align: left;
 }
 
 .form__input {
