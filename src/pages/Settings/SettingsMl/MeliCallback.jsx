@@ -21,7 +21,7 @@ const MeliCallback = () => {
 					client_id: variables.mlAppId,
 					client_secret: variables.mlSecret,
 					code,
-					redirect_uri: `${variables.frontend}/settings/meli-callback`,
+					redirect_uri: `${variables.frontend}/meli-callback`,
 				};
 
 				const resAccessToken = await fetch(url, {
