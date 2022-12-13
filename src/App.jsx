@@ -16,6 +16,10 @@ const ForgotPassword = React.lazy(() =>
 const RecoveryPassword = React.lazy(() =>
 	import('./pages/auth/RecoveryPassword/RecoveryPassword')
 );
+
+const MeliCallback = React.lazy(() =>
+	import('./pages/Settings/SettingsMl/MeliCallback')
+);
 const Profile = React.lazy(() => import('./pages/Profile/Profile'));
 const Error404 = React.lazy(() => import('./pages/Error404/Error404'));
 const Dashboard = React.lazy(() => import('./pages/Dashboard/Dashboard'));
@@ -58,6 +62,7 @@ function App() {
 							<Route path='/' element={<Login />} />
 							<Route path='/forgot-password' element={<ForgotPassword />} />
 							<Route path='/recovery-password' element={<RecoveryPassword />} />
+							<Route path='/meli-callback' element={<MeliCallback />} />
 							<Route
 								path='/dashboard'
 								element={
