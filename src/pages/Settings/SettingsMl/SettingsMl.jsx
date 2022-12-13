@@ -20,7 +20,7 @@ const SettingsMl = () => {
 				try {
 					const state =
 						values.nickname + '-' + Math.floor(Math.random() * 1000000);
-					const uri = `https://auth.mercadolibre.com.ar/authorization?response_type=code&client_id=${variables.mlAppId}&redirect_uri=${variables.frontend}/settings/meli-callback&state=${state}`;
+					const uri = `https://auth.mercadolibre.com.ar/authorization?response_type=code&client_id=${variables.mlAppId}&redirect_uri=${variables.frontend}/meli-callback&state=${state}`;
 					window.open(uri);
 				} catch (error) {
 					console.log('errorrr', error);
