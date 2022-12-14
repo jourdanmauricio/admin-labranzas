@@ -38,6 +38,8 @@ export const connectMl = createAsyncThunk(
 			const responseUserMl = await fetch(API_USER, options);
 			const resUserMl = await responseUserMl.json();
 
+			console.log('resUserMl', resUserMl);
+
 			if (data.nickname !== resUserMl.nickname) {
 				throw 'No coincide el nickname ingresado con la autorización de Mercado Libre';
 			}

@@ -41,6 +41,7 @@ const MeliCallback = () => {
 			userMl.status === 'failed' &&
 			userMl.error === 'Ususario de Mercado Libre no configurado!'
 		) {
+			console.log('nickMLParam', state.split('-')[0]);
 			dispatch(
 				connectMl({
 					code,
