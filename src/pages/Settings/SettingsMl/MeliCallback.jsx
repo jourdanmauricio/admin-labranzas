@@ -10,7 +10,7 @@ import {connectMl} from '@/store/userMl';
 const MeliCallback = () => {
 	const dispatch = useDispatch();
 	const dispatchNotif = useNotification();
-	let statusUserMl = useSelector(state => state.userMl.status);
+	let userMl = useSelector(state => state.userMl);
 	const navigate = useNavigate();
 
 	let {search} = useLocation();
@@ -19,7 +19,7 @@ const MeliCallback = () => {
 	const state = params.get('state');
 
 	useEffect(() => {
-		if (statusUserMl === 'success') {
+		if (userMl.status === 'success') {
 			console.log('Change to success');
 			dispatchNotif({
 				type: 'SUCCESS',
@@ -27,7 +27,10 @@ const MeliCallback = () => {
 			});
 			navigate('/settings/settingsMl');
 		}
-		if (statusUserMl === 'failed') {
+		if (
+			userMl.status === 'failed' &&
+			userMl.error !== 'Ususario de Mercado Libre no configurado!'
+		) {
 			console.log('Change to success');
 			dispatchNotif({
 				type: 'ERROR',
@@ -35,13 +38,18 @@ const MeliCallback = () => {
 			});
 		}
 
-		dispatch(
-			connectMl({
-				code,
-				nickname: state.split('-')[0],
-			})
-		);
-	}, [statusUserMl]);
+		if (
+			userMl.status === 'failed' &&
+			userMl.error === 'Ususario de Mercado Libre no configurado!'
+		) {
+			dispatch(
+				connectMl({
+					code,
+					nickname: state.split('-')[0],
+				})
+			);
+		}
+	}, [userMl]);
 	return (
 		<Layout>
 			<h1>Estamos sincronizando con Mercado Libre....</h1>
@@ -49,7 +57,7 @@ const MeliCallback = () => {
 			<br />
 			<p>{code}</p>
 			<p>{state}</p>
-			{statusUserMl === 'loading' && <Loader />}
+			{userMl.state === 'loading' && <Loader />}
 			{/* {statusUserMl === 'success' && (
 				<Navigate to='/dashboard' replace={true} />
 			)} */}
