@@ -4,11 +4,13 @@ import {variables} from '@/config/variables';
 import {useDispatch, useSelector} from 'react-redux';
 import {useEffect} from 'react';
 import {disconnectMl} from '../../../store/userMl';
+import Message from '../../../commons/Message/Message';
 
 const SettingsMl = () => {
-	let userMl = useSelector(state => state.userMl.userMl);
+	let userMl = useSelector(state => state.userMl);
 	const dispatch = useDispatch();
 	const dispatchNotif = useNotification();
+
 	return (
 		<Formik
 			initialValues={{
@@ -22,36 +24,38 @@ const SettingsMl = () => {
 				return errors;
 			}}
 			onSubmit={async (values, {setSubmitting}) => {
-				if (userMl) {
-					dispatch(disconnectMl());
-				} else {
-					try {
+				try {
+					if (userMl.userMl) {
+						dispatch(disconnectMl());
+						dispatchNotif({
+							type: 'SUCCESS',
+							message: 'Nickname desvinculado',
+						});
+					} else {
 						const state =
 							values.nickname + '-' + Math.floor(Math.random() * 1000000);
 						const uri = `https://auth.mercadolibre.com.ar/authorization?response_type=code&client_id=${variables.mlAppId}&redirect_uri=${variables.frontend}/meli-callback&state=${state}`;
 						window.open(uri);
-					} catch (error) {
-						console.log('errorrr', error);
-						dispatchNotif({
-							type: 'ERROR',
-							message: 'Error modificando la configuración',
-						});
-					} finally {
-						setSubmitting(false);
 					}
+				} catch (error) {
+					dispatchNotif({
+						type: 'ERROR',
+						message: 'Error modificando la configuración',
+					});
+				} finally {
+					setSubmitting(false);
 				}
 			}}>
 			{({isSubmitting, setFieldValue}) => {
 				useEffect(() => {
-					if (userMl) {
-						setFieldValue('nickname', userMl.nickname || '');
-					}
+					setFieldValue('nickname', userMl.userMl?.nickname || '');
 				}, [userMl]);
 
 				return (
 					<>
 						<h1 className='title'>Configuración Mercado Libre</h1>
 						<br />
+						{userMl.error && <Message msg={userMl.error} />}
 						<Form className='form__container'>
 							<div className='formulario'>
 								<div className='wide'>
@@ -61,7 +65,7 @@ const SettingsMl = () => {
 										type='text'
 										name='nickname'
 										placeholder='MLA...'
-										disabled={userMl}
+										disabled={userMl.userMl?.nickname.length > 0}
 									/>
 									<ErrorMessage
 										name='nickname'

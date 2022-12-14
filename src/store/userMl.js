@@ -119,13 +119,10 @@ export const getUserMl = createAsyncThunk(
 					Authorization: `Bearer ${user.user.token}`,
 				},
 			};
-
 			const responseUserMl = await fetch(API_AUTH, options);
-			console.log('responseUserMl', responseUserMl);
 			const resUserMl = await responseUserMl.json();
-			console.log('resUserMl', resUserMl);
+
 			if (resUserMl.error) {
-				console.log('ERRORRRRRRR', resUserMl.message);
 				throw resUserMl.message;
 			}
 			return resUserMl;
@@ -171,7 +168,6 @@ let userSlice = createSlice({
 			state.status = 'success';
 		},
 		[getUserMl.rejected]: (state, action) => {
-			console.log('Rejectedddddd', action);
 			state.userMl = null;
 			state.status = 'failed';
 			state.error = action.payload;

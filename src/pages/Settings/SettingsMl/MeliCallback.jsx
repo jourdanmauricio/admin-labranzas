@@ -2,7 +2,6 @@ import {useEffect} from 'react';
 import Loader from '@/commons/Loader-overlay/Loader-overlay';
 import {useNotification} from '@/commons/Notifications/NotificationProvider';
 import {useLocation, useNavigate} from 'react-router-dom';
-//import {variables} from '@/config/variables';
 import Layout from '@/commons/Layout/layout';
 import {useDispatch, useSelector} from 'react-redux';
 import {connectMl} from '@/store/userMl';
@@ -31,11 +30,11 @@ const MeliCallback = () => {
 			userMl.status === 'failed' &&
 			userMl.error !== 'Ususario de Mercado Libre no configurado!'
 		) {
-			console.log('Change to success');
 			dispatchNotif({
 				type: 'ERROR',
 				message: 'Error vinculado Nickname',
 			});
+			navigate('/settings/settingsMl');
 		}
 
 		if (
