@@ -178,6 +178,7 @@ let userSlice = createSlice({
 		[connectMl.fulfilled]: (state, action) => {
 			state.userMl = action.payload;
 			state.status = 'success';
+			state.error = '';
 		},
 		[connectMl.rejected]: (state, action) => {
 			console.log(action);
