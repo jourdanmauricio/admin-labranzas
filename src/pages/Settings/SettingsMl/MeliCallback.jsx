@@ -60,10 +60,13 @@ const MeliCallback = () => {
 			<br />
 			<p>{code}</p>
 			<p>{state}</p>
+
 			{userMl.state === 'loading' && <Loader />}
 			{/* {statusUserMl === 'success' && (
 				<Navigate to='/dashboard' replace={true} />
 			)} */}
+
+			{userMl}
 		</Layout>
 	);
 };
