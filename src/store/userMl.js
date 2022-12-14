@@ -57,12 +57,13 @@ export const connectMl = createAsyncThunk(
 				},
 			};
 
-			const userMl = await fetch(
+			const responseBdUserMl = await fetch(
 				`${variables.basePath}/usersml`,
 				userMlOptions
 			);
+			const resBdUserMl = await responseBdUserMl.json();
 
-			return userMl;
+			return resBdUserMl;
 		} catch (error) {
 			return rejectWithValue(error);
 		}
