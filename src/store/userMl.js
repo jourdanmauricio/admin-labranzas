@@ -1,11 +1,10 @@
 import {createAsyncThunk, createSlice} from '@reduxjs/toolkit';
-import {useSelector} from 'react-redux';
 import {variables} from '../config/variables';
 
 export const connectMl = createAsyncThunk(
 	'userMl/connectMl',
-	async (data, {rejectWithValue}) => {
-		let user = useSelector(state => state.user.user);
+	async (data, {getState, rejectWithValue}) => {
+		const {user} = getState();
 		// async operation
 
 		try {
@@ -54,7 +53,7 @@ export const connectMl = createAsyncThunk(
 				body: JSON.stringify(resToken),
 				headers: {
 					'Content-Type': 'application/json',
-					Authorization: `Bearer ${user.token}`,
+					Authorization: `Bearer ${user.user.token}`,
 				},
 			};
 
