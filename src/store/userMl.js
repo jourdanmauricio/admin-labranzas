@@ -163,6 +163,8 @@ let userSlice = createSlice({
 
 		[getUserMl.pending]: state => {
 			state.status = 'loading';
+			state.error = '';
+			state.userMl = null;
 		},
 		[getUserMl.fulfilled]: (state, action) => {
 			console.log(action);
