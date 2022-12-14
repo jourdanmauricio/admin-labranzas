@@ -34,7 +34,7 @@ const MeliCallback = () => {
 				type: 'ERROR',
 				message: 'Error vinculado Nickname',
 			});
-			navigate('/settings/settingsMl');
+			// navigate('/settings/settingsMl');
 		}
 
 		if (
