@@ -1,4 +1,5 @@
 import {createAsyncThunk, createSlice} from '@reduxjs/toolkit';
+import {variables} from '../config/variables';
 
 // export const signUp = createAsyncThunk(
 //   "user/signUp",
@@ -12,9 +13,8 @@ import {createAsyncThunk, createSlice} from '@reduxjs/toolkit';
 // );
 
 export const signIn = createAsyncThunk('user/signIn', async data => {
-	// async operation
-	const API_AUTH = `${import.meta.env.VITE_BACKEND_API}/auth/login`;
-	const API_USER = `${import.meta.env.VITE_BACKEND_API}/users/profile`;
+	const API_AUTH = `${variables.basePath}/auth/login`;
+	const API_USER = `${variables.basePath}/users/profile`;
 
 	const userOptions = {
 		method: 'POST',

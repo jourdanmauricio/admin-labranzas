@@ -5,6 +5,7 @@ import Spinner from '@/commons/spinner/spinner';
 import {FaEyeSlash, FaEye} from 'react-icons/fa';
 import {useNotification} from '@/commons/Notifications/NotificationProvider';
 import {signIn} from '@/store/user';
+import {getUserMl} from '@/store/userMl';
 
 import styles from '../auth.module.css';
 
@@ -54,13 +55,16 @@ const Login = () => {
 		}
 	}
 
-	function isMatch() {
-		dispatch(
+	async function isMatch() {
+		// Login
+		await dispatch(
 			signIn({
 				email,
 				password,
 			})
 		);
+		// UserMl
+		dispatch(getUserMl());
 	}
 
 	function handleSubmit(e) {

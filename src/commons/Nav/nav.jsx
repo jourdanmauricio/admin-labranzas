@@ -2,6 +2,7 @@ import {useEffect, useState} from 'react';
 import {useDispatch, useSelector} from 'react-redux';
 import {NavLink, useLocation, useNavigate} from 'react-router-dom';
 import {logOut} from '@/store/user';
+import {logOutMl} from '@/store/userMl';
 import logo from '@/assets/logos/logo2.svg';
 import {
 	FaGlobe,
@@ -32,6 +33,7 @@ const Nav = () => {
 
 	const handleLogout = () => {
 		dispatch(logOut());
+		dispatch(logOutMl());
 		navigate('/');
 	};
 
