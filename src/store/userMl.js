@@ -170,6 +170,7 @@ let userSlice = createSlice({
 			console.log(action);
 			state.userMl = action.payload;
 			state.status = 'success';
+			state.error = '';
 		},
 		[getUserMl.rejected]: (state, action) => {
 			state.userMl = null;
@@ -178,6 +179,7 @@ let userSlice = createSlice({
 		},
 		[connectMl.pending]: state => {
 			state.status = 'loading';
+			state.error = '';
 		},
 		[connectMl.fulfilled]: (state, action) => {
 			state.userMl = action.payload;
@@ -191,6 +193,7 @@ let userSlice = createSlice({
 		},
 		[disconnectMl.pending]: state => {
 			state.status = 'loading';
+			state.error = '';
 		},
 		[disconnectMl.fulfilled]: state => {
 			state.userMl = null;
