@@ -18,6 +18,7 @@ const MeliCallback = () => {
 	const state = params.get('state');
 
 	useEffect(() => {
+		console.log('nickMLParam', state.split('-')[0]);
 		if (userMl.status === 'success') {
 			console.log('Change to success');
 			dispatchNotif({
