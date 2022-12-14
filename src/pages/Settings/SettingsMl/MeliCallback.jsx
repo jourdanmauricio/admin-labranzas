@@ -68,7 +68,7 @@ const MeliCallback = () => {
 
 			{userMl.status}
 			{userMl.error}
-			{userMl.userMl.nickname}
+			{userMl.userMl?.nickname}
 		</Layout>
 	);
 };
