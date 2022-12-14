@@ -45,10 +45,11 @@ export const connectMl = createAsyncThunk(
 				throw 'No coincide el nickname ingresado con la autorización de Mercado Libre';
 			}
 
-			resToken.nickname = resUserMl.user_id;
+			resToken.id = resToken.user_id;
 			resToken.nickname = resUserMl.nickname;
 			resToken.permalink = resUserMl.permalink;
 			resToken.site_id = resUserMl.site_id;
+			delete resToken.user_id;
 
 			const userMlOptions = {
 				method: 'POST',
