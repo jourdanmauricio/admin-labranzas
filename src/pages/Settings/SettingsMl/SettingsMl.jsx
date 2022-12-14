@@ -77,7 +77,9 @@ const SettingsMl = () => {
 										className='btn btn__primary'
 										type='submit'
 										disabled={isSubmitting}>
-										{userMl ? 'Desvincular' : 'Vincular'}
+										{userMl.userMl?.nickname.length > 0
+											? 'Desvincular'
+											: 'Vincular'}
 									</button>
 								</div>
 							</div>
