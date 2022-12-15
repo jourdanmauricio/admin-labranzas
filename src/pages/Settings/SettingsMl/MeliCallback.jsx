@@ -21,24 +21,26 @@ const MeliCallback = () => {
 		console.log('nickMLParam', state.split('-')[0]);
 		console.log('userMl.status', userMl.status);
 		console.log('userMl.error', userMl.error);
-		if (userMl.userMl) {
-			console.log('Change to success');
-			dispatchNotif({
-				type: 'SUCCESS',
-				message: 'Nickname vinculado correctamente',
-			});
-			navigate('/settings/settingsMl');
-		}
 
-		if (!userMl.userMl) {
-			console.log('nickMLParam', state.split('-')[0]);
-			dispatch(
-				connectMl({
-					code,
-					nickname: state.split('-')[0],
-				})
-			);
-		}
+		const connect = async () => {
+			if (!userMl.userMl) {
+				console.log('nickMLParam', state.split('-')[0]);
+				await dispatch(
+					connectMl({
+						code,
+						nickname: state.split('-')[0],
+					})
+				);
+			}
+			if (userMl.status === 'success') {
+				dispatchNotif({
+					type: 'SUCCESS',
+					message: 'Nickname vinculado !!',
+				});
+			}
+			navigate('/settings/settingsMl');
+		};
+		connect();
 	}, []);
 	return (
 		<Layout>
