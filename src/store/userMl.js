@@ -125,11 +125,14 @@ export const getUserMl = createAsyncThunk(
 			const resUserMl = await responseUserMl.json();
 
 			if (resUserMl.error) {
-				throw resUserMl.message;
+				if (resUserMl.statusCode === 404) {
+					return {userMl: null, status: '', error: ''};
+				} else {
+					throw resUserMl.message;
+				}
 			}
 			return resUserMl;
 		} catch (err) {
-			console.log(err);
 			return rejectWithValue(err);
 		}
 	}
@@ -146,7 +149,7 @@ let userSlice = createSlice({
 		logOutMl: state => {
 			state.userMl = null;
 			state.status = 'failed';
-			state.error = 'Ususario de Mercado Libre no configurado!';
+			state.error = 'Usuario de Mercado Libre no configurado!';
 		},
 	},
 	extraReducers: {
@@ -198,7 +201,7 @@ let userSlice = createSlice({
 		[disconnectMl.fulfilled]: state => {
 			state.userMl = null;
 			state.status = 'failed';
-			state.error = 'Ususario de Mercado Libre no configurado!';
+			state.error = 'Usuario de Mercado Libre no configurado!';
 		},
 		[disconnectMl.rejected]: (state, action) => {
 			console.log(action);

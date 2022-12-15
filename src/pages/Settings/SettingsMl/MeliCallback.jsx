@@ -21,7 +21,7 @@ const MeliCallback = () => {
 		console.log('nickMLParam', state.split('-')[0]);
 		console.log('userMl.status', userMl.status);
 		console.log('userMl.error', userMl.error);
-		if (userMl.status === 'success') {
+		if (userMl.userMl) {
 			console.log('Change to success');
 			dispatchNotif({
 				type: 'SUCCESS',
@@ -29,21 +29,8 @@ const MeliCallback = () => {
 			});
 			navigate('/settings/settingsMl');
 		}
-		if (
-			userMl.status === 'failed' &&
-			userMl.error !== 'Ususario de Mercado Libre no configurado!'
-		) {
-			dispatchNotif({
-				type: 'ERROR',
-				message: 'Error vinculado Nickname',
-			});
-			// navigate('/settings/settingsMl');
-		}
 
-		if (
-			userMl.status === 'failed' &&
-			userMl.error === 'Ususario de Mercado Libre no configurado!'
-		) {
+		if (!userMl.userMl) {
 			console.log('nickMLParam', state.split('-')[0]);
 			dispatch(
 				connectMl({
