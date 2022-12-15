@@ -1,0 +1,711 @@
+import Api from "../Api";
+import ApiMl from "../ApiMl";
+import { credentials, product } from "../../store/stores";
+import { getAllCategories } from "./categories";
+import { get } from "svelte/store";
+
+/*****************/
+/***   Local   ***/
+/*****************/
+
+export const getLocalProducts = async (limit, offset, search) => {
+  try {
+    let paramSearch = !search ? "" : `&q=${search}`;
+    const products = await Api.get(
+      `/products?limit=${limit}&offset=${offset}${paramSearch}`
+    );
+    return products;
+  } catch (error) {
+    throw error;
+  }
+};
+
+export const getLocalSkus = async () => {
+  try {
+    const res = await Api.get(`products/getSkus`);
+    return res;
+  } catch (error) {
+    throw error;
+  }
+};
+
+export const postLocalProducts = async (newProducts) => {
+  try {
+    const results = await Promise.all(
+      newProducts.map(async (prod) => {
+        const newProd = {
+          ml_id: prod.id,
+          attributes: prod.attributes,
+          title: prod.title,
+          seller_custom_field: prod.seller_custom_field,
+          price: prod.price,
+          available_quantity: prod.available_quantity,
+          sold_quantity: prod.sold_quantity,
+          status: prod.status,
+          description: prod.description,
+          pictures: prod.pictures,
+          listing_type_id: prod.listing_type_id,
+          condition: prod.condition,
+          thumbnail: prod.thumbnail,
+          category_id: prod.category_id,
+          start_time: prod.start_time,
+          sale_terms: prod.sale_terms,
+          variations: prod.variations,
+        };
+        let prod2 = await Api.post("/products", newProd);
+        prod2.ml_id = prod.id;
+        // console.log("PRODID", prod2);
+        return prod2;
+      })
+    );
+    return results;
+  } catch (error) {
+    console.log("ERRORRRR", error);
+    let message = "";
+    message = error.response.data
+      ? `${error.response.data.statusCode}: ${error.response.data.message}`
+      : "Error Creando categoría 😞";
+    throw message;
+  }
+};
+
+export const patchLocalProduct = async (prod) => {
+  try {
+    const newProd = {
+      id: prod.id,
+      ml_id: prod.mlId,
+      attributes: prod.attributes,
+      description: prod.description,
+      title: prod.title,
+      seller_custom_field: prod.seller_custom_field,
+      price: prod.price,
+      available_quantity: prod.available_quantity,
+      sold_quantity: prod.sold_quantity,
+      status: prod.status,
+      pictures: prod.pictures,
+      listing_type_id: prod.listing_type_id,
+      condition: prod.condition,
+      thumbnail: prod.thumbnail,
+      category_id: prod.category_id,
+      start_time: prod.start_time,
+      sale_terms: prod.sale_terms,
+      variations: prod.variations,
+    };
+
+    const res = await Api.patch(`/products/${newProd.id}`, newProd);
+    return res;
+  } catch (error) {
+    console.log("ERRORRRR", error);
+    let message = "";
+    message = error.response.data
+      ? `${error.response.data.statusCode}: ${error.response.data.message}`
+      : "Error Creando categoría 😞";
+    throw message;
+  }
+};
+
+export const deleteLocalProduct = async (id) => {
+  try {
+    return await Api.delete(`/products/${id}`);
+  } catch (error) {
+    console.log("Error", error);
+    let message = "";
+    message = res.statusText
+      ? `${res.status}: ${res.statusText}`
+      : "Error eliminando el producto 😞";
+    throw message;
+  }
+};
+
+export const deleteLocalProducts = async (items) => {
+  try {
+    const results = await Promise.all(
+      items.map(async (prod) => {
+        const res = await Api.delete(`/products/${prod.id}`);
+        return res;
+      })
+    );
+    return results;
+  } catch (error) {
+    console.log("Error", error);
+    let message = "";
+    message = res.statusText
+      ? `${res.status}: ${res.statusText}`
+      : "Error eliminando el producto 😞";
+    throw message;
+  }
+};
+
+/*******************/
+/***   LocalMl   ***/
+/*******************/
+
+export const getLocalMlProducts = async () => {
+  try {
+    const productsMl = await Api.get("productsml");
+    return productsMl;
+  } catch (error) {
+    return error;
+  }
+};
+
+export const postLocalMlProducts = async (newProducts) => {
+  try {
+    const results = await Promise.all(
+      newProducts.map(async (prod) => {
+        const newProd = {
+          id: prod.id,
+          prod_id: prod.prod_id,
+          seller_custom_field: prod.seller_custom_field,
+          price: prod.price,
+          available_quantity: prod.available_quantity,
+          status: prod.status,
+          permalink: prod.permalink,
+          start_time: prod.start_time,
+          variations: prod.variations,
+        };
+        await Api.post("/productsMl", newProd);
+      })
+    );
+    return results;
+  } catch (error) {
+    console.log("ERRORRRR", error);
+    let message = "";
+    message = error.response.data
+      ? `${error.response.data.statusCode}: ${error.response.data.message}`
+      : "Error Creando categoría 😞";
+    throw message;
+  }
+};
+
+export const patchLocalMlProduct = async (prod) => {
+  try {
+    const newProd = {
+      id: prod.id,
+      prod_id: prod.prod_id,
+      seller_custom_field: prod.seller_custom_field,
+      price: prod.price,
+      available_quantity: prod.available_quantity,
+      status: prod.status,
+      permalink: prod.permalink,
+      start_time: prod.start_time,
+      variations: prod.variations,
+    };
+    return await Api.patch(`/productsMl/${newProd.id}`, newProd);
+  } catch (error) {
+    console.log("ERRORRRR", error);
+    let message = "";
+    message = error.response.data
+      ? `${error.response.data.statusCode}: ${error.response.data.message}`
+      : "Error modificando producto ML 😞";
+    throw message;
+  }
+};
+
+export const patchLocalMlProducts = async (mlItems) => {
+  try {
+    const results = await Promise.all(
+      mlItems.map(async (prod) => {
+        const newProd = {
+          id: prod.id,
+          prod_id: prod.prod_id,
+          seller_custom_field: prod.seller_custom_field,
+          price: prod.price,
+          available_quantity: prod.available_quantity,
+          status: prod.status,
+          permalink: prod.permalink,
+          start_time: prod.start_time,
+          variations: prod.variations,
+        };
+        return await Api.patch(`/productsMl/${newProd.id}`, newProd);
+      })
+    );
+    return results;
+  } catch (error) {
+    console.log("ERRORRRR", error);
+    let message = "";
+    message = error.response.data
+      ? `${error.response.data.statusCode}: ${error.response.data.message}`
+      : "Error Creando categoría 😞";
+    throw message;
+  }
+};
+
+export const delLocalMlProduct = async (id) => {
+  try {
+    return await Api.delete(`/productsMl/${id}`);
+  } catch (error) {
+    console.log("ERRORRRR", error);
+    let message = "";
+    message = error.response.data
+      ? `${error.response.data.statusCode}: ${error.response.data.message}`
+      : "Error modificando producto ML 😞";
+    throw message;
+  }
+};
+
+/**************/
+/***   Ml   ***/
+/**************/
+
+export const getMlItems = async () => {
+  try {
+    const user = get(credentials);
+    const res = await ApiMl.get(`users/${user.userMl.ml_user_id}/items/search`);
+    console.log("res", res);
+
+    const cantItems = res.paging.total;
+    const pages = [];
+    let items = [];
+    for (let i = 0; i < cantItems; i = i + res.paging.limit) pages.push(i);
+    const requests = pages.map((i) => {
+      return ApiMl.get(
+        `users/${user.userMl.ml_user_id}/items/search?limit=${res.paging.limit}&offset=${i}`
+      )
+        .then((res) => res.results)
+        .catch((err) => err);
+    });
+    await Promise.all(requests).then((values) => (items = values.flat()));
+    return items;
+    // return itemsId;
+  } catch (error) {
+    let message = "";
+    console.log("ERROR", error);
+    // message = error.response.data
+    //   ? `${error.response.data.status} ${error.response.data.error}: ${error.response.data.message}`
+    //   : "Error Obteniendo usuario ML 😞";
+    // console.log("Error", error.response.data);
+    throw error;
+  }
+};
+
+export const getMlProducts = async (mlItems) => {
+  const detItems = [];
+  const req_items = [];
+  const iteraciones = Math.ceil(mlItems.length / 20);
+  for (let i = 0; i < iteraciones; i++) {
+    req_items[i] = mlItems.splice(0, 20);
+  }
+
+  const req = await req_items.map((items2) => {
+    return ApiMl.get(
+      "items?ids=" +
+        items2 +
+        "&attributes=id,attributes,title,price,category_id,title,thumbnail,listing_type_id,condition,available_quantity,sold_quantity,status,permalink,pictures,sale_terms,variations,start_time,seller_custom_field"
+    )
+      .then((res) => {
+        res.forEach(async (element) => {
+          await ApiMl.get(`items/${element.body.id}/description`)
+            .then((resDesc) => {
+              element.body.description = resDesc.plain_text;
+            })
+            .catch((err) => {
+              if ((err.response.status = 404)) element.body.description = "";
+            })
+            .finally(() => {
+              detItems.push(element.body);
+            });
+        });
+      })
+      .catch((err) => console.log(err));
+  });
+  await Promise.all(req).then(() => {});
+  console.log("detItems", detItems);
+  return detItems;
+};
+
+export const patchMlProducts = async (mlItems) => {
+  try {
+    const results = await Promise.all(
+      mlItems.map(async (prod) => {
+        let id = prod.id;
+        delete prod.id;
+        return await ApiMl.put(`items/${id}`, prod);
+      })
+    );
+    return results;
+  } catch (error) {
+    console.log("ERR!!!!", error);
+    let message = "";
+    if (error.response.data) {
+      message = `${error.response.status}: ${error.response.data.message}`;
+      if (error.response.data.cause.length > 0) {
+        error.response.data.cause.forEach((el) => {
+          if (el.type === "error") message += `<br> ${el.message}`;
+        });
+      }
+    }
+    if (message === "") message = "Error modificando el producto 😞";
+    throw message;
+  }
+};
+
+export const patchMlProduct = async (mlItem) => {
+  try {
+    let id = mlItem.id;
+    delete mlItem.id;
+    return await ApiMl.put(`items/${id}`, mlItem);
+  } catch (error) {
+    console.log("ERR!!!!", error);
+    let message = "";
+    if (error.response.data) {
+      message = `${error.response.status}: ${error.response.data.message}`;
+      if (error.response.data.cause.length > 0) {
+        error.response.data.cause.forEach((el) => {
+          if (el.type === "error") message += `<br> ${el.message}`;
+        });
+      }
+    }
+    if (message === "") message = "Error modificando el producto 😞";
+    throw message;
+  }
+};
+
+export const patchMlDescription = async (descriptions) => {
+  try {
+    const results = await Promise.all(
+      descriptions.map(async (description) => {
+        let id = description.id;
+        delete description.id;
+        return await ApiMl.put(
+          `items/${id}/description?api_version=2`,
+          description
+        );
+      })
+    );
+    return results;
+  } catch (error) {
+    console.log("ERR!!!!", error);
+    let message = "";
+    if (error.response.data) {
+      message = `${error.response.status}: ${error.response.data.message}`;
+      if (error.response.data.cause.length > 0) {
+        error.response.data.cause.forEach((el) => {
+          if (el.type === "error") message += `<br> ${el.message}`;
+        });
+      }
+    }
+    if (message === "") message = "Error modificando la descripción 😞";
+    throw message;
+  }
+};
+
+export const postMlProduct = async (mlItem) => {
+  try {
+    return await ApiMl.post(`items`, mlItem);
+  } catch (error) {
+    console.log("ERR!!!!", error);
+    let message = "";
+    if (error.response.data) {
+      message = `${error.response.status}: ${error.response.data.message}`;
+      if (error.response.data.cause.length > 0) {
+        error.response.data.cause.forEach((el) => {
+          if (el.type === "error") message += `<br> ${el.message}`;
+        });
+      }
+    }
+    if (message === "") message = "Error modificando el producto 😞";
+    throw message;
+  }
+};
+
+/**************/
+/***  Web  ***/
+/**************/
+
+export const postWebProduct = async (prod) => {
+  try {
+    return await Api.post(`productsweb`, prod);
+  } catch (error) {
+    throw error;
+  }
+};
+export const deleteWebProduct = async (id) => {
+  try {
+    return await Api.delete(`/productsweb/${id}`);
+  } catch (error) {
+    throw error;
+  }
+};
+
+/********************/
+/***   Service   ****/
+/********************/
+
+export const serviceImportMl = async () => {
+  try {
+    const mlApiItemsId = await getMlItems();
+    const mlApiProducts = await getMlProducts(mlApiItemsId);
+    const mlProducts = await getLocalMlProducts();
+    const allCategories = await getAllCategories();
+
+    let newCategoriesId = [];
+    let newItems = [];
+    let updItems = [];
+    mlApiProducts.forEach((apiMlProd) => {
+      const found = mlProducts.find((mlProd) => mlProd.id === apiMlProd.id);
+      if (found) {
+        apiMlProd.prod_id = found.prod_id;
+        updItems.push(apiMlProd);
+      } else {
+        newItems.push(apiMlProd);
+      }
+      const index2 = allCategories.findIndex(
+        (cat) => cat.id === apiMlProd.category_id
+      );
+      if (index2 === -1) {
+        if (!newCategoriesId.includes(apiMlProd.category_id))
+          newCategoriesId.push(apiMlProd.category_id);
+      }
+    });
+    if (newCategoriesId.length > 0) {
+      const newCategories = await getApiCategoriesMl(newCategoriesId);
+      await createCategories(newCategories);
+    }
+    // Copio newItems para modificar el precio
+    const newItemsPrice = JSON.parse(JSON.stringify(newItems));
+
+    const user = get(credentials);
+
+    let percent = user.settings.price_percent_ml;
+    if (user.settings.hasOwnProperty("price_percent_ml")) {
+      newItemsPrice.forEach((itemPrice) => {
+        itemPrice.price =
+          itemPrice.price - itemPrice.price * (parseInt(percent) / 100);
+      });
+    }
+    const newProducts = await postLocalProducts(newItemsPrice);
+    newItems.forEach((item) => {
+      let found = newProducts.find((newProd) => item.id === newProd.ml_id);
+      if (found) item.prod_id = found.id;
+    });
+    await postLocalMlProducts(newItems);
+    await patchLocalMlProducts(updItems);
+    return;
+  } catch (error) {
+    console.log("ERRORRRR", error);
+  }
+};
+
+export const serviceUpdProduct = async (body, apps, feature) => {
+  console.log("apps", apps);
+  console.log("feature", feature);
+  try {
+    const prod = get(product);
+    switch (apps) {
+      case "ML":
+        body.id = prod.prodMl.id;
+        const resApi = await patchMlProduct(body);
+        console.log("resApi", resApi);
+        resApi.prod_id = prod.id;
+        const resMl = await patchLocalMlProduct(resApi);
+        break;
+      case "LOCAL":
+        body.id = prod.id;
+        const res = await patchLocalProduct(body);
+        break;
+      case "ML-LOCAL":
+        if (feature === "PRODUCT") {
+          body.id = prod.prodMl.id;
+          console.log("ML");
+          const resApi = await patchMlProduct(body);
+          resApi.prod_id = prod.id;
+          console.log("ML-LOCAL");
+          const resMl = await patchLocalMlProduct(resApi);
+          console.log("resMl", resMl);
+          resApi.id = prod.id;
+          delete resApi.status;
+          delete resApi.available_quantity;
+          delete resApi.price;
+          delete resApi.sold_quantity;
+          delete resApi.start_time;
+          console.log("LOCAL");
+          console.log("resApi", resApi);
+          await patchLocalProduct(resApi);
+          return;
+        }
+        if (feature === "DESCRIPTION") {
+          body.id = prod.prodMl.id;
+          const descriptionMl = await patchMlDescription([body]);
+          const description = {
+            id: prod.id,
+            description: descriptionMl[0].plain_text,
+          };
+          await patchLocalProduct([description]);
+          return;
+        }
+        break;
+      case "WEB-LOCAL":
+        break;
+      case "ALL":
+        break;
+    }
+  } catch (error) {
+    throw error;
+  }
+};
+
+export const serviceCreateProduct = async () => {
+  try {
+    let attributes = [];
+    let newProduct = Object.assign({}, get(product));
+    delete newProduct.action;
+    delete newProduct.category;
+    delete newProduct.thumbnail;
+    delete newProduct.sold_quantity;
+    delete newProduct.prodMl;
+    delete newProduct.prodWeb;
+    delete newProduct.createdAt;
+    delete newProduct.id;
+    delete newProduct.updatedAt;
+
+    newProduct.variations.map((vari) => {
+      delete vari.id;
+      vari.price = newProduct.price;
+      return vari;
+    });
+    newProduct.attributes.map((attribute) => {
+      if (attribute.updated) {
+        let atrib = {
+          id: attribute.id,
+          value_id: attribute.value_id,
+          value_name: attribute.value_name,
+        };
+        attributes.push(atrib);
+      }
+    });
+    newProduct.attributes = attributes;
+    newProduct.currency_id = "ARS";
+    newProduct.sold_quantity = 0;
+    newProduct.thumbnail = newProduct.pictures[0].url;
+
+    const prodMl = await postLocalProducts([newProduct]);
+    return prodMl;
+  } catch (error) {
+    console.log("ERRRROR CREATE LOCAL", error);
+  }
+};
+
+export const serviceCreateMlProduct = async () => {
+  try {
+    let attributes = [];
+    let price = parseFloat(newProduct.price);
+    let newProduct = Object.assign({}, get(product));
+    let prod_id = newProduct.id;
+    const user = get(credentials);
+    if (user.settings.price_percent_ml) {
+      price = price + (price * user.settings.price_percent_ml) / 100;
+    }
+    delete newProduct.action;
+    delete newProduct.category;
+    delete newProduct.thumbnail;
+    delete newProduct.sold_quantity;
+    delete newProduct.prodMl;
+    delete newProduct.prodWeb;
+    delete newProduct.createdAt;
+    delete newProduct.id;
+    delete newProduct.updatedAt;
+
+    newProduct.variations.map((vari) => {
+      delete vari.id;
+      vari.price = price;
+      return vari;
+    });
+    newProduct.attributes.map((attribute) => {
+      if (attribute.updated) {
+        let atrib = {
+          id: attribute.id,
+          value_id: attribute.value_id,
+          value_name: attribute.value_name,
+        };
+        attributes.push(atrib);
+      }
+    });
+    newProduct.attributes = attributes;
+    newProduct.currency_id = "ARS";
+    newProduct.price = price;
+
+    const prodMl = await postMlProduct(newProduct);
+    console.log("res", prodMl);
+    prodMl.prod_id = prod_id;
+    const localMlprod = await postLocalMlProducts([prodMl]);
+    console.log("localMlprod", localMlprod);
+  } catch (error) {
+    console.log("ERRRROR CREATE", error);
+  }
+};
+
+export const serviceCreateWebProduct = async (prod) => {
+  let variations = [];
+  let price = parseFloat(prod.price);
+  const user = get(credentials);
+  if (user.settings.price_percent_web) {
+    price = price + (price * user.settings.price_percent_web) / 100;
+    prod.variations.forEach((vari) => {
+      vari.price = price;
+      variations.push(vari);
+    });
+  }
+  try {
+    let obj = {
+      prod_id: prod.id,
+      seller_custom_field: prod.seller_custom_field,
+      price: price,
+      available_quantity: prod.available_quantity,
+      status: prod.status,
+      permalink: prod.permalink,
+      start_time: Date.now(),
+      variations: variations,
+    };
+
+    const res = await postWebProduct(obj);
+    return res;
+  } catch (error) {
+    console.log("ERRRROR CREATE", error);
+  }
+};
+
+export const serviceRepublish = async (prod) => {
+  let price = parseFloat(prod.prodMl.price);
+  let item = {
+    price: price,
+    quantity: prod.prodMl.available_quantity,
+    listing_type_id: prod.listing_type_id,
+  };
+  if (prod.variations.length > 0) {
+    let variations = [];
+    prod.variations.map((vari) => {
+      variations.push({
+        id: vari.id,
+        price: price,
+        quantity: vari.available_quantity,
+      });
+    });
+    item.variations = variations;
+    delete item.price;
+    delete item.quantity;
+  }
+  try {
+    const resMl = await ApiMl.post(`items/${prod.prodMl.id}/relist`, item);
+    console.log("res", resMl);
+    const resDelLocalMl = await delLocalMlProduct(prod.prodMl.id);
+    console.log("resDelLocalMl", resDelLocalMl);
+    console.log("prod.id", prod.id);
+    resMl.prod_id = prod.id;
+    const resPostLocalMl = await postLocalMlProducts([resMl]);
+    console.log("resPostLocalMl", resPostLocalMl);
+  } catch (error) {
+    console.log("ERR!!!!", error);
+    let message = "";
+    if (error.response.data) {
+      message = `${error.response.status}: ${error.response.data.message}`;
+      if (error.response.data.cause.length > 0) {
+        error.response.data.cause.forEach((el) => {
+          if (el.type === "error") message += `<br> ${el.message}`;
+        });
+      }
+    }
+    if (message === "") message = "Error modificando el producto 😞";
+    throw message;
+  }
+};

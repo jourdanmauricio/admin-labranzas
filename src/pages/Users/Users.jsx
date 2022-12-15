@@ -1,11 +1,12 @@
 import {useEffect, useState} from 'react';
-import Layout from '../../commons/Layout/layout';
-import Loader from '../../commons/Loader-overlay/Loader-overlay';
-import Message from '../../commons/Message/Message';
-import {Modal} from '../../commons/Modal/Modal';
-import {useNotification} from '../../commons/Notifications/NotificationProvider';
-import {helpHttp} from '../../helpers/helpHttp';
-import {useModal} from '../../hooks/useModal';
+import Layout from '@/commons/Layout/layout';
+import Loader from '@/commons/Loader-overlay/Loader-overlay';
+import Message from '@/commons/Message/Message';
+import {Modal} from '@/commons/Modal/Modal';
+import {useNotification} from '@/commons/Notifications/NotificationProvider';
+import {variables} from '@/config/variables';
+import {helpHttp} from '@/services/helpHttp';
+import {useModal} from '@/hooks/useModal';
 import UserDeleteForm from './components/UserDeleteForm/UserDeleteForm';
 import UsersForm from './components/UsersForm/UsersForm';
 import UsersTable from './components/UsersTable/UsersTable';
@@ -29,7 +30,7 @@ const Users = () => {
 	const [dataToDelete, setDataToDelete] = useState(null);
 
 	let api = helpHttp();
-	const url = `${import.meta.env.VITE_BACKEND_API}/users`;
+	const url = `${variables.basePath}/users`;
 
 	useEffect(() => {
 		setLoading(true);

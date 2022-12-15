@@ -2,6 +2,7 @@ import {useState} from 'react';
 import Spinner from '@/commons/spinner/spinner';
 import styles from '../auth.module.css';
 import {Link} from 'react-router-dom';
+import {variables} from '@/config/variables';
 
 const ForgotPassword = () => {
 	const [loading, setLoading] = useState(false);
@@ -12,7 +13,7 @@ const ForgotPassword = () => {
 
 	// const dispatchNotif = useNotification();
 
-	const URL = `${import.meta.env.VITE_BACKEND_API}/auth/recovery`;
+	const URL = `${variables.basePath}/auth/recovery`;
 
 	function handleChange(name, value) {
 		if (name === 'email') {

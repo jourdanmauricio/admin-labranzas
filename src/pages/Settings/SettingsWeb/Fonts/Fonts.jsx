@@ -1,10 +1,11 @@
-import React, {useEffect} from 'react';
+import {useEffect} from 'react';
 import {ErrorMessage, Field, Form, Formik} from 'formik';
-import {helpHttp} from '../../../../helpers/helpHttp';
+import {helpHttp} from '@/services/helpHttp';
+import {variables} from '@/config/variables';
 
 const Fonts = ({settings, setError, dispatch, setLoading}) => {
 	const api = helpHttp();
-	const url = `${import.meta.env.VITE_BACKEND_API}/settings`;
+	const url = `${variables.basePath}/settings`;
 
 	return (
 		<Formik
@@ -70,7 +71,7 @@ const Fonts = ({settings, setError, dispatch, setLoading}) => {
 					setLoading(false);
 				}
 			}}>
-			{({isSubmitting, setFieldValue, values}) => {
+			{({isSubmitting, setFieldValue}) => {
 				useEffect(() => {
 					if (settings) {
 						setFieldValue(

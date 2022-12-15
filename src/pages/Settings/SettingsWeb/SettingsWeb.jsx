@@ -2,7 +2,7 @@ import {useEffect, useState} from 'react';
 // import Layout from '@/commons/Layout/layout';
 import Message from '@/commons/Message/Message';
 import Loader from '@/commons/Loader-overlay/Loader-overlay';
-import {helpHttp} from '@/helpers/helpHttp';
+import {helpHttp} from '@/services/helpHttp';
 import Tabs from './Tabs/Tabs';
 import {useNotification} from '@/commons/Notifications/NotificationProvider';
 import {variables} from '@/config/variables';

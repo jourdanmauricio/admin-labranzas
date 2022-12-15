@@ -4,6 +4,7 @@ import {FaEyeSlash, FaEye} from 'react-icons/fa';
 import styles from '../auth.module.css';
 import {useNotification} from '@/commons/Notifications/NotificationProvider';
 import {useLocation, useNavigate} from 'react-router-dom';
+import {variables} from '@/config/variables';
 
 const RecoveryPassword = () => {
 	const [loading, setLoading] = useState(false);
@@ -16,7 +17,7 @@ const RecoveryPassword = () => {
 	const dispatchNotif = useNotification();
 	let navigate = useNavigate();
 
-	const URL = `${import.meta.env.VITE_BACKEND_API}/auth/change-password`;
+	const URL = `${variables.basePath}/auth/change-password`;
 	let {search} = useLocation();
 	const params = new URLSearchParams(search);
 

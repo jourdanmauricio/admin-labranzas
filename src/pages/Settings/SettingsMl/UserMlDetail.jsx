@@ -1,5 +1,5 @@
 import {useEffect, useState} from 'react';
-import {helpHttpMl} from '@/helpers/helpHttpMl';
+import {helpHttpMl} from '@/services/helpHttpMl';
 import {variables} from '@/config/variables';
 import {useSelector} from 'react-redux';
 import {useNotification} from '@/commons/Notifications/NotificationProvider';

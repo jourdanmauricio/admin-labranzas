@@ -1,5 +1,5 @@
 // import {useEffect, useState} from 'react';
-// import {helpHttp} from '@/helpers/helpHttp';
+// import {helpHttp} from '@/services/helpHttp';
 // import Tabs from './components/Tabs/Tabs';
 import Layout from '../../commons/Layout/layout';
 // import Message from '@/commons/Message/Message';
