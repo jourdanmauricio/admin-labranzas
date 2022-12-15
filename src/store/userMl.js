@@ -1,6 +1,36 @@
 import {createAsyncThunk, createSlice} from '@reduxjs/toolkit';
 import {variables} from '../config/variables';
 
+export const getUserMl = createAsyncThunk(
+	'userMl/getUserMl',
+	async (_, {getState, rejectWithValue}) => {
+		const {user} = getState();
+		const API_AUTH = `${variables.basePath}/usersMl`;
+
+		try {
+			const options = {
+				headers: {
+					'Content-Type': 'application/json',
+					Authorization: `Bearer ${user.user.token}`,
+				},
+			};
+			const responseUserMl = await fetch(API_AUTH, options);
+			const resUserMl = await responseUserMl.json();
+
+			if (resUserMl.error) {
+				if (resUserMl.statusCode === 404) {
+					return {userMl: null, status: '', error: ''};
+				} else {
+					throw resUserMl.message;
+				}
+			}
+			return resUserMl;
+		} catch (err) {
+			return rejectWithValue(err);
+		}
+	}
+);
+
 export const connectMl = createAsyncThunk(
 	'userMl/connectMl',
 	async (data, {getState, rejectWithValue}) => {
@@ -110,37 +140,7 @@ export const disconnectMl = createAsyncThunk(
 	}
 );
 
-export const getUserMl = createAsyncThunk(
-	'userMl/getUserMl',
-	async (_, {getState, rejectWithValue}) => {
-		const {user} = getState();
-		const API_AUTH = `${variables.basePath}/usersMl`;
-
-		try {
-			const options = {
-				headers: {
-					'Content-Type': 'application/json',
-					Authorization: `Bearer ${user.user.token}`,
-				},
-			};
-			const responseUserMl = await fetch(API_AUTH, options);
-			const resUserMl = await responseUserMl.json();
-
-			if (resUserMl.error) {
-				if (resUserMl.statusCode === 404) {
-					return {userMl: null, status: '', error: ''};
-				} else {
-					throw resUserMl.message;
-				}
-			}
-			return resUserMl;
-		} catch (err) {
-			return rejectWithValue(err);
-		}
-	}
-);
-
-let userSlice = createSlice({
+let userMlSlice = createSlice({
 	name: 'userMl',
 	initialState: {
 		userMl: null,
@@ -155,17 +155,6 @@ let userSlice = createSlice({
 		},
 	},
 	extraReducers: {
-		// [signUp.pending]: (state, action) => {
-		//   state.status = "loading";
-		// },
-		// [signUp.fulfilled]: (state, action) => {
-		//   state.user = action.payload;
-		//   state.status = "success";
-		// },
-		// [signUp.rejected]: (state, action) => {
-		//   state.status = "failed";
-		// },
-
 		[getUserMl.pending]: state => {
 			state.status = 'loading';
 			state.error = '';
@@ -213,6 +202,6 @@ let userSlice = createSlice({
 	},
 });
 
-export const {logOutMl} = userSlice.actions;
+export const {logOutMl} = userMlSlice.actions;
 
-export default userSlice.reducer;
+export default userMlSlice.reducer;

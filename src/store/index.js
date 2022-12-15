@@ -5,11 +5,14 @@ import storage from 'redux-persist/lib/storage';
 
 import userReducer from './user';
 import userMlReducer from './userMl';
+import settingsReducer from './settings';
+
 // import videosReducer from "./videos";
 
 const reducer = combineReducers({
 	user: userReducer,
 	userMl: userMlReducer,
+	settings: settingsReducer,
 	//videos: videosReducer,
 });
 

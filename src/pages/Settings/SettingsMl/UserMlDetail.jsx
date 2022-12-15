@@ -2,9 +2,11 @@ import {useEffect, useState} from 'react';
 import {helpHttpMl} from '@/helpers/helpHttpMl';
 import {variables} from '@/config/variables';
 import {useSelector} from 'react-redux';
+import {useNotification} from '@/commons/Notifications/NotificationProvider';
 import {formatDateTable} from '@/helpers/helpFunctions';
 
 const UserMlDetail = () => {
+	const dispatchNotif = useNotification();
 	let userMl = useSelector(state => state.userMl.userMl);
 	const [userDetail, setUserDetail] = useState(null);
 
@@ -16,7 +18,15 @@ const UserMlDetail = () => {
 			try {
 				const resUserMl = await apiMl.get(API_USER_ML);
 				console.log('resUserMl', resUserMl);
-				setUserDetail(resUserMl);
+
+				if (resUserMl.status === 401) {
+					dispatchNotif({
+						type: 'ERROR',
+						message: 'Unauthorized. Refresh token',
+					});
+				} else {
+					setUserDetail(resUserMl);
+				}
 			} catch (error) {
 				console.log('error', error);
 			}
