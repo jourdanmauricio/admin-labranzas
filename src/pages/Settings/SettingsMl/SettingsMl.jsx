@@ -3,13 +3,17 @@ import {useNotification} from '@/commons/Notifications/NotificationProvider';
 import {variables} from '@/config/variables';
 import {useDispatch, useSelector} from 'react-redux';
 import {useEffect} from 'react';
-import {disconnectMl} from '../../../store/userMl';
-import Message from '../../../commons/Message/Message';
+import {disconnectMl, logOutMl} from '../../../store/userMl';
+import Message from '@/commons/Message/Message';
 
 const SettingsMl = () => {
 	let userMl = useSelector(state => state.userMl);
 	const dispatch = useDispatch();
 	const dispatchNotif = useNotification();
+
+	const closeMessage = () => {
+		dispatch(logOutMl());
+	};
 
 	return (
 		<Formik
@@ -55,7 +59,9 @@ const SettingsMl = () => {
 					<>
 						<h1 className='title'>Configuración Mercado Libre</h1>
 						<br />
-						{userMl.error && <Message msg={userMl.error} />}
+						{userMl.error && (
+							<Message msg={userMl.error} closeMessage={closeMessage} />
+						)}
 						<Form className='form__container'>
 							<div className='formulario'>
 								<div className='wide'>
