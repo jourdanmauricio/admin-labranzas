@@ -18,12 +18,11 @@ const MeliCallback = () => {
 	const state = params.get('state');
 
 	useEffect(() => {
-		console.log('nickMLParam', state.split('-')[0]);
-		console.log('userMl.status', userMl.status);
-		console.log('userMl.error', userMl.error);
-
 		const connect = async () => {
 			if (!userMl.userMl) {
+				console.log('userMl.status', userMl.status);
+				console.log('userMl.error', userMl.error);
+
 				console.log('nickMLParam', state.split('-')[0]);
 				await dispatch(
 					connectMl({
@@ -31,6 +30,9 @@ const MeliCallback = () => {
 						nickname: state.split('-')[0],
 					})
 				);
+				console.log('userMl.status2', userMl.status);
+				console.log('userMl.error2', userMl.error);
+
 				if (userMl.status === 'success') {
 					dispatchNotif({
 						type: 'SUCCESS',
@@ -38,7 +40,10 @@ const MeliCallback = () => {
 					});
 				}
 			}
-			navigate('/settings/settingsMl');
+			console.log('userMl.status3', userMl.status);
+			console.log('userMl.error3', userMl.error);
+
+			// navigate('/settings/settingsMl');
 		};
 		connect();
 	}, []);
