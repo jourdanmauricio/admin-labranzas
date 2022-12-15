@@ -148,8 +148,8 @@ let userSlice = createSlice({
 	reducers: {
 		logOutMl: state => {
 			state.userMl = null;
-			state.status = 'failed';
-			state.error = 'Usuario de Mercado Libre no configurado!';
+			state.status = '';
+			state.error = '';
 		},
 	},
 	extraReducers: {
@@ -200,8 +200,8 @@ let userSlice = createSlice({
 		},
 		[disconnectMl.fulfilled]: state => {
 			state.userMl = null;
-			state.status = 'failed';
-			state.error = 'Usuario de Mercado Libre no configurado!';
+			state.status = '';
+			state.error = '';
 		},
 		[disconnectMl.rejected]: (state, action) => {
 			console.log(action);
