@@ -4,7 +4,8 @@ import Message from '@/commons/Message/Message';
 import Loader from '@/commons/Loader-overlay/Loader-overlay';
 import {helpHttp} from '@/helpers/helpHttp';
 import Tabs from './Tabs/Tabs';
-import {useNotification} from '../../../commons/Notifications/NotificationProvider';
+import {useNotification} from '@/commons/Notifications/NotificationProvider';
+import {variables} from '@/config/variables';
 
 const Settings = () => {
 	const dispatch = useNotification();
@@ -13,7 +14,7 @@ const Settings = () => {
 	const [error, setError] = useState(null);
 
 	const api = helpHttp();
-	const url = `${import.meta.env.VITE_BACKEND_API}/settings`;
+	const url = `${variables.basePath}/settings`;
 
 	useEffect(() => {
 		async function fetchData() {

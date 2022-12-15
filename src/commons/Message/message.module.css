@@ -2,7 +2,6 @@
 	position: relative;
 	text-align: center;
 	background-color: var(--error);
-	animation: 'inAnimation 250ms ease-in';
 }
 
 .message__close {
@@ -26,25 +25,4 @@
 
 .message__close:hover {
 	transform: scale(1.1);
-}
-
-@keyframes inAnimation {
-	0% {
-		opacity: 0;
-		visibility: hidden;
-	}
-	100% {
-		opacity: 1;
-		visibility: visible;
-	}
-}
-
-@keyframes outAnimation {
-	0% {
-		opacity: 1;
-	}
-	100% {
-		opacity: 0;
-		visibility: hidden;
-	}
 }
