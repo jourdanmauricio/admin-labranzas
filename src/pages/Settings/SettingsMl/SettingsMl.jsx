@@ -32,7 +32,6 @@ const SettingsMl = () => {
 							message: 'Nickname desvinculado',
 						});
 					} else {
-						dispatch(logOutMl());
 						const state =
 							values.nickname + '-' + Math.floor(Math.random() * 1000000);
 						const uri = `https://auth.mercadolibre.com.ar/authorization?response_type=code&client_id=${variables.mlAppId}&redirect_uri=${variables.frontend}/meli-callback&state=${state}`;
