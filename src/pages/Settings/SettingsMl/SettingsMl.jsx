@@ -3,7 +3,7 @@ import {useNotification} from '@/commons/Notifications/NotificationProvider';
 import {variables} from '@/config/variables';
 import {useDispatch, useSelector} from 'react-redux';
 import {useEffect} from 'react';
-import {disconnectMl, logOutMl} from '../../../store/userMl';
+import {disconnectMl} from '../../../store/userMl';
 import Message from '../../../commons/Message/Message';
 
 const SettingsMl = () => {

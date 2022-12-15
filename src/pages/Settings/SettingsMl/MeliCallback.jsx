@@ -39,7 +39,7 @@ const MeliCallback = () => {
 				})
 			);
 		}
-	}, [userMl]);
+	}, []);
 	return (
 		<Layout>
 			<h1>Estamos sincronizando con Mercado Libre....</h1>
