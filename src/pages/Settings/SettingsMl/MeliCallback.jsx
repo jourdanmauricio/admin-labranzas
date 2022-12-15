@@ -31,12 +31,12 @@ const MeliCallback = () => {
 						nickname: state.split('-')[0],
 					})
 				);
-			}
-			if (userMl.status === 'success') {
-				dispatchNotif({
-					type: 'SUCCESS',
-					message: 'Nickname vinculado !!',
-				});
+				if (userMl.status === 'success') {
+					dispatchNotif({
+						type: 'SUCCESS',
+						message: 'Nickname vinculado !!',
+					});
+				}
 			}
 			navigate('/settings/settingsMl');
 		};
