@@ -66,7 +66,7 @@ const SettingsMl = () => {
 										type='text'
 										name='nickname'
 										placeholder='MLA...'
-										disabled={userMl.userMl?.nickname.length > 0}
+										disabled={userMl.userMl?.nickname?.length > 0}
 									/>
 									<ErrorMessage
 										name='nickname'
@@ -78,7 +78,7 @@ const SettingsMl = () => {
 										className='btn btn__primary'
 										type='submit'
 										disabled={isSubmitting}>
-										{userMl.userMl?.nickname.length > 0
+										{userMl.userMl?.nickname?.length > 0
 											? 'Desvincular'
 											: 'Vincular'}
 									</button>
