@@ -23,7 +23,6 @@ const MeliCallback = () => {
 				console.log('userMl.status', userMl.status);
 				console.log('userMl.error', userMl.error);
 
-				console.log('nickMLParam', state.split('-')[0]);
 				await dispatch(
 					connectMl({
 						code,

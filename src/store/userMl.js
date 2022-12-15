@@ -7,6 +7,8 @@ export const connectMl = createAsyncThunk(
 		const {user} = getState();
 		// async operation
 
+		console.log('ConnectMl, userMl');
+
 		try {
 			const API_AUTH = `${variables.basePathMl}/oauth/token`;
 			const body = {
