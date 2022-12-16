@@ -1,11 +1,14 @@
 import {useEffect} from 'react';
-import {ErrorMessage, Field, Form, Formik} from 'formik';
-import {helpHttp} from '@/services/helpHttp';
-import {variables} from '@/config/variables';
+// import {ErrorMessage, Field, Form, Formik} from 'formik';
+import {Form, Formik} from 'formik';
+import {useDispatch, useSelector} from 'react-redux';
+import {putSettings} from '../../../../store/settings';
+import Loader from '@/commons/Loader-overlay/Loader-overlay';
 
-const Images = ({settings, setError, dispatch, setLoading}) => {
-	const api = helpHttp();
-	const url = `${variables.basePath}/settings`;
+const Images = ({dispatchNotif}) => {
+	let {status} = useSelector(state => state.settings);
+	let settings = useSelector(state => state.settings.settings?.images);
+	const dispatch = useDispatch();
 
 	return (
 		<Formik
@@ -19,46 +22,63 @@ const Images = ({settings, setError, dispatch, setLoading}) => {
 			}}
 			onSubmit={async (values, {setSubmitting}) => {
 				try {
-					setLoading(true);
-					/* upload-image */
-					if (newLogo) {
-						const fd = new FormData();
-						fd.append('image', newLogo, values.logo);
+					console.log('VALUES', values);
+					dispatch(putSettings({images: {...values}}));
 
-						const response = await fetch(`${url}/upload-file`, {
-							method: 'POST',
-							body: fd,
-							headers: {
-								Authorization: `Bearer ${user.token}`,
-							},
-						});
-						const uploadImg = await response.json();
-						values.logo = uploadImg.image;
-
-						if (uploadImg.statusCode) {
-							throw uploadImg;
-						}
-					}
-
-					const data = await api.put(url, {body: {data: values}});
-					if (data.statusCode) {
-						throw data;
-					}
-					dispatch({
+					dispatchNotif({
 						type: 'SUCCESS',
 						message: 'Configuración modificada!',
 					});
-					setError(null);
 				} catch (err) {
-					dispatch({
+					dispatchNotif({
 						type: 'ERROR',
 						message: 'Error modificando la configuración',
 					});
-					setError(`${err.statusCode}: ${err.error} - ${err.message}`);
 				} finally {
 					setSubmitting(false);
-					setLoading(false);
 				}
+
+				// try {
+				// 	setLoading(true);
+				// 	/* upload-image */
+				// 	if (newLogo) {
+				// 		const fd = new FormData();
+				// 		fd.append('image', newLogo, values.logo);
+
+				// 		const response = await fetch(`${url}/upload-file`, {
+				// 			method: 'POST',
+				// 			body: fd,
+				// 			headers: {
+				// 				Authorization: `Bearer ${user.token}`,
+				// 			},
+				// 		});
+				// 		const uploadImg = await response.json();
+				// 		values.logo = uploadImg.image;
+
+				// 		if (uploadImg.statusCode) {
+				// 			throw uploadImg;
+				// 		}
+				// 	}
+
+				// 	const data = await api.put(url, {body: {data: values}});
+				// 	if (data.statusCode) {
+				// 		throw data;
+				// 	}
+				// 	dispatchNotif({
+				// 		type: 'SUCCESS',
+				// 		message: 'Configuración modificada!',
+				// 	});
+				// 	setError(null);
+				// } catch (err) {
+				// 	dispatchNotif({
+				// 		type: 'ERROR',
+				// 		message: 'Error modificando la configuración',
+				// 	});
+				// 	setError(`${err.statusCode}: ${err.error} - ${err.message}`);
+				// } finally {
+				// 	setSubmitting(false);
+				// 	setLoading(false);
+				// }
 			}}>
 			{({isSubmitting, setFieldValue, values}) => {
 				useEffect(() => {
@@ -69,6 +89,7 @@ const Images = ({settings, setError, dispatch, setLoading}) => {
 
 				return (
 					<Form>
+						{status === 'loading' && <Loader />}
 						<div className='formulario'>
 							<div className='settings__logo'>
 								<label htmlFor='logo'>Logo</label>

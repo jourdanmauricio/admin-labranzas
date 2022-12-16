@@ -4,12 +4,11 @@ import Loader from '@/commons/Loader-overlay/Loader-overlay';
 import Message from '@/commons/Message/Message';
 import {Modal} from '@/commons/Modal/Modal';
 import {useNotification} from '@/commons/Notifications/NotificationProvider';
-import {variables} from '@/config/variables';
-import {helpHttp} from '@/services/helpHttp';
 import {useModal} from '@/hooks/useModal';
 import UserDeleteForm from './components/UserDeleteForm/UserDeleteForm';
 import UsersForm from './components/UsersForm/UsersForm';
 import UsersTable from './components/UsersTable/UsersTable';
+import {fetchUsers} from '../../services/api/users.api';
 
 const initialState = {
 	id: '',
@@ -29,22 +28,23 @@ const Users = () => {
 	const [dataToEdit, setDataToEdit] = useState(initialState);
 	const [dataToDelete, setDataToDelete] = useState(null);
 
-	let api = helpHttp();
-	const url = `${variables.basePath}/users`;
+	let apiUser = fetchUsers();
 
 	useEffect(() => {
-		setLoading(true);
-		api.get(url).then(res => {
-			console.log('res', res);
-			if (!res.err) {
+		const getUsersApi = async () => {
+			try {
+				setLoading(true);
+				const res = await apiUser.getUsers();
+				console.log('res', res);
 				setUsers(res.results);
 				setError(null);
-			} else {
-				setError(res);
-				setUsers(null);
+			} catch (err) {
+				setError(err);
+			} finally {
+				setLoading(false);
 			}
-			setLoading(false);
-		});
+		};
+		getUsersApi();
 	}, []);
 
 	const createData = async data => {
@@ -53,56 +53,43 @@ const Users = () => {
 
 		try {
 			setLoading(true);
-			const user = await api.post(url, {body: data});
-			console.log('user', user);
-
-			if (!user.error) {
-				setUsers([...users, user.newUser]);
-				dispatch({
-					type: 'SUCCESS',
-					message: 'Usuario creado!',
-				});
-			} else {
-				throw user;
-			}
+			const user = await apiUser.postUser(data);
+			setUsers([...users, user.newUser]);
+			dispatch({
+				type: 'SUCCESS',
+				message: 'Usuario creado!',
+			});
 		} catch (err) {
 			dispatch({
 				type: 'ERROR',
 				message: 'Error creando el usuario',
 			});
-			setError(`${err.statusCode}: ${err.error} - ${err.message}`);
+			setError(err);
 		} finally {
 			setLoading(false);
 		}
 	};
 
 	const updateData = async data => {
-		let endpoint = `${url}/change-password/${data.id}`;
-
-		let obj = {
-			id: data.id,
-			newPassword: data.password,
-		};
-
 		try {
 			setLoading(true);
-			const user = await api.put(endpoint, {body: obj});
-			if (!user.error) {
-				dispatch({
-					type: 'SUCCESS',
-					message: 'Usuario modificado!',
-				});
-				let newData = users.map(el => (el.id === data.id ? data : el));
-				setUsers(newData);
-			} else {
-				throw user;
-			}
+			let obj = {
+				id: data.id,
+				newPassword: data.password,
+			};
+			await apiUser.putUser(obj);
+			dispatch({
+				type: 'SUCCESS',
+				message: 'Usuario modificado!',
+			});
+			let newData = users.map(el => (el.id === data.id ? data : el));
+			setUsers(newData);
 		} catch (err) {
 			dispatch({
 				type: 'ERROR',
 				message: 'Error modificando el usuario',
 			});
-			setError(`${err.statusCode}: ${err.error} - ${err.message}`);
+			setError(err);
 		} finally {
 			setLoading(false);
 		}
@@ -113,27 +100,27 @@ const Users = () => {
 		openModal();
 	};
 
-	const handleDelete = id => {
-		let endpoint = `${url}/${id}`;
-
-		api.del(endpoint).then(res => {
-			if (!res.err) {
-				let newData = users.filter(el => el.id !== id);
-				setUsers(newData);
-				closeModal();
-				setDataToDelete(null);
-				dispatch({
-					type: 'SUCCESS',
-					message: 'Usuario eliminado!',
-				});
-			} else {
-				setError(res);
-				dispatch({
-					type: 'ERROR',
-					message: 'Error eliminando el usuario',
-				});
-			}
-		});
+	const handleDelete = async id => {
+		try {
+			setLoading(true);
+			await apiUser.deleteUser(id);
+			dispatch({
+				type: 'SUCCESS',
+				message: 'Usuario eliminado!',
+			});
+			let newData = users.filter(el => el.id !== id);
+			setUsers(newData);
+			closeModal();
+			setDataToDelete(null);
+		} catch (err) {
+			dispatch({
+				type: 'ERROR',
+				message: 'Error eliminando el usuario',
+			});
+			setError(err);
+		} finally {
+			setLoading(false);
+		}
 	};
 
 	const handleCancelDelete = () => {

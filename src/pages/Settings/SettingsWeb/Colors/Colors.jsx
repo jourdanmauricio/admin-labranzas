@@ -1,11 +1,16 @@
 import {useEffect} from 'react';
 import {ErrorMessage, Field, Form, Formik} from 'formik';
-import {helpHttp} from '@/services/helpHttp';
-import {variables} from '@/config/variables';
+import {useDispatch, useSelector} from 'react-redux';
+import {putSettings} from '../../../../store/settings';
+import Loader from '@/commons/Loader-overlay/Loader-overlay';
+// import {useNotification} from '@/commons/Notifications/NotificationProvider';
 
-const Colors = ({settings, setError, dispatch, setLoading}) => {
-	const api = helpHttp();
-	const url = `${variables.basePath}/settings`;
+const Colors = ({updated}) => {
+	let {status} = useSelector(state => state.settings);
+	let settings = useSelector(state => state.settings.settings?.colors);
+	const dispatch = useDispatch();
+	// const dispatchNotif = useNotification();
+
 	return (
 		<Formik
 			initialValues={{
@@ -89,27 +94,26 @@ const Colors = ({settings, setError, dispatch, setLoading}) => {
 				return errors;
 			}}
 			onSubmit={async (values, {setSubmitting}) => {
-				try {
-					setLoading(true);
-					const data = await api.put(url, {body: {data: values}});
-					if (data.statusCode) {
-						throw data;
-					}
-					dispatch({
-						type: 'SUCCESS',
-						message: 'Configuración modificada!',
-					});
-					setError(null);
-				} catch (err) {
-					dispatch({
-						type: 'ERROR',
-						message: 'Error modificando la configuración',
-					});
-					setError(`${err.statusCode}: ${err.error} - ${err.message}`);
-				} finally {
-					setSubmitting(false);
-					setLoading(false);
-				}
+				dispatch(putSettings({colors: {...values}}));
+				updated();
+				setSubmitting(false);
+
+				// try {
+				// 	console.log('VALUES', values);
+				// 	dispatch(putSettings({colors: {...values}}));
+
+				// 	dispatchNotif({
+				// 		type: 'SUCCESS',
+				// 		message: 'Configuración modificada!',
+				// 	});
+				// } catch (err) {
+				// 	dispatchNotif({
+				// 		type: 'ERROR',
+				// 		message: 'Error modificando la configuración',
+				// 	});
+				// } finally {
+				// 	setSubmitting(false);
+				// }
 			}}>
 			{({isSubmitting, setFieldValue, values}) => {
 				useEffect(() => {
@@ -141,6 +145,7 @@ const Colors = ({settings, setError, dispatch, setLoading}) => {
 
 				return (
 					<Form>
+						{status === 'loading' && <Loader />}
 						<div className='formulario'>
 							<div>
 								<label htmlFor='title_color'>Color de títulos</label>

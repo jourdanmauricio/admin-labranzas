@@ -38,7 +38,6 @@ export const signIn = createAsyncThunk('user/signIn', async data => {
 	const resUser = await response.json();
 
 	resUser.token = resAuth.access_token;
-
 	return resUser;
 });
 

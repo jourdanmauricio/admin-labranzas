@@ -1,53 +1,36 @@
-import {useEffect, useState} from 'react';
-// import Layout from '@/commons/Layout/layout';
 import Message from '@/commons/Message/Message';
-import Loader from '@/commons/Loader-overlay/Loader-overlay';
-import {helpHttp} from '@/services/helpHttp';
 import Tabs from './Tabs/Tabs';
+import {useDispatch, useSelector} from 'react-redux';
+import {logOutSettings} from '../../../store/settings';
 import {useNotification} from '@/commons/Notifications/NotificationProvider';
-import {variables} from '@/config/variables';
 
 const Settings = () => {
-	const dispatch = useNotification();
-	const [loading, setLoading] = useState(false);
-	const [settings, setSettings] = useState([]);
-	const [error, setError] = useState(null);
+	const dispatch = useDispatch();
+	const dispatchNotif = useNotification();
+	let {error, status} = useSelector(state => state.settings);
 
-	const api = helpHttp();
-	const url = `${variables.basePath}/settings`;
+	const updated = () => {
+		if (status === 'failed')
+			dispatchNotif({
+				type: 'ERROR',
+				message: 'Error modificando la configuración',
+			});
+		if (status === 'success')
+			dispatchNotif({
+				type: 'SUCCESS',
+				message: 'Configuración modificada!',
+			});
+	};
 
-	useEffect(() => {
-		async function fetchData() {
-			setLoading(true);
-			try {
-				const data = await api.get(url);
-
-				if (data.statusCode) {
-					throw data;
-				} else {
-					const obj = {};
-					data.forEach(el => {
-						obj[el.feature] = el.value;
-					});
-					setSettings(obj);
-				}
-			} catch (err) {
-				setError(`${err.statusCode}: ${err.error} - ${err.message}`);
-			} finally {
-				setLoading(false);
-			}
-		}
-		fetchData();
-	}, []);
-
+	const closeMessage = () => {
+		dispatch(logOutSettings());
+	};
 	return (
 		<>
 			<h1 className='title'>Configuración Web</h1>
-
 			{/* MESSAGE */}
-			{error && <Message msg={error} closeMessage={() => setError(null)} />}
-			{loading && <Loader />}
-			<Tabs settings={settings} setError={setError} dispatch={dispatch}></Tabs>
+			{error.length > 0 && <Message msg={error} closeMessage={closeMessage} />}
+			<Tabs updated={updated}></Tabs>
 		</>
 	);
 };

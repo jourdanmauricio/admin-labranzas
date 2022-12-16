@@ -1,15 +1,14 @@
 import {useState} from 'react';
-import {FaRegImage, FaFont, FaFillDrip, FaWhatsapp} from 'react-icons/fa';
+// import {FaRegImage, FaFont, FaFillDrip, FaWhatsapp} from 'react-icons/fa';
+import {FaFont, FaFillDrip, FaWhatsapp} from 'react-icons/fa';
 import Colors from '../Colors/Colors';
 import Contact from '../Contact/Contact';
 import Fonts from '../Fonts/Fonts';
-import Images from '../Images/Images';
+// import Images from '../Images/Images';
 import styles from './tabs.module.css';
-import Loader from '@/commons/Loader-overlay/Loader-overlay';
 
-const Tabs = ({settings, setError, dispatch}) => {
+const Tabs = ({updated}) => {
 	const [toggleState, setToggleState] = useState(1);
-	const [loading, setLoading] = useState(false);
 
 	const toggleTab = index => {
 		setToggleState(index);
@@ -47,7 +46,7 @@ const Tabs = ({settings, setError, dispatch}) => {
 					<FaFont color='black' />
 					<span>Fuentes</span>
 				</div>
-				<div
+				{/* <div
 					onClick={() => toggleTab(4)}
 					className={
 						toggleState === 4
@@ -56,21 +55,16 @@ const Tabs = ({settings, setError, dispatch}) => {
 					}>
 					<FaRegImage color='blue' />
 					<span>Imagenes</span>
-				</div>
+				</div> */}
 			</div>
 			<div className={styles.content__tabs}>
-				{loading && <Loader />}
 				<div
 					className={
 						toggleState === 1
 							? `${styles.content} ${styles.active__content}`
 							: styles.content
 					}>
-					<Colors
-						settings={settings}
-						setError={setError}
-						dispatch={dispatch}
-						setLoading={setLoading}></Colors>
+					<Colors updated={updated}></Colors>
 				</div>
 				<div
 					className={
@@ -78,11 +72,7 @@ const Tabs = ({settings, setError, dispatch}) => {
 							? `${styles.content} ${styles.active__content}`
 							: styles.content
 					}>
-					<Contact
-						settings={settings}
-						setError={setError}
-						dispatch={dispatch}
-						setLoading={setLoading}></Contact>
+					<Contact updated={updated}></Contact>
 				</div>
 				<div
 					className={
@@ -90,24 +80,16 @@ const Tabs = ({settings, setError, dispatch}) => {
 							? `${styles.content} ${styles.active__content}`
 							: styles.content
 					}>
-					<Fonts
-						settings={settings}
-						setError={setError}
-						dispatch={dispatch}
-						setLoading={setLoading}></Fonts>
+					<Fonts updated={updated}></Fonts>
 				</div>
-				<div
+				{/* <div
 					className={
 						toggleState === 4
 							? `${styles.content} ${styles.active__content}`
 							: styles.content
 					}>
-					<Images
-						settings={settings}
-						setError={setError}
-						dispatch={dispatch}
-						setLoading={setLoading}></Images>
-				</div>
+					<Images dispatchNotif={dispatchNotif}></Images>
+				</div> */}
 			</div>
 		</div>
 	);

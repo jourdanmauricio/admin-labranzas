@@ -8,6 +8,7 @@ import {signIn} from '@/store/user';
 import {getUserMl} from '@/store/userMl';
 
 import styles from '../auth.module.css';
+import {getSettings} from '../../../store/settings';
 
 const Login = () => {
 	let dispatch = useDispatch();
@@ -57,6 +58,7 @@ const Login = () => {
 
 	async function isMatch() {
 		// Login
+		console.log('Login');
 		await dispatch(
 			signIn({
 				email,
@@ -64,7 +66,10 @@ const Login = () => {
 			})
 		);
 		// UserMl
-		dispatch(getUserMl());
+		console.log('UserMl');
+		await dispatch(getUserMl());
+		console.log('Settings');
+		dispatch(getSettings());
 	}
 
 	function handleSubmit(e) {

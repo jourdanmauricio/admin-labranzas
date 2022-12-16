@@ -18,6 +18,7 @@ import {
 } from 'react-icons/fa';
 
 import './nav.css';
+import {logOutSettings} from '../../store/settings';
 
 const Nav = () => {
 	const [mobileMenu, setMobileMenu] = useState(true);
@@ -34,6 +35,7 @@ const Nav = () => {
 	const handleLogout = () => {
 		dispatch(logOut());
 		dispatch(logOutMl());
+		dispatch(logOutSettings());
 		navigate('/');
 	};
 

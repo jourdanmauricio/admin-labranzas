@@ -1,11 +1,13 @@
 import {useEffect} from 'react';
 import {ErrorMessage, Field, Form, Formik} from 'formik';
-import {helpHttp} from '@/services/helpHttp';
-import {variables} from '@/config/variables';
+import {useDispatch, useSelector} from 'react-redux';
+import {putSettings} from '../../../../store/settings';
+import Loader from '@/commons/Loader-overlay/Loader-overlay';
 
-const Contact = ({settings, setError, dispatch, setLoading}) => {
-	const api = helpHttp();
-	const url = `${variables.basePath}/settings`;
+const Contact = ({updated}) => {
+	let {status} = useSelector(state => state.settings);
+	let settings = useSelector(state => state.settings.settings?.contact);
+	const dispatch = useDispatch();
 
 	return (
 		<Formik
@@ -22,7 +24,7 @@ const Contact = ({settings, setError, dispatch, setLoading}) => {
 				const errors = {};
 				if (
 					values.Facebook.length > 0 &&
-					!/(?:https?:\/\/)?(?:www\.)?(?:facebook|fb|m\.facebook)\.(?:com|me)\/(?:(?:\w)*#!\/)?(?:pages\/)?(?:[\w\-]*\/)*([\w\-\.]+)(?:\/)?/i.test(
+					!/(?:https?:\/\/)?(?:www\.)?(?:facebook|fb|m\.facebook)\.(?:com|me)\/(?:(?:\w)*#!\/)?(?:pages\/)?(?:[\w-]*\/)*([\w\-.]+)(?:\/)?/i.test(
 						values.Facebook
 					)
 				) {
@@ -40,7 +42,7 @@ const Contact = ({settings, setError, dispatch, setLoading}) => {
 
 				if (
 					values.Instagram.length > 0 &&
-					!/(?:(?:http|https):\/\/)?(?:www\.)?(?:instagram\.com|instagr\.am|twitter\.com)\/([A-Za-z0-9-_\.]+)/im.test(
+					!/(?:(?:http|https):\/\/)?(?:www\.)?(?:instagram\.com|instagr\.am|twitter\.com)\/([A-Za-z0-9-_.]+)/im.test(
 						values.Instagram
 					)
 				) {
@@ -70,27 +72,9 @@ const Contact = ({settings, setError, dispatch, setLoading}) => {
 				return errors;
 			}}
 			onSubmit={async (values, {setSubmitting}) => {
-				try {
-					setLoading(true);
-					const data = await api.put(url, {body: {data: values}});
-					if (data.statusCode) {
-						throw data;
-					}
-					dispatch({
-						type: 'SUCCESS',
-						message: 'Configuración modificada!',
-					});
-					setError(null);
-				} catch (err) {
-					dispatch({
-						type: 'ERROR',
-						message: 'Error modificando la configuración',
-					});
-					setError(`${err.statusCode}: ${err.error} - ${err.message}`);
-				} finally {
-					setSubmitting(false);
-					setLoading(false);
-				}
+				dispatch(putSettings({contact: {...values}}));
+				updated();
+				setSubmitting(false);
 			}}>
 			{({isSubmitting, setFieldValue}) => {
 				useEffect(() => {
@@ -107,6 +91,7 @@ const Contact = ({settings, setError, dispatch, setLoading}) => {
 
 				return (
 					<Form>
+						{status === 'loading' && <Loader />}
 						<div className='formulario'>
 							<div>
 								<label htmlFor='Twitter'>Twitter</label>
