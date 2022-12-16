@@ -15,6 +15,7 @@ import {
 	FaTh,
 	FaPowerOff,
 	FaBars,
+	FaBoxOpen,
 } from 'react-icons/fa';
 
 import './nav.css';
@@ -43,6 +44,12 @@ const Nav = () => {
 		switch (true) {
 			case location.pathname.includes('/settings'):
 				setPage([
+					{
+						id: 1,
+						title: 'Productos',
+						icon: FaBoxOpen,
+						to: '/settings/SettingsProducts',
+					},
 					{
 						id: 1,
 						title: 'Preguntas',
@@ -80,7 +87,7 @@ const Nav = () => {
 									<span>
 										<e.icon className='material__icon' />
 									</span>
-									<span className='icon-text'>{e.title}</span>
+									<span className='icon__text'>{e.title}</span>
 								</button>
 							</NavLink>
 						</li>

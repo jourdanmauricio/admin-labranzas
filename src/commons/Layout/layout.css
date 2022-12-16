@@ -57,7 +57,7 @@
 }
 
 .material__icon {
-	margin-right: 15px;
+	margin-right: 0;
 }
 .material__icon,
 .icon-text {
@@ -92,5 +92,11 @@
 
 	.full {
 		width: 170px;
+	}
+}
+
+@media (min-width: 1024px) {
+	.material__icon {
+		margin-right: 15px;
 	}
 }

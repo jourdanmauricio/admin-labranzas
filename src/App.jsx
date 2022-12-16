@@ -34,6 +34,10 @@ const SettingsQuestions = React.lazy(() =>
 	import('./pages/Settings/SettingsQuestions/SettingsQuestions')
 );
 
+const SettingsProducts = React.lazy(() =>
+	import('./pages/Settings/SettingsProducts/SettingsProducts')
+);
+
 const Users = React.lazy(() => import('./pages/Users/Users'));
 
 const AuthRoute = props => {
@@ -115,6 +119,14 @@ function App() {
 									element={
 										<AuthSuperadminRoute>
 											<SettingsMl />
+										</AuthSuperadminRoute>
+									}
+								/>
+								<Route
+									path='settingsProducts'
+									element={
+										<AuthSuperadminRoute>
+											<SettingsProducts />
 										</AuthSuperadminRoute>
 									}
 								/>
