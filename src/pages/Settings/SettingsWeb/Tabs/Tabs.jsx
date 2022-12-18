@@ -1,11 +1,8 @@
 import {useState} from 'react';
-// import {FaRegImage, FaFont, FaFillDrip, FaWhatsapp} from 'react-icons/fa';
 import {FaFont, FaFillDrip, FaWhatsapp} from 'react-icons/fa';
 import Colors from '../Colors/Colors';
 import Contact from '../Contact/Contact';
 import Fonts from '../Fonts/Fonts';
-// import Images from '../Images/Images';
-import styles from './tabs.module.css';
 
 const Tabs = ({updated}) => {
 	const [toggleState, setToggleState] = useState(1);
@@ -14,82 +11,46 @@ const Tabs = ({updated}) => {
 		setToggleState(index);
 	};
 	return (
-		<div className={styles.container}>
-			<div className={styles.bloc__tabs}>
+		<div className='tabs__container'>
+			<div className='tabs__bloc'>
 				<div
 					onClick={() => toggleTab(1)}
-					className={
-						toggleState === 1
-							? `${styles.tabs} ${styles.active__tabs}`
-							: styles.tabs
-					}>
-					<FaFillDrip color='teal' />
+					className={toggleState === 1 ? 'tabs active__tabs' : 'tabs'}>
+					<FaFillDrip color='teal' size={20} />
 					<span>Colores</span>
 				</div>
 				<div
 					onClick={() => toggleTab(2)}
-					className={
-						toggleState === 2
-							? `${styles.tabs} ${styles.active__tabs}`
-							: styles.tabs
-					}>
-					<FaWhatsapp color='green' />
+					className={toggleState === 2 ? 'tabs active__tabs' : 'tabs'}>
+					<FaWhatsapp color='green' size={20} />
 					<span>Contacto</span>
 				</div>
 				<div
 					onClick={() => toggleTab(3)}
-					className={
-						toggleState === 3
-							? `${styles.tabs} ${styles.active__tabs}`
-							: styles.tabs
-					}>
-					<FaFont color='black' />
+					className={toggleState === 3 ? 'tabs active__tabs' : 'tabs'}>
+					<FaFont color='black' size={20} />
 					<span>Fuentes</span>
 				</div>
-				{/* <div
-					onClick={() => toggleTab(4)}
-					className={
-						toggleState === 4
-							? `${styles.tabs} ${styles.active__tabs}`
-							: styles.tabs
-					}>
-					<FaRegImage color='blue' />
-					<span>Imagenes</span>
-				</div> */}
 			</div>
-			<div className={styles.content__tabs}>
+			<div className='tabs__content'>
 				<div
 					className={
-						toggleState === 1
-							? `${styles.content} ${styles.active__content}`
-							: styles.content
+						toggleState === 1 ? 'tab__content active__content' : 'tab__content'
 					}>
 					<Colors updated={updated}></Colors>
 				</div>
 				<div
 					className={
-						toggleState === 2
-							? `${styles.content} ${styles.active__content}`
-							: styles.content
+						toggleState === 2 ? 'tab__content active__content' : 'tab__content'
 					}>
 					<Contact updated={updated}></Contact>
 				</div>
 				<div
 					className={
-						toggleState === 3
-							? `${styles.content} ${styles.active__content}`
-							: styles.content
+						toggleState === 3 ? 'tab__content active__content' : 'tab__content'
 					}>
 					<Fonts updated={updated}></Fonts>
 				</div>
-				{/* <div
-					className={
-						toggleState === 4
-							? `${styles.content} ${styles.active__content}`
-							: styles.content
-					}>
-					<Images dispatchNotif={dispatchNotif}></Images>
-				</div> */}
 			</div>
 		</div>
 	);
