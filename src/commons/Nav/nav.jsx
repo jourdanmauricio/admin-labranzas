@@ -45,7 +45,7 @@ const Nav = () => {
 			case location.pathname.includes('/settings'):
 				setPage([
 					{
-						id: 1,
+						id: 0,
 						title: 'Productos',
 						icon: FaBoxOpen,
 						to: '/settings/SettingsProducts',
@@ -114,7 +114,7 @@ const Nav = () => {
 								isActive ? 'item__detail item__active' : 'item__detail'
 							}>
 							<FaUserCog className='material__icon' />
-							<span className='icon-text'>Perfil</span>
+							<span className='icon__text'>Perfil</span>
 						</NavLink>
 					</li>
 
@@ -125,7 +125,7 @@ const Nav = () => {
 								isActive ? 'item__detail item__active' : 'item__detail'
 							}>
 							<FaTh className='material__icon' />
-							<span className='icon-text'>Dashboard</span>
+							<span className='icon__text'>Dashboard</span>
 						</NavLink>
 					</li>
 					<li>
@@ -135,7 +135,7 @@ const Nav = () => {
 								isActive ? 'item__detail item__active' : 'item__detail'
 							}>
 							<FaCog className='material__icon' />
-							<span className='icon-text'>Configuración</span>
+							<span className='icon__text'>Configuración</span>
 						</NavLink>
 					</li>
 					<li>
@@ -145,7 +145,7 @@ const Nav = () => {
 							}
 							to='/lessons'>
 							<FaRegCalendarAlt className='material__icon' />
-							<span className='icon-text'>Clases</span>
+							<span className='icon__text'>Clases</span>
 						</NavLink>
 					</li>
 					<li>
@@ -155,7 +155,7 @@ const Nav = () => {
 								isActive ? 'item__detail item__active' : 'item__detail'
 							}>
 							<FaUsers className='material__icon' />
-							<span className='icon-text'>Alumnos</span>
+							<span className='icon__text'>Alumnos</span>
 						</NavLink>
 					</li>
 				</ul>

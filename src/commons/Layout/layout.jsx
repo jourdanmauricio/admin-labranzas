@@ -34,7 +34,7 @@ const Layout = props => {
 							isActive ? 'item__detail item__active' : 'item__detail'
 						}>
 						<FaUserCog className='material__icon' />
-						<span className='icon-text'>Perfil</span>
+						<span className='icon__text'>Perfil</span>
 					</NavLink>
 					<br />
 					<NavLink
@@ -43,7 +43,7 @@ const Layout = props => {
 							isActive ? 'item__detail item__active' : 'item__detail'
 						}>
 						<FaTh className='material__icon' />
-						<span className='icon-text'>Dashboard</span>
+						<span className='icon__text'>Dashboard</span>
 					</NavLink>
 					{user.role === 'superadmin' && (
 						<>
@@ -54,7 +54,7 @@ const Layout = props => {
 									isActive ? 'item__detail item__active' : 'item__detail'
 								}>
 								<FaCog className='material__icon' />
-								<span className='icon-text'>Configuración</span>
+								<span className='icon__text'>Configuración</span>
 							</NavLink>
 						</>
 					)}
@@ -65,7 +65,7 @@ const Layout = props => {
 						}
 						to='/lessons'>
 						<FaRegCalendarAlt className='material__icon' />
-						<span className='icon-text'>Clases</span>
+						<span className='icon__text'>Clases</span>
 					</NavLink>
 					<br />
 					{user.role === 'superadmin' && (
@@ -75,7 +75,7 @@ const Layout = props => {
 								isActive ? 'item__detail item__active' : 'item__detail'
 							}>
 							<FaUsers className='material__icon' />
-							<span className='icon-text'>Usuarios</span>
+							<span className='icon__text'>Usuarios</span>
 						</NavLink>
 					)}
 				</div>

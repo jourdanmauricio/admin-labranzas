@@ -17,7 +17,6 @@ const UserMlDetail = () => {
 		const getMlUser = async () => {
 			try {
 				const resUserMl = await apiMl.get(API_USER_ML);
-				console.log('resUserMl', resUserMl);
 
 				if (resUserMl.status === 401) {
 					dispatchNotif({
@@ -84,7 +83,7 @@ const UserMlDetail = () => {
 							<label htmlFor='gender'>Genero</label>
 							<input
 								className='form__input'
-								value={userDetail.gender}
+								value={userDetail.gender || ''}
 								type='text'
 								name='gender'
 								disabled
@@ -155,7 +154,7 @@ const UserMlDetail = () => {
 							<label htmlFor='logo'>Logo</label>
 							<input
 								className='form__input'
-								value={userDetail.logo}
+								value={userDetail.logo || ''}
 								type='text'
 								name='logo'
 								disabled
