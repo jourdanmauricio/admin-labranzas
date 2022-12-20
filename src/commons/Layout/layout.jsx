@@ -2,12 +2,13 @@ import {useState} from 'react';
 import {NavLink} from 'react-router-dom';
 import {
 	FaCog,
-	FaRegCalendarAlt,
+	FaBoxOpen,
 	FaAngleLeft,
 	FaAngleRight,
 	FaUsers,
 	FaTh,
 	FaUserCog,
+	FaRegListAlt,
 } from 'react-icons/fa';
 
 import Nav from '../Nav/nav';
@@ -59,15 +60,6 @@ const Layout = props => {
 						</>
 					)}
 					<br />
-					<NavLink
-						className={({isActive}) =>
-							isActive ? 'item__detail item__active' : 'item__detail'
-						}
-						to='/lessons'>
-						<FaRegCalendarAlt className='material__icon' />
-						<span className='icon__text'>Clases</span>
-					</NavLink>
-					<br />
 					{user.role === 'superadmin' && (
 						<NavLink
 							to='/users'
@@ -78,6 +70,25 @@ const Layout = props => {
 							<span className='icon__text'>Usuarios</span>
 						</NavLink>
 					)}
+					<br />
+					<NavLink
+						className={({isActive}) =>
+							isActive ? 'item__detail item__active' : 'item__detail'
+						}
+						to='/categories'>
+						<FaRegListAlt className='material__icon' />
+						<span className='icon__text'>Categorías</span>
+					</NavLink>
+
+					<br />
+					<NavLink
+						className={({isActive}) =>
+							isActive ? 'item__detail item__active' : 'item__detail'
+						}
+						to='/products'>
+						<FaBoxOpen className='material__icon' />
+						<span className='icon__text'>Productos</span>
+					</NavLink>
 				</div>
 				<section
 					className={`main__content ${minItems && 'main__content--full'}`}>

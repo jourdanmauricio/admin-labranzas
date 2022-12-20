@@ -1,36 +1,22 @@
 import {useEffect, useState} from 'react';
-import {helpHttpMl} from '@/services/helpHttpMl';
-import {variables} from '@/config/variables';
 import {useSelector} from 'react-redux';
-import {useNotification} from '@/commons/Notifications/NotificationProvider';
 import {formatDateTable} from '@/helpers/helpFunctions';
+import {getApiMlUser} from '../../../services/api/userMl.api';
 
 const UserMlDetail = () => {
-	const dispatchNotif = useNotification();
-	let userMl = useSelector(state => state.userMl.userMl);
 	const [userDetail, setUserDetail] = useState(null);
-
-	const apiMl = helpHttpMl();
-	const API_USER_ML = `${variables.basePathMl}/users/${userMl.id}`;
+	const id = useSelector(state => state.userMl.userMl.id);
 
 	useEffect(() => {
 		const getMlUser = async () => {
 			try {
-				const resUserMl = await apiMl.get(API_USER_ML);
+				const userMlDetail = await getApiMlUser(id);
 
-				if (resUserMl.status === 401) {
-					dispatchNotif({
-						type: 'ERROR',
-						message: 'Unauthorized. Refresh token',
-					});
-				} else {
-					setUserDetail(resUserMl);
-				}
+				setUserDetail(userMlDetail);
 			} catch (error) {
 				console.log('error', error);
 			}
 		};
-
 		getMlUser();
 	}, []);
 

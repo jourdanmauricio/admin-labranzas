@@ -10,7 +10,7 @@ import {PersistGate} from 'redux-persist/integration/react';
 import {persistor, store} from './store';
 import './App.css';
 import Login from './pages/auth/Login/Login';
-import Loader from '@/commons/Loader-overlay/Loader-overlay';
+// import Loader from '@/commons/Loader-overlay/Loader-overlay';
 
 const ForgotPassword = React.lazy(() =>
 	import('./pages/auth/ForgotPassword/ForgotPassword')
@@ -35,12 +35,12 @@ const SettingsMl = React.lazy(() =>
 const SettingsQuestions = React.lazy(() =>
 	import('./pages/Settings/SettingsQuestions/SettingsQuestions')
 );
-
 const SettingsProducts = React.lazy(() =>
 	import('./pages/Settings/SettingsProducts/SettingsProducts')
 );
-
 const Users = React.lazy(() => import('./pages/Users/Users'));
+const Products = React.lazy(() => import('./pages/Products/Products'));
+const Categories = React.lazy(() => import('./pages/Categories/Categories'));
 
 const AuthRoute = props => {
 	let user = useSelector(state => state.user.user);
@@ -63,8 +63,8 @@ function App() {
 		<Router>
 			<Provider store={store}>
 				<PersistGate loading={null} persistor={persistor}>
-					{/* <Suspense fallback={<div />}> */}
-					<Suspense maxDuration={400} fallback={<Loader />}>
+					<Suspense fallback={<div />}>
+						{/* <Suspense maxDuration={400} fallback={<Loader />}> */}
 						<Routes>
 							<Route path='/' element={<Login />} />
 							<Route path='/forgot-password' element={<ForgotPassword />} />
@@ -134,7 +134,22 @@ function App() {
 									}
 								/>
 							</Route>
-
+							<Route
+								path='products'
+								element={
+									<AuthSuperadminRoute>
+										<Products />
+									</AuthSuperadminRoute>
+								}
+							/>
+							<Route
+								path='categories'
+								element={
+									<AuthSuperadminRoute>
+										<Categories />
+									</AuthSuperadminRoute>
+								}
+							/>
 							<Route path='*' element={<Error404 />} />
 						</Routes>
 					</Suspense>

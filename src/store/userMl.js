@@ -1,32 +1,15 @@
 import {createAsyncThunk, createSlice} from '@reduxjs/toolkit';
 import {variables} from '../config/variables';
+import {fetchMlUser} from '../services/api/userMl.api';
 
 export const getUserMl = createAsyncThunk(
 	'userMl/getUserMl',
-	async (_, {getState, rejectWithValue}) => {
-		const {user} = getState();
-		const API_AUTH = `${variables.basePath}/usersMl`;
-
+	async (_, {rejectWithValue}) => {
 		try {
-			const options = {
-				headers: {
-					'Content-Type': 'application/json',
-					Authorization: `Bearer ${user.user.token}`,
-				},
-			};
-			const responseUserMl = await fetch(API_AUTH, options);
-			const resUserMl = await responseUserMl.json();
-
-			if (resUserMl.error) {
-				if (resUserMl.statusCode === 404) {
-					return {userMl: null, status: '', error: ''};
-				} else {
-					throw resUserMl.message;
-				}
-			}
-			return resUserMl;
-		} catch (err) {
-			return rejectWithValue(err);
+			const userMl = await fetchMlUser();
+			return userMl;
+		} catch (error) {
+			return rejectWithValue(error);
 		}
 	}
 );
@@ -112,7 +95,7 @@ export const disconnectMl = createAsyncThunk(
 		const URL = `${variables.basePath}/usersml/${userMl.userMl.id}`;
 
 		try {
-			// TODO: Utilizar el access_token del credor de la app, no del user a desvincular
+			// TODO: Utilizar el access_token del creador de la app, no del user a desvincular
 
 			// const optionsMl = {
 			// 	headers: {
@@ -161,7 +144,7 @@ let userMlSlice = createSlice({
 			state.userMl = null;
 		},
 		[getUserMl.fulfilled]: (state, action) => {
-			console.log(action);
+			console.log('action', action);
 			state.userMl = action.payload;
 			state.status = 'success';
 			state.error = '';

@@ -8,7 +8,12 @@ import {useModal} from '@/hooks/useModal';
 import UserDeleteForm from './components/UserDeleteForm/UserDeleteForm';
 import UsersForm from './components/UsersForm/UsersForm';
 import UsersTable from './components/UsersTable/UsersTable';
-import {fetchUsers} from '../../services/api/users.api';
+import {
+	deleteUser,
+	getUsers,
+	postUser,
+	putUser,
+} from '../../services/api/users.api';
 
 const initialState = {
 	id: '',
@@ -20,7 +25,7 @@ const initialState = {
 };
 
 const Users = () => {
-	const dispatch = useNotification();
+	const dispatchNotif = useNotification();
 	const [isOpenModal, openModal, closeModal] = useModal(false);
 	const [loading, setLoading] = useState(false);
 	const [error, setError] = useState(null);
@@ -28,23 +33,19 @@ const Users = () => {
 	const [dataToEdit, setDataToEdit] = useState(initialState);
 	const [dataToDelete, setDataToDelete] = useState(null);
 
-	let apiUser = fetchUsers();
-
 	useEffect(() => {
-		const getUsersApi = async () => {
+		const fetchUsers = async () => {
+			setLoading(true);
 			try {
-				setLoading(true);
-				const res = await apiUser.getUsers();
-				console.log('res', res);
-				setUsers(res.results);
-				setError(null);
-			} catch (err) {
-				setError(err);
+				const users = await getUsers();
+				setUsers(users);
+			} catch (error) {
+				setError(error);
 			} finally {
 				setLoading(false);
 			}
 		};
-		getUsersApi();
+		fetchUsers();
 	}, []);
 
 	const createData = async data => {
@@ -53,18 +54,18 @@ const Users = () => {
 
 		try {
 			setLoading(true);
-			const user = await apiUser.postUser(data);
-			setUsers([...users, user.newUser]);
-			dispatch({
+			const newUser = await postUser(data);
+			setUsers([...users, newUser]);
+			dispatchNotif({
 				type: 'SUCCESS',
 				message: 'Usuario creado!',
 			});
-		} catch (err) {
-			dispatch({
+		} catch (error) {
+			setError(error);
+			dispatchNotif({
 				type: 'ERROR',
 				message: 'Error creando el usuario',
 			});
-			setError(err);
 		} finally {
 			setLoading(false);
 		}
@@ -77,15 +78,15 @@ const Users = () => {
 				id: data.id,
 				newPassword: data.password,
 			};
-			await apiUser.putUser(obj);
-			dispatch({
+			await putUser(obj);
+			dispatchNotif({
 				type: 'SUCCESS',
 				message: 'Usuario modificado!',
 			});
 			let newData = users.map(el => (el.id === data.id ? data : el));
 			setUsers(newData);
 		} catch (err) {
-			dispatch({
+			dispatchNotif({
 				type: 'ERROR',
 				message: 'Error modificando el usuario',
 			});
@@ -103,8 +104,8 @@ const Users = () => {
 	const handleDelete = async id => {
 		try {
 			setLoading(true);
-			await apiUser.deleteUser(id);
-			dispatch({
+			await deleteUser(id);
+			dispatchNotif({
 				type: 'SUCCESS',
 				message: 'Usuario eliminado!',
 			});
@@ -113,7 +114,7 @@ const Users = () => {
 			closeModal();
 			setDataToDelete(null);
 		} catch (err) {
-			dispatch({
+			dispatchNotif({
 				type: 'ERROR',
 				message: 'Error eliminando el usuario',
 			});

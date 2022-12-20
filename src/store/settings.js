@@ -1,51 +1,26 @@
 import {createAsyncThunk, createSlice} from '@reduxjs/toolkit';
-import {variables} from '../config/variables';
+import {fetchSettings, updateSettings} from '../services/api/settings.api';
 
 export const getSettings = createAsyncThunk(
 	'settings/getSettings',
-	async (_, {getState, rejectWithValue}) => {
-		const {user} = getState();
-		const API = `${variables.basePath}/settings`;
-
+	async (_, {rejectWithValue}) => {
 		try {
-			const options = {
-				headers: {
-					'Content-Type': 'application/json',
-					Authorization: `Bearer ${user.user.token}`,
-				},
-			};
-			const responseSettings = await fetch(API, options);
-			const resSettings = await responseSettings.json();
-
-			return resSettings.setting;
-		} catch (err) {
-			return rejectWithValue(err);
+			const settings = await fetchSettings();
+			console.log('settings', settings);
+			return settings.setting;
+		} catch (error) {
+			return rejectWithValue(error);
 		}
 	}
 );
 
 export const putSettings = createAsyncThunk(
 	'settings/putSettings',
-	async (data, {getState, rejectWithValue}) => {
-		const {user} = getState();
-		const API = `${variables.basePath}/settings`;
-
+	async (data, {rejectWithValue}) => {
 		try {
-			const options = {
-				method: 'PUT',
-				body: JSON.stringify({setting: data}),
-				headers: {
-					'Content-Type': 'application/json',
-					Authorization: `Bearer ${user.user.token}`,
-				},
-			};
-			const responseSettings = await fetch(API, options);
-			const resSettings = await responseSettings.json();
-			console.log('resSettings', resSettings);
-
-			return resSettings.setting;
+			const settings = await updateSettings(data);
+			return settings.setting;
 		} catch (err) {
-			console.log('errrrrrrrrrrrrrrrrrrrrrr', err);
 			return rejectWithValue(err);
 		}
 	}
@@ -74,7 +49,7 @@ let settingsSlice = createSlice({
 		[getSettings.fulfilled]: (state, action) => {
 			console.log(action);
 			state.settings = action.payload;
-			state.status = 'initial';
+			state.status = 'success';
 			state.error = '';
 		},
 		[getSettings.rejected]: (state, action) => {

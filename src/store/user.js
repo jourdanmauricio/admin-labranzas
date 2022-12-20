@@ -1,5 +1,5 @@
 import {createAsyncThunk, createSlice} from '@reduxjs/toolkit';
-import {variables} from '../config/variables';
+import {login} from '../services/api/auth.api';
 
 // export const signUp = createAsyncThunk(
 //   "user/signUp",
@@ -12,34 +12,17 @@ import {variables} from '../config/variables';
 //   }
 // );
 
-export const signIn = createAsyncThunk('user/signIn', async data => {
-	const API_AUTH = `${variables.basePath}/auth/login`;
-	const API_USER = `${variables.basePath}/users/profile`;
-
-	const userOptions = {
-		method: 'POST',
-		body: JSON.stringify(data),
-		headers: {
-			'Content-Type': 'application/json',
-		},
-	};
-
-	const responseAuth = await fetch(API_AUTH, userOptions);
-	const resAuth = await responseAuth.json();
-
-	const options = {
-		method: 'GET',
-		headers: {
-			'Content-Type': 'application/json',
-			Authorization: `Bearer ${resAuth.access_token}`,
-		},
-	};
-	const response = await fetch(API_USER, options);
-	const resUser = await response.json();
-
-	resUser.token = resAuth.access_token;
-	return resUser;
-});
+export const signIn = createAsyncThunk(
+	'user/signIn',
+	async (data, {rejectWithValue}) => {
+		try {
+			const user = await login(data);
+			return user;
+		} catch (err) {
+			return rejectWithValue(err);
+		}
+	}
+);
 
 let userSlice = createSlice({
 	name: 'user',
@@ -69,6 +52,7 @@ let userSlice = createSlice({
 			state.status = 'loading';
 		},
 		[signIn.fulfilled]: (state, action) => {
+			console.log('action.payload', action.payload);
 			state.user = action.payload;
 			state.status = 'success';
 		},
