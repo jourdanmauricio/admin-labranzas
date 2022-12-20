@@ -1,31 +1,40 @@
-import {useState} from 'react';
+import {useEffect, useState} from 'react';
 import Layout from '../../commons/Layout/layout';
 import Message from '@/commons/Message/Message';
 import Loader from '../../commons/Loader-overlay/Loader-overlay';
-import {getApiAllCategoriesMl} from '../../services/api/categoriesML';
+import {getAllCategories} from '../../services/api/categories';
 
 const Categories = () => {
-	const [data, setdata] = useState(null);
+	const [categories, setCategories] = useState([]);
 	const [loading, setLoading] = useState(false);
 	const [error, setError] = useState(null);
 
-	getApiAllCategoriesMl().then(({response, error, loading}) => {
-		setdata(response);
-		setLoading(loading);
-		setError(error);
-	});
+	useEffect(() => {
+		setLoading(true);
+		const fetchCategories = async () => {
+			try {
+				const categories = await getAllCategories();
+				setCategories(categories);
+			} catch (error) {
+				setError(error);
+			} finally {
+				setLoading(false);
+			}
+		};
+		fetchCategories();
+	}, []);
 
 	const closeMessage = () => {
-		setError(null);
+		setError(false);
 	};
-
 	return (
 		<Layout>
 			<div>Categories</div>
 			{loading && <Loader />}
 			{error && <Message msg={error} closeMessage={closeMessage} />}
-			{data &&
-				data.map(res => (
+			<span>Cats: {categories.length}</span>
+			{categories.length > 0 &&
+				categories.map(res => (
 					<div key={res.id}>
 						<span>
 							{res.id} -{res.name}

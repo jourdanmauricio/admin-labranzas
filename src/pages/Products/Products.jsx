@@ -1,27 +1,33 @@
 import Layout from '../../commons/Layout/layout';
 import Message from '@/commons/Message/Message';
-import useAxiosMl from '../../services/apiMl';
 import Loader from '../../commons/Loader-overlay/Loader-overlay';
+import {useEffect, useState} from 'react';
+import {getMlItems} from '../../services/api/products';
+import {useSelector} from 'react-redux';
 
-const Categories = () => {
-	let {response, error, loading} = useAxiosMl({
-		method: 'GET',
-		// url: '/sites/MLA/categories',
+const Products = () => {
+	const [loading, setLoading] = useState(false);
+	const [products, setProducts] = useState([]);
+	const [error, setError] = useState(null);
+	const userMl = useSelector(state => state.userMl.userMl);
 
-		url: 'https://api.mercadolibre.com/users/652092206/items/search',
-		// 	headers: {
-		// 		accept: '*/*',
-		// 	},
-		// 	data: {
-		// 		userId: 7,
-		// 		id: 777,
-		// 		title: 'New Post',
-		// 		body: 'This is a new post',
-		// 	},
-	});
+	useEffect(() => {
+		setLoading(true);
+		const fetchProducts = async () => {
+			try {
+				const products = await getMlItems(userMl.id);
+				setProducts(products);
+			} catch (error) {
+				setError(error);
+			} finally {
+				setLoading(false);
+			}
+		};
+		fetchProducts();
+	}, []);
 
 	const closeMessage = () => {
-		error = false;
+		setError(false);
 	};
 
 	return (
@@ -29,18 +35,16 @@ const Categories = () => {
 			<div>Productos</div>
 			{loading && <Loader />}
 			{console.log('error', error)}
-			{/* {error && <Message msg={error} closeMessage={closeMessage} />} */}
-			{/* {response &&
-				response.map(res => (
-					<>
-						<span key={res.id}>
-							{res.id} -{res.name}
-						</span>
+			{error && <Message msg={error} closeMessage={closeMessage} />}
+			{products.length > 0 &&
+				products.map(res => (
+					<div key={res}>
+						<span>{res}</span>
 						<br />
-					</>
-				))} */}
+					</div>
+				))}
 		</Layout>
 	);
 };
 
-export default Categories;
+export default Products;
