@@ -42,23 +42,24 @@ export const getAllCategories = async () => {
 // 	}
 // };
 
-// export const createCategories = async newCategories => {
-// 	try {
-// 		const results = await Promise.all(
-// 			newCategories.map(async cat => {
-// 				delete cat.children_categories;
-// 				await Api.post('/categories', cat);
-// 			})
-// 		);
-// 		return results;
-// 	} catch (error) {
-// 		let message = '';
-// 		message = error.response.data
-// 			? `${error.response.data.statusCode}: ${error.response.data.message}`
-// 			: 'Error Creando categoría 😞';
-// 		throw message;
-// 	}
-// };
+export const createCategories = async newCategories => {
+	console.log('newCategories', newCategories);
+	try {
+		const results = await Promise.all(
+			newCategories.map(async cat => {
+				delete cat.children_categories;
+				await axiosApi.post('/categories', cat);
+			})
+		);
+		return results;
+	} catch (error) {
+		let message = '';
+		message = error.response.data
+			? `${error.response.data.statusCode}: ${error.response.data.message}`
+			: 'Error Creando categoría 😞';
+		throw message;
+	}
+};
 
 // export const deleteCategory = async category_id => {
 // 	try {

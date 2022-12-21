@@ -1,10 +1,8 @@
-// import Api from "../Api";
-// import ApiMl from "../ApiMl";
-// import { credentials, product } from "../../store/stores";
-// import { getAllCategories } from "./categories";
-// import { get } from "svelte/store";
-
 import {axiosMlApi} from '../apiMl';
+import {axiosApi} from '../api';
+
+import {createCategories, getAllCategories} from './categories';
+import {getApiCategoriesMl} from './categoriesML';
 
 // /*****************/
 // /***   Local   ***/
@@ -31,45 +29,45 @@ import {axiosMlApi} from '../apiMl';
 //   }
 // };
 
-// export const postLocalProducts = async (newProducts) => {
-//   try {
-//     const results = await Promise.all(
-//       newProducts.map(async (prod) => {
-//         const newProd = {
-//           ml_id: prod.id,
-//           attributes: prod.attributes,
-//           title: prod.title,
-//           seller_custom_field: prod.seller_custom_field,
-//           price: prod.price,
-//           available_quantity: prod.available_quantity,
-//           sold_quantity: prod.sold_quantity,
-//           status: prod.status,
-//           description: prod.description,
-//           pictures: prod.pictures,
-//           listing_type_id: prod.listing_type_id,
-//           condition: prod.condition,
-//           thumbnail: prod.thumbnail,
-//           category_id: prod.category_id,
-//           start_time: prod.start_time,
-//           sale_terms: prod.sale_terms,
-//           variations: prod.variations,
-//         };
-//         let prod2 = await Api.post("/products", newProd);
-//         prod2.ml_id = prod.id;
-//         // console.log("PRODID", prod2);
-//         return prod2;
-//       })
-//     );
-//     return results;
-//   } catch (error) {
-//     console.log("ERRORRRR", error);
-//     let message = "";
-//     message = error.response.data
-//       ? `${error.response.data.statusCode}: ${error.response.data.message}`
-//       : "Error Creando categoría 😞";
-//     throw message;
-//   }
-// };
+export const postLocalProducts = async newProducts => {
+	try {
+		const results = await Promise.all(
+			newProducts.map(async prod => {
+				const newProd = {
+					// ml_id: prod.id,
+					attributes: prod.attributes,
+					title: prod.title,
+					seller_custom_field: prod.seller_custom_field,
+					price: prod.price,
+					available_quantity: prod.available_quantity,
+					// sold_quantity: prod.sold_quantity,
+					status: prod.status,
+					description: prod.description,
+					pictures: prod.pictures,
+					listing_type_id: prod.listing_type_id,
+					condition: prod.condition,
+					thumbnail: prod.thumbnail,
+					category_id: prod.category_id,
+					start_time: prod.start_time,
+					sale_terms: prod.sale_terms,
+					variations: prod.variations,
+				};
+				let prod2 = await axiosApi.post('/products', newProd);
+				prod2.data.ml_id = prod.id;
+				// console.log("PRODID", prod2);
+				return prod2.data;
+			})
+		);
+		return results;
+	} catch (error) {
+		console.log('ERRORRRR', error);
+		let message = '';
+		message = error.response.data
+			? `${error.response.data.statusCode}: ${error.response.data.message}`
+			: 'Error Creando categoría 😞';
+		throw message;
+	}
+};
 
 // export const patchLocalProduct = async (prod) => {
 //   try {
@@ -142,43 +140,44 @@ import {axiosMlApi} from '../apiMl';
 // /***   LocalMl   ***/
 // /*******************/
 
-// export const getLocalMlProducts = async () => {
-//   try {
-//     const productsMl = await Api.get("productsml");
-//     return productsMl;
-//   } catch (error) {
-//     return error;
-//   }
-// };
+export const getLocalMlProducts = async () => {
+	try {
+		const productsMl = await axiosApi.get('productsml');
+		return productsMl;
+	} catch (error) {
+		return error;
+	}
+};
 
-// export const postLocalMlProducts = async (newProducts) => {
-//   try {
-//     const results = await Promise.all(
-//       newProducts.map(async (prod) => {
-//         const newProd = {
-//           id: prod.id,
-//           prod_id: prod.prod_id,
-//           seller_custom_field: prod.seller_custom_field,
-//           price: prod.price,
-//           available_quantity: prod.available_quantity,
-//           status: prod.status,
-//           permalink: prod.permalink,
-//           start_time: prod.start_time,
-//           variations: prod.variations,
-//         };
-//         await Api.post("/productsMl", newProd);
-//       })
-//     );
-//     return results;
-//   } catch (error) {
-//     console.log("ERRORRRR", error);
-//     let message = "";
-//     message = error.response.data
-//       ? `${error.response.data.statusCode}: ${error.response.data.message}`
-//       : "Error Creando categoría 😞";
-//     throw message;
-//   }
-// };
+export const postLocalMlProducts = async newProducts => {
+	try {
+		const results = await Promise.all(
+			newProducts.map(async prod => {
+				const newProd = {
+					id: prod.id,
+					prod_id: prod.prod_id,
+					seller_custom_field: prod.seller_custom_field,
+					price: prod.price,
+					available_quantity: prod.available_quantity,
+					sold_quantity: prod.sold_quantity,
+					status: prod.status,
+					permalink: prod.permalink,
+					start_time: prod.start_time,
+					variations: prod.variations,
+				};
+				await axiosApi.post('/productsMl', newProd);
+			})
+		);
+		return results;
+	} catch (error) {
+		console.log('ERRORRRR', error);
+		let message = '';
+		message = error.response.data
+			? `${error.response.data.statusCode}: ${error.response.data.message}`
+			: 'Error Creando categoría 😞';
+		throw message;
+	}
+};
 
 // export const patchLocalMlProduct = async (prod) => {
 //   try {
@@ -204,34 +203,34 @@ import {axiosMlApi} from '../apiMl';
 //   }
 // };
 
-// export const patchLocalMlProducts = async (mlItems) => {
-//   try {
-//     const results = await Promise.all(
-//       mlItems.map(async (prod) => {
-//         const newProd = {
-//           id: prod.id,
-//           prod_id: prod.prod_id,
-//           seller_custom_field: prod.seller_custom_field,
-//           price: prod.price,
-//           available_quantity: prod.available_quantity,
-//           status: prod.status,
-//           permalink: prod.permalink,
-//           start_time: prod.start_time,
-//           variations: prod.variations,
-//         };
-//         return await Api.patch(`/productsMl/${newProd.id}`, newProd);
-//       })
-//     );
-//     return results;
-//   } catch (error) {
-//     console.log("ERRORRRR", error);
-//     let message = "";
-//     message = error.response.data
-//       ? `${error.response.data.statusCode}: ${error.response.data.message}`
-//       : "Error Creando categoría 😞";
-//     throw message;
-//   }
-// };
+export const patchLocalMlProducts = async mlItems => {
+	try {
+		const results = await Promise.all(
+			mlItems.map(async prod => {
+				const newProd = {
+					id: prod.id,
+					prod_id: prod.prod_id,
+					seller_custom_field: prod.seller_custom_field,
+					price: prod.price,
+					available_quantity: prod.available_quantity,
+					status: prod.status,
+					permalink: prod.permalink,
+					start_time: prod.start_time,
+					variations: prod.variations,
+				};
+				return await axiosApi.patch(`/productsMl/${newProd.id}`, newProd);
+			})
+		);
+		return results;
+	} catch (error) {
+		console.log('ERRORRRR', error);
+		let message = '';
+		message = error.response.data
+			? `${error.response.data.statusCode}: ${error.response.data.message}`
+			: 'Error Creando categoría 😞';
+		throw message;
+	}
+};
 
 // export const delLocalMlProduct = async (id) => {
 //   try {
@@ -253,7 +252,6 @@ import {axiosMlApi} from '../apiMl';
 export const getMlItems = async id => {
 	try {
 		const res = await axiosMlApi.get(`users/${id}/items/search`);
-		// console.log('res', res);
 
 		const cantItems = res.data.paging.total;
 		const pages = [];
@@ -281,40 +279,41 @@ export const getMlItems = async id => {
 	}
 };
 
-// export const getMlProducts = async (mlItems) => {
-//   const detItems = [];
-//   const req_items = [];
-//   const iteraciones = Math.ceil(mlItems.length / 20);
-//   for (let i = 0; i < iteraciones; i++) {
-//     req_items[i] = mlItems.splice(0, 20);
-//   }
+export const getMlProducts = async mlItems => {
+	const detItems = [];
+	const req_items = [];
+	const iteraciones = Math.ceil(mlItems.length / 20);
+	for (let i = 0; i < iteraciones; i++) {
+		req_items[i] = mlItems.splice(0, 20);
+	}
 
-//   const req = await req_items.map((items2) => {
-//     return ApiMl.get(
-//       "items?ids=" +
-//         items2 +
-//         "&attributes=id,attributes,title,price,category_id,title,thumbnail,listing_type_id,condition,available_quantity,sold_quantity,status,permalink,pictures,sale_terms,variations,start_time,seller_custom_field"
-//     )
-//       .then((res) => {
-//         res.forEach(async (element) => {
-//           await ApiMl.get(`items/${element.body.id}/description`)
-//             .then((resDesc) => {
-//               element.body.description = resDesc.plain_text;
-//             })
-//             .catch((err) => {
-//               if ((err.response.status = 404)) element.body.description = "";
-//             })
-//             .finally(() => {
-//               detItems.push(element.body);
-//             });
-//         });
-//       })
-//       .catch((err) => console.log(err));
-//   });
-//   await Promise.all(req).then(() => {});
-//   console.log("detItems", detItems);
-//   return detItems;
-// };
+	const req = await req_items.map(items2 => {
+		return axiosMlApi
+			.get(
+				'items?ids=' +
+					items2 +
+					'&attributes=id,attributes,title,price,category_id,title,thumbnail,listing_type_id,condition,available_quantity,sold_quantity,status,permalink,pictures,sale_terms,variations,start_time,seller_custom_field'
+			)
+			.then(res => {
+				res.data.forEach(async element => {
+					await axiosMlApi
+						.get(`items/${element.body.id}/description`)
+						.then(resDesc => {
+							element.body.description = resDesc.plain_text;
+						})
+						.catch(err => {
+							if (err.response.status === 404) element.body.description = '';
+						})
+						.finally(() => {
+							detItems.push(element.body);
+						});
+				});
+			})
+			.catch(err => console.log(err));
+	});
+	await Promise.all(req).then(() => {});
+	return detItems;
+};
 
 // export const patchMlProducts = async (mlItems) => {
 //   try {
@@ -434,60 +433,67 @@ export const getMlItems = async id => {
 // /***   Service   ****/
 // /********************/
 
-// export const serviceImportMl = async () => {
-//   try {
-//     const mlApiItemsId = await getMlItems();
-//     const mlApiProducts = await getMlProducts(mlApiItemsId);
-//     const mlProducts = await getLocalMlProducts();
-//     const allCategories = await getAllCategories();
+export const serviceImportMl = async (id, settings) => {
+	try {
+		const mlApiItemsId = await getMlItems(id);
+		// console.log('mlApiItemsId', mlApiItemsId);
+		const mlApiProducts = await getMlProducts(mlApiItemsId);
+		// console.log('mlApiProducts', mlApiProducts);
+		const mlProducts = await getLocalMlProducts();
+		// console.log('mlProducts', mlProducts);
+		const allCategories = await getAllCategories();
+		// console.log('allCategories', allCategories);
 
-//     let newCategoriesId = [];
-//     let newItems = [];
-//     let updItems = [];
-//     mlApiProducts.forEach((apiMlProd) => {
-//       const found = mlProducts.find((mlProd) => mlProd.id === apiMlProd.id);
-//       if (found) {
-//         apiMlProd.prod_id = found.prod_id;
-//         updItems.push(apiMlProd);
-//       } else {
-//         newItems.push(apiMlProd);
-//       }
-//       const index2 = allCategories.findIndex(
-//         (cat) => cat.id === apiMlProd.category_id
-//       );
-//       if (index2 === -1) {
-//         if (!newCategoriesId.includes(apiMlProd.category_id))
-//           newCategoriesId.push(apiMlProd.category_id);
-//       }
-//     });
-//     if (newCategoriesId.length > 0) {
-//       const newCategories = await getApiCategoriesMl(newCategoriesId);
-//       await createCategories(newCategories);
-//     }
-//     // Copio newItems para modificar el precio
-//     const newItemsPrice = JSON.parse(JSON.stringify(newItems));
+		let newCategoriesId = [];
+		let newItems = [];
+		let updItems = [];
+		mlApiProducts.forEach(apiMlProd => {
+			const found = mlProducts.data.find(mlProd => mlProd.id === apiMlProd.id);
+			if (found) {
+				apiMlProd.prod_id = found.prod_id;
+				updItems.push(apiMlProd);
+			} else {
+				newItems.push(apiMlProd);
+			}
+			const index2 = allCategories.findIndex(
+				cat => cat.id === apiMlProd.category_id
+			);
 
-//     const user = get(credentials);
+			if (index2 === -1) {
+				if (!newCategoriesId.includes(apiMlProd.category_id))
+					newCategoriesId.push(apiMlProd.category_id);
+			}
+		});
 
-//     let percent = user.settings.price_percent_ml;
-//     if (user.settings.hasOwnProperty("price_percent_ml")) {
-//       newItemsPrice.forEach((itemPrice) => {
-//         itemPrice.price =
-//           itemPrice.price - itemPrice.price * (parseInt(percent) / 100);
-//       });
-//     }
-//     const newProducts = await postLocalProducts(newItemsPrice);
-//     newItems.forEach((item) => {
-//       let found = newProducts.find((newProd) => item.id === newProd.ml_id);
-//       if (found) item.prod_id = found.id;
-//     });
-//     await postLocalMlProducts(newItems);
-//     await patchLocalMlProducts(updItems);
-//     return;
-//   } catch (error) {
-//     console.log("ERRORRRR", error);
-//   }
-// };
+		if (newCategoriesId.length > 0) {
+			const newCategories = await getApiCategoriesMl(newCategoriesId);
+			await createCategories(newCategories);
+		}
+		// Copio newItems para modificar el precio
+		const newItemsPrice = JSON.parse(JSON.stringify(newItems));
+
+		// const user = get(credentials);
+
+		const percent = settings.price_percent_ml;
+		if (Object.prototype.hasOwnProperty.call(settings, 'price_percent_ml')) {
+			// if (settings.hasOwnProperty('price_percent_ml')) {
+			newItemsPrice.forEach(itemPrice => {
+				itemPrice.price =
+					itemPrice.price - itemPrice.price * (parseInt(percent) / 100);
+			});
+		}
+		const newProducts = await postLocalProducts(newItemsPrice);
+		newItems.forEach(item => {
+			let found = newProducts.find(newProd => item.id === newProd.ml_id);
+			if (found) item.prod_id = found.id;
+		});
+		await postLocalMlProducts(newItems);
+		await patchLocalMlProducts(updItems);
+		return;
+	} catch (error) {
+		console.log('ERRORRRR', error);
+	}
+};
 
 // export const serviceUpdProduct = async (body, apps, feature) => {
 //   console.log("apps", apps);

@@ -1,8 +1,8 @@
 import Layout from '../../commons/Layout/layout';
 import Message from '@/commons/Message/Message';
 import Loader from '../../commons/Loader-overlay/Loader-overlay';
-import {useEffect, useState} from 'react';
-import {getMlItems} from '../../services/api/products';
+import {useState} from 'react';
+import {serviceImportMl} from '../../services/api/products';
 import {useSelector} from 'react-redux';
 
 const Products = () => {
@@ -10,21 +10,19 @@ const Products = () => {
 	const [products, setProducts] = useState([]);
 	const [error, setError] = useState(null);
 	const userMl = useSelector(state => state.userMl.userMl);
+	const settings = useSelector(state => state.settings.settings);
 
-	useEffect(() => {
+	const fetchProducts = async () => {
 		setLoading(true);
-		const fetchProducts = async () => {
-			try {
-				const products = await getMlItems(userMl.id);
-				setProducts(products);
-			} catch (error) {
-				setError(error);
-			} finally {
-				setLoading(false);
-			}
-		};
-		fetchProducts();
-	}, []);
+		try {
+			const products = await serviceImportMl(userMl.id, settings);
+			setProducts(products);
+		} catch (error) {
+			setError(error);
+		} finally {
+			setLoading(false);
+		}
+	};
 
 	const closeMessage = () => {
 		setError(false);
@@ -32,11 +30,16 @@ const Products = () => {
 
 	return (
 		<Layout>
-			<div>Productos</div>
+			<h1 className='title'>Productos</h1>
+			<br />
+			<button onClick={fetchProducts} className='btn btn__primary'>
+				Download ML
+			</button>
 			{loading && <Loader />}
 			{console.log('error', error)}
 			{error && <Message msg={error} closeMessage={closeMessage} />}
-			{products.length > 0 &&
+			<br />
+			{products > 0 &&
 				products.map(res => (
 					<div key={res}>
 						<span>{res}</span>

@@ -120,12 +120,12 @@ nav {
 	.mobile-menu {
 		display: none;
 	}
-}
-
-@media (min-width: 1024px) {
 	.icon__text {
 		display: inline-block;
 	}
+}
+
+@media (min-width: 1024px) {
 	.logo {
 		display: inline-block;
 	}
