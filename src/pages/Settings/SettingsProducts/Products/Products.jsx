@@ -53,7 +53,7 @@ const Products = ({updated}) => {
 				return (
 					<Form>
 						{status === 'loading' && <Loader />}
-						<div className='formulario'>
+						<div className='formulario pt'>
 							<div>
 								<label htmlFor='status'>Estado</label>
 								<Field as='select' className='form__input' name='status'>

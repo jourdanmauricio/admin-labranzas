@@ -144,7 +144,7 @@ const Colors = ({updated}) => {
 				}, [settings]);
 
 				return (
-					<Form>
+					<Form className='pt'>
 						{status === 'loading' && <Loader />}
 						<div className='formulario'>
 							<div>

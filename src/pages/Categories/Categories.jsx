@@ -1,47 +1,88 @@
-import {useEffect, useState} from 'react';
-import Layout from '../../commons/Layout/layout';
+import {Modal} from '@/commons/Modal/Modal';
+import {paginationComponentOptions} from '@/config/constants';
+import Layout from '@/commons/Layout/layout';
+import DataTable from 'react-data-table-component';
+import CategoryDeleteForm from './components/CategoryDeleteForm';
+import LoaderTable from '@/commons/Table/LoaderTable';
 import Message from '@/commons/Message/Message';
-import Loader from '../../commons/Loader-overlay/Loader-overlay';
-import {getAllCategories} from '../../services/api/categories';
+import CategoryEditFrom from './components/CategoryEditFrom';
+import SearchCategory from '../../commons/SearchCategory/SearchCategory';
+import useCategories from './useCategories';
 
 const Categories = () => {
-	const [categories, setCategories] = useState([]);
-	const [loading, setLoading] = useState(false);
-	const [error, setError] = useState(null);
+	const {
+		action,
+		loading,
+		error,
+		subHeaderComponentMemo,
+		isOpenModal,
+		isOpenModalEdit,
+		dataToEdit,
+		dataToDelete,
+		filteredItems,
+		resetPaginationToggle,
+		closeModal,
+		closeModalEdit,
+		CATEGORIES_COLUMNS,
+		handleAddCategory,
+		handleEdit,
+		handleDelete,
+		handleCancel,
+		closeMessage,
+	} = useCategories();
 
-	useEffect(() => {
-		setLoading(true);
-		const fetchCategories = async () => {
-			try {
-				const categories = await getAllCategories();
-				setCategories(categories);
-			} catch (error) {
-				setError(error);
-			} finally {
-				setLoading(false);
-			}
-		};
-		fetchCategories();
-	}, []);
-
-	const closeMessage = () => {
-		setError(false);
-	};
 	return (
 		<Layout>
-			<div>Categories</div>
-			{loading && <Loader />}
-			{error && <Message msg={error} closeMessage={closeMessage} />}
-			<span>Cats: {categories.length}</span>
-			{categories.length > 0 &&
-				categories.map(res => (
-					<div key={res.id}>
-						<span>
-							{res.id} -{res.name}
-						</span>
-						<br />
-					</div>
-				))}
+			{error && (
+				<>
+					<Message msg={error} closeMessage={closeMessage} />
+					<br />
+				</>
+			)}
+
+			{action === 'SEARCH' && (
+				<SearchCategory
+					handleAddCategory={handleAddCategory}
+					handleCancel={handleCancel}
+				/>
+			)}
+
+			{action !== 'SEARCH' && (
+				<>
+					<DataTable
+						title='Categorías'
+						columns={CATEGORIES_COLUMNS}
+						data={filteredItems}
+						dense
+						responsive
+						// selectableRows
+						pagination
+						paginationComponentOptions={paginationComponentOptions}
+						paginationResetDefaultPage={resetPaginationToggle} // optionally, a hook to reset pagination to page 1
+						progressPending={loading}
+						progressComponent={<LoaderTable />}
+						actions={subHeaderComponentMemo}
+						// subHeader
+						// subHeaderComponent={subHeaderComponentMemo}
+						// fixedHeader
+						// fixedHeaderScrollHeight='393px'
+					/>
+					<Modal isOpenModal={isOpenModal} closeModal={closeModal}>
+						<CategoryDeleteForm
+							dataToDelete={dataToDelete}
+							handleDelete={handleDelete}
+							handleCancelDelete={handleCancel}
+						/>
+					</Modal>
+					<Modal isOpenModal={isOpenModalEdit} closeModal={closeModalEdit}>
+						<CategoryEditFrom
+							dataToEdit={dataToEdit}
+							handleEdit={handleEdit}
+							handleCancelDelete={handleCancel}
+						/>
+					</Modal>
+				</>
+			)}
 		</Layout>
 	);
 };

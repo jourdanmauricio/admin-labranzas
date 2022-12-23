@@ -71,7 +71,7 @@ const Nav = () => {
 	}, [location]);
 
 	return (
-		<nav>
+		<nav className='nav'>
 			<div className='menu'>
 				<FaBars onClick={handleMobileMenu} />
 			</div>

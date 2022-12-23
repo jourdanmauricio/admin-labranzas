@@ -108,7 +108,7 @@ const Images = ({updated}) => {
 
 	return (
 		<>
-			<form onSubmit={handleSubmit}>
+			<form className='pt' onSubmit={handleSubmit}>
 				{status === 'loading' && <Loader />}
 				<div
 					className={

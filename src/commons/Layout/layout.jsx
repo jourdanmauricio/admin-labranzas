@@ -95,7 +95,7 @@ const Layout = props => {
 					{props.children}
 				</section>
 			</main>
-			<footer className='footer'>FOOTER</footer>
+			{/* <footer className='footer'>FOOTER</footer> */}
 		</div>
 	);
 };

@@ -2,7 +2,7 @@ import {axiosMlApi} from '../apiMl';
 import {axiosApi} from '../api';
 
 import {createCategories, getAllCategories} from './categories';
-import {getApiCategoriesMl} from './categoriesML';
+import {getApiCategoriesMl} from './categories';
 
 // /*****************/
 // /***   Local   ***/
