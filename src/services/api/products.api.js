@@ -1,24 +1,43 @@
 import {axiosMlApi} from '../apiMl';
 import {axiosApi} from '../api';
 
-import {createCategories, getAllCategories} from './categories';
-import {getApiCategoriesMl} from './categories';
+import {createCategories, getAllCategories} from './categories.api';
+import {getApiCategoriesMl} from './categories.api';
 
 // /*****************/
 // /***   Local   ***/
 // /*****************/
 
+export const getLocalProduct = async id => {
+	try {
+		const products = await axiosApi.get(`/products/${id}`);
+		return products.data;
+	} catch (error) {
+		let message = '';
+		message = error.response.data
+			? `${error.response.data.statusCode}: ${error.response.data.message}`
+			: 'Error Creando categoría 😞';
+		throw message;
+	}
+};
+
 // export const getLocalProducts = async (limit, offset, search) => {
-//   try {
-//     let paramSearch = !search ? "" : `&q=${search}`;
-//     const products = await Api.get(
-//       `/products?limit=${limit}&offset=${offset}${paramSearch}`
-//     );
-//     return products;
-//   } catch (error) {
-//     throw error;
-//   }
-// };
+export const getLocalProducts = async () => {
+	try {
+		// let paramSearch = !search ? '' : `&q=${search}`;
+		// const products = await axiosApi.get(
+		// 	`/products?limit=${limit}&offset=${offset}${paramSearch}`
+		// );
+		const products = await axiosApi.get('/products');
+		return products.data;
+	} catch (error) {
+		let message = '';
+		message = error.response.data
+			? `${error.response.data.statusCode}: ${error.response.data.message}`
+			: 'Error Creando categoría 😞';
+		throw message;
+	}
+};
 
 // export const getLocalSkus = async () => {
 //   try {
@@ -42,7 +61,7 @@ export const postLocalProducts = async newProducts => {
 					available_quantity: prod.available_quantity,
 					// sold_quantity: prod.sold_quantity,
 					status: prod.status,
-					description: prod.description,
+					description: '',
 					pictures: prod.pictures,
 					listing_type_id: prod.listing_type_id,
 					condition: prod.condition,
@@ -69,53 +88,78 @@ export const postLocalProducts = async newProducts => {
 	}
 };
 
-// export const patchLocalProduct = async (prod) => {
-//   try {
-//     const newProd = {
-//       id: prod.id,
-//       ml_id: prod.mlId,
-//       attributes: prod.attributes,
-//       description: prod.description,
-//       title: prod.title,
-//       seller_custom_field: prod.seller_custom_field,
-//       price: prod.price,
-//       available_quantity: prod.available_quantity,
-//       sold_quantity: prod.sold_quantity,
-//       status: prod.status,
-//       pictures: prod.pictures,
-//       listing_type_id: prod.listing_type_id,
-//       condition: prod.condition,
-//       thumbnail: prod.thumbnail,
-//       category_id: prod.category_id,
-//       start_time: prod.start_time,
-//       sale_terms: prod.sale_terms,
-//       variations: prod.variations,
-//     };
+export const putLocalDescProducts = async mlItems => {
+	try {
+		const results = await Promise.all(
+			mlItems.map(async prod => {
+				const newProd = {
+					// ml_id: prod.id,
+					description:
+						prod.description.length > 5000
+							? prod.description.substring(0, 5000)
+							: prod.description,
+				};
+				return await axiosApi.put(`/products/${prod.prod_id}`, newProd);
+			})
+		);
+		return results;
+	} catch (error) {
+		console.log('ERRORRRR', error);
+		let message = '';
+		message = error.response.data
+			? `${error.response.data.statusCode}: ${error.response.data.message}`
+			: 'Error Creando categoría 😞';
+		throw message;
+	}
+};
 
-//     const res = await Api.patch(`/products/${newProd.id}`, newProd);
-//     return res;
-//   } catch (error) {
-//     console.log("ERRORRRR", error);
-//     let message = "";
-//     message = error.response.data
-//       ? `${error.response.data.statusCode}: ${error.response.data.message}`
-//       : "Error Creando categoría 😞";
-//     throw message;
-//   }
+// export const patchLocalProduct = async prod => {
+// 	try {
+// 		const newProd = {
+// 			id: prod.id,
+// 			ml_id: prod.mlId,
+// 			attributes: prod.attributes,
+// 			description: prod.description,
+// 			title: prod.title,
+// 			seller_custom_field: prod.seller_custom_field,
+// 			price: prod.price,
+// 			available_quantity: prod.available_quantity,
+// 			sold_quantity: prod.sold_quantity,
+// 			status: prod.status,
+// 			pictures: prod.pictures,
+// 			listing_type_id: prod.listing_type_id,
+// 			condition: prod.condition,
+// 			thumbnail: prod.thumbnail,
+// 			category_id: prod.category_id,
+// 			start_time: prod.start_time,
+// 			sale_terms: prod.sale_terms,
+// 			variations: prod.variations,
+// 		};
+//
+// 		const res = await axiosApi.patch(`/products/${newProd.id}`, newProd);
+// 		return res;
+// 	} catch (error) {
+// 		console.log('ERRORRRR', error);
+// 		let message = '';
+// 		message = error.response.data
+// 			? `${error.response.data.statusCode}: ${error.response.data.message}`
+// 			: 'Error Creando categoría 😞';
+// 		throw message;
+// 	}
 // };
 
-// export const deleteLocalProduct = async (id) => {
-//   try {
-//     return await Api.delete(`/products/${id}`);
-//   } catch (error) {
-//     console.log("Error", error);
-//     let message = "";
-//     message = res.statusText
-//       ? `${res.status}: ${res.statusText}`
-//       : "Error eliminando el producto 😞";
-//     throw message;
-//   }
-// };
+export const deleteLocalProduct = async id => {
+	try {
+		return await axiosApi.delete(`/products/${id}`);
+	} catch (error) {
+		console.log('Error', error);
+		let message = '';
+		message = error.statusText
+			? `${error.status}: ${error.statusText}`
+			: 'Error eliminando el producto 😞';
+		throw message;
+	}
+};
 
 // export const deleteLocalProducts = async (items) => {
 //   try {
@@ -157,10 +201,11 @@ export const postLocalMlProducts = async newProducts => {
 					id: prod.id,
 					prod_id: prod.prod_id,
 					seller_custom_field: prod.seller_custom_field,
-					price: prod.price,
+					price: +prod.price.toFixed(2),
 					available_quantity: prod.available_quantity,
 					sold_quantity: prod.sold_quantity,
 					status: prod.status,
+					listing_type_id: prod.listing_type_id,
 					permalink: prod.permalink,
 					start_time: prod.start_time,
 					variations: prod.variations,
@@ -203,7 +248,7 @@ export const postLocalMlProducts = async newProducts => {
 //   }
 // };
 
-export const patchLocalMlProducts = async mlItems => {
+export const putLocalMlProducts = async mlItems => {
 	try {
 		const results = await Promise.all(
 			mlItems.map(async prod => {
@@ -211,6 +256,7 @@ export const patchLocalMlProducts = async mlItems => {
 					id: prod.id,
 					prod_id: prod.prod_id,
 					seller_custom_field: prod.seller_custom_field,
+					// price: +parseFloat(prod.price.toFixed(2)),
 					price: prod.price,
 					available_quantity: prod.available_quantity,
 					status: prod.status,
@@ -218,7 +264,7 @@ export const patchLocalMlProducts = async mlItems => {
 					start_time: prod.start_time,
 					variations: prod.variations,
 				};
-				return await axiosApi.patch(`/productsMl/${newProd.id}`, newProd);
+				return await axiosApi.put(`/productsMl/${newProd.id}`, newProd);
 			})
 		);
 		return results;
@@ -279,41 +325,123 @@ export const getMlItems = async id => {
 	}
 };
 
+export const getMlDescProducts = async mlItems => {
+	let items = [];
+	const req_items = [];
+	const mlItems2 = JSON.parse(JSON.stringify(mlItems));
+	const iteraciones = Math.ceil(mlItems2.length / 20);
+	for (let i = 0; i < iteraciones; i++) {
+		req_items[i] = mlItems2.splice(0, 20);
+	}
+
+	function processAsync(item) {
+		return new Promise(function (resolve) {
+			axiosMlApi
+				.get(`items/${item.id}/description`)
+				.then(resDesc => {
+					item.description = resDesc.data.plain_text;
+				})
+				.catch(err => {
+					if (err.response.status === 404) {
+						item.description = '';
+					}
+				})
+				.finally(() => {
+					resolve(item);
+				});
+		});
+	}
+
+	return Promise.all(
+		req_items.map(function (items) {
+			return Promise.all(
+				items.map(function (item) {
+					return processAsync(item);
+				})
+			);
+		})
+	).then(function (data) {
+		items = data.flat();
+		return items;
+	});
+};
+
 export const getMlProducts = async mlItems => {
 	const detItems = [];
 	const req_items = [];
-	const iteraciones = Math.ceil(mlItems.length / 20);
+	const mlItems2 = JSON.parse(JSON.stringify(mlItems));
+	const iteraciones = Math.ceil(mlItems2.length / 20);
 	for (let i = 0; i < iteraciones; i++) {
-		req_items[i] = mlItems.splice(0, 20);
+		req_items[i] = mlItems2.splice(0, 20);
 	}
 
-	const req = await req_items.map(items2 => {
-		return axiosMlApi
-			.get(
-				'items?ids=' +
-					items2 +
-					'&attributes=id,attributes,title,price,category_id,title,thumbnail,listing_type_id,condition,available_quantity,sold_quantity,status,permalink,pictures,sale_terms,variations,start_time,seller_custom_field'
-			)
-			.then(res => {
-				res.data.forEach(async element => {
-					await axiosMlApi
-						.get(`items/${element.body.id}/description`)
-						.then(resDesc => {
-							element.body.description = resDesc.plain_text;
-						})
-						.catch(err => {
-							if (err.response.status === 404) element.body.description = '';
-						})
-						.finally(() => {
-							detItems.push(element.body);
-						});
-				});
-			})
-			.catch(err => console.log(err));
+	let urls = [];
+
+	req_items.map(items2 => {
+		urls.push(
+			`items?ids=${items2}&attributes=id,attributes,title,price,category_id,title,thumbnail,listing_type_id,condition,available_quantity,sold_quantity,status,permalink,pictures,sale_terms,variations,start_time,seller_custom_field`
+		);
 	});
-	await Promise.all(req).then(() => {});
-	return detItems;
+	try {
+		await Promise.all(urls.map(url => axiosMlApi(url))).then(results => {
+			results.forEach(result => {
+				result.data.forEach(async el => {
+					detItems.push(el.body);
+				});
+			});
+		});
+		return detItems;
+	} catch (error) {
+		console.log('ERRORRRR', error);
+		let message = '';
+		message = error.response.data
+			? `${error.response.data.statusCode}: ${error.response.data.message}`
+			: 'Error Creando categoría 😞';
+		throw message;
+	}
 };
+
+// export const getMlProducts = async mlItems => {
+// 	console.log('****************************************');
+// 	const detItems = [];
+// 	const req_items = [];
+// 	const mlItems2 = JSON.parse(JSON.stringify(mlItems));
+// 	const iteraciones = Math.ceil(mlItems2.length / 20);
+// 	for (let i = 0; i < iteraciones; i++) {
+// 		req_items[i] = mlItems2.splice(0, 20);
+// 	}
+
+// 	let urls = [];
+
+// const req = req_items.map(async items2 => {
+// 	console.log('items2', items2);
+// 	return axiosMlApi
+// 		.get(
+// 			'items?ids=' +
+// 				items2 +
+// 				'&attributes=id,attributes,title,price,category_id,title,thumbnail,listing_type_id,condition,available_quantity,sold_quantity,status,permalink,pictures,sale_terms,variations,start_time,seller_custom_field'
+// 		)
+// 		.then(res => {
+// 			res.data.map(
+// 				async element =>
+// 					await axiosMlApi
+// 						.get(`items/${element.body.id}/description`)
+// 						.then(resDesc => {
+// 							element.body.description = resDesc.plain_text;
+// 						})
+// 						.catch(err => {
+// 							if (err.response.status === 404) element.body.description = '';
+// 						})
+// 						.finally(() => {
+// 							detItems.push(element.body);
+// 						})
+// 			);
+// 		})
+// 		.catch(err => console.log(err));
+// });
+// await Promise.all(req).then(response => console.log('description', response));
+// return detItems;
+// };
 
 // export const patchMlProducts = async (mlItems) => {
 //   try {
@@ -482,14 +610,23 @@ export const serviceImportMl = async (id, settings) => {
 					itemPrice.price - itemPrice.price * (parseInt(percent) / 100);
 			});
 		}
+
 		const newProducts = await postLocalProducts(newItemsPrice);
 		newItems.forEach(item => {
 			let found = newProducts.find(newProd => item.id === newProd.ml_id);
 			if (found) item.prod_id = found.id;
 		});
+		const descriptions = newItems.map(item => ({
+			id: item.id,
+			prod_id: item.prod_id,
+		}));
+		const mlApidescProducts = await getMlDescProducts(descriptions);
+		await putLocalDescProducts(mlApidescProducts);
+
 		await postLocalMlProducts(newItems);
-		await patchLocalMlProducts(updItems);
-		return;
+		await putLocalMlProducts(updItems);
+
+		return newItems.concat(updItems);
 	} catch (error) {
 		console.log('ERRORRRR', error);
 	}

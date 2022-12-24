@@ -1,7 +1,7 @@
 import {useState} from 'react';
 import Loader from '../../Loader-overlay/Loader-overlay';
 import {useNotification} from '@/commons/Notifications/NotificationProvider';
-import {searchPredictor} from '../../../services/api/categories';
+import {searchPredictor} from '../../../services/api/categories.api';
 import styles from '../searchCategory.module.css';
 
 const CatPredictor = ({handleSelectCat}) => {

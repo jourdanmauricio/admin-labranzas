@@ -1,7 +1,7 @@
 import {useState} from 'react';
 import Tabs from './components/Tabs';
 import styles from './searchCategory.module.css';
-import {createCategories, getCategory} from '../../services/api/categories';
+import {createCategories, getCategory} from '@/services/api/categories.api';
 import Loader from '../Loader-overlay/Loader-overlay';
 
 const SearchCategory = ({handleAddCategory, handleCancel}) => {

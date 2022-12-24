@@ -47,15 +47,14 @@ export const getCategory = async catId => {
 };
 
 export const createCategories = async newCategories => {
-	console.log('newCategories', newCategories);
 	try {
 		const results = await Promise.all(
 			newCategories.map(async cat => {
 				delete cat.children_categories;
+				if (!cat.description_web) cat.description_web = cat.name;
 				return await axiosApi.post('/categories', cat);
 			})
 		);
-		console.log('results', results);
 		return results;
 	} catch (error) {
 		let message = '';

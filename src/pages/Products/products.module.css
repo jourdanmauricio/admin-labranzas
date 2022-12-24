@@ -1,0 +1,53 @@
+.table__price {
+	display: grid;
+	margin: 0 auto;
+	grid-template-columns: 40px 1fr;
+	text-align: left;
+	column-gap: 0.5em;
+}
+
+/* [data-column-id='price'].rdt_TableCol {
+	justify-content: center;
+} */
+
+.product_systems {
+	width: 90%;
+	margin-left: auto;
+	margin-right: auto;
+}
+
+.product_systems th,
+.product_systems td {
+	font-size: 14px;
+}
+
+.view__container {
+	position: relative;
+}
+
+.view__close {
+	position: absolute;
+	border: none;
+	background: none;
+	top: -1.5rem;
+	right: 0;
+	font-size: 1.5em;
+	color: var(--gray-80);
+	cursor: pointer;
+	transition: transform 0.3s ease-out;
+}
+
+.view__close:hover {
+	transform: scale(1.1);
+}
+/* rdt_Table
+rdt_TableRow
+rdt_TableCol
+rdt_TableCol_Sortable
+rdt_TableCell
+rdt_TableHeader
+rdt_TableFooter
+rdt_TableHead
+rdt_TableHeadRow
+rdt_TableBody
+rdt_ExpanderRow */

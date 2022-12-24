@@ -5,7 +5,7 @@ import {
 	deleteCategory,
 	getAllCategories,
 	putCategory,
-} from '../../services/api/categories';
+} from '@/services/api/categories.api';
 import FilterComponent from '@/commons/Table/FilterTable';
 import {FaPlus, FaRegTrashAlt, FaEdit} from 'react-icons/fa';
 

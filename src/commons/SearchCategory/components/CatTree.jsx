@@ -4,7 +4,7 @@ import {FaChevronRight, FaCheck} from 'react-icons/fa';
 import {
 	getApiAllCategoriesMl,
 	getApiCategoriesMl,
-} from '../../../services/api/categories';
+} from '../../../services/api/categories.api';
 import styles from '../searchCategory.module.css';
 
 const CatTree = ({handleSelectCat}) => {

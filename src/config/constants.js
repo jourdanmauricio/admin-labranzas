@@ -4,3 +4,12 @@ export const paginationComponentOptions = {
 	selectAllRowsItem: true,
 	selectAllRowsItemText: 'Todos',
 };
+
+export const usersInitialState = {
+	id: '',
+	name: '',
+	email: '',
+	role: 'admin',
+	password: '',
+	newPassword: '',
+};

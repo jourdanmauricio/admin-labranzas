@@ -6,7 +6,7 @@ import CategoryDeleteForm from './components/CategoryDeleteForm';
 import LoaderTable from '@/commons/Table/LoaderTable';
 import Message from '@/commons/Message/Message';
 import CategoryEditFrom from './components/CategoryEditFrom';
-import SearchCategory from '../../commons/SearchCategory/SearchCategory';
+import SearchCategory from '@/commons/SearchCategory/SearchCategory';
 import useCategories from './useCategories';
 
 const Categories = () => {
@@ -49,6 +49,7 @@ const Categories = () => {
 
 			{action !== 'SEARCH' && (
 				<>
+					<div className='mt'></div>
 					<DataTable
 						title='Categorías'
 						columns={CATEGORIES_COLUMNS}
