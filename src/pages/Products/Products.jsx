@@ -1,12 +1,11 @@
 import Layout from '../../commons/Layout/layout';
 import Message from '@/commons/Message/Message';
 import Loader from '@/commons/Loader-overlay/Loader-overlay';
-// import {serviceImportMl} from '../../services/api/products.api';
-// import {useSelector} from 'react-redux';
+import {paginationComponentOptions} from '@/config/constants';
 import DataTable from 'react-data-table-component';
 import useProducts from './useProducts';
-import ExpandedProduct from './ExpandedProduct';
-import ProductView from './ProductView';
+import ProductSystems from './ProductSystems';
+import ProductDetail from './ProductDetail';
 
 const Products = () => {
 	const {
@@ -16,6 +15,7 @@ const Products = () => {
 		filteredItems,
 		action,
 		currentProd,
+		resetPaginationToggle,
 		closeMessage,
 		handleAction,
 		// handleCancel,
@@ -31,7 +31,7 @@ const Products = () => {
 			{error && <Message msg={error} closeMessage={closeMessage} />}
 			<br />
 			{action === 'VIEW' && (
-				<ProductView id={currentProd.id} handleAction={handleAction} />
+				<ProductDetail id={currentProd.id} handleAction={handleAction} />
 			)}
 			{action === 'INITIAL' && (
 				<DataTable
@@ -42,9 +42,12 @@ const Products = () => {
 					responsive
 					selectableRows
 					expandableRows
-					expandableRowsComponent={ExpandedProduct}
+					expandableRowsComponent={ProductSystems}
 					expandableRowsComponentProps={{handleAction: handleAction}}
 					actions={subHeaderComponentMemo}
+					pagination
+					paginationComponentOptions={paginationComponentOptions}
+					paginationResetDefaultPage={resetPaginationToggle} // optionally, a hook to reset pagination to page 1
 				/>
 			)}
 		</Layout>

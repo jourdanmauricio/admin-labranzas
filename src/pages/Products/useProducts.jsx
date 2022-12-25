@@ -10,6 +10,7 @@ import {FaPlus, FaRegTrashAlt, FaEdit, FaDownload} from 'react-icons/fa';
 import FilterComponent from '@/commons/Table/FilterTable';
 import {useSelector} from 'react-redux';
 import styles from './products.module.css';
+import {trad} from '../../helpers/helpTraduccion';
 
 const useProducts = () => {
 	const [loading, setLoading] = useState(true);
@@ -25,7 +26,12 @@ const useProducts = () => {
 	const [filterText, setFilterText] = useState('');
 	const filteredItems = data.filter(
 		item =>
-			item.title && item.title.toLowerCase().includes(filterText.toLowerCase())
+			(item.title &&
+				item.title.toLowerCase().includes(filterText.toLowerCase())) ||
+			item.seller_custom_field
+				.toLowerCase()
+				.includes(filterText.toLowerCase()) ||
+			item.prodMl.id.toLowerCase().includes(filterText.toLowerCase())
 	);
 
 	const userMl = useSelector(state => state.userMl.userMl);
@@ -76,8 +82,22 @@ const useProducts = () => {
 		{
 			name: 'SKU',
 			width: '150px',
-			// selector: row => row.seller_custom_field,
 			cell: row => <span>{row.seller_custom_field}</span>,
+		},
+		{
+			name: 'Estado',
+			id: 'status',
+			width: '160px',
+			cell: row => (
+				<div className={styles.table__price}>
+					<p>Loc: </p>
+					<span>{trad(row.status)}</span>
+					<p>Ml:</p>
+					<span>{trad(row.prodMl?.status)}</span>
+					<p>Web:</p>
+					<span>{trad(row.prodWeb?.status)}</span>
+				</div>
+			),
 		},
 		{
 			name: 'Precio',
@@ -93,7 +113,6 @@ const useProducts = () => {
 					<span>{row.prodWeb?.price}</span>
 				</div>
 			),
-			sortable: true,
 		},
 	];
 
@@ -225,6 +244,7 @@ const useProducts = () => {
 		filteredItems,
 		action,
 		currentProd,
+		resetPaginationToggle,
 		closeMessage,
 		handleCancel,
 		handleDelete,

@@ -51,3 +51,28 @@ rdt_TableHead
 rdt_TableHeadRow
 rdt_TableBody
 rdt_ExpanderRow */
+
+.table__images {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+}
+
+.images__icon {
+	cursor: pointer;
+	padding: 5px;
+	width: 24px;
+	height: 24px;
+}
+
+.images__icon:hover {
+	background-color: var(--gray-20);
+	border-radius: 50%;
+}
+
+.image__var {
+	width: 90px;
+	width: 90px;
+	object-fit: contain;
+	aspect-ratio: 1/1;
+}
