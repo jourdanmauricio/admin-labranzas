@@ -137,9 +137,9 @@ function App() {
 							<Route
 								path='products'
 								element={
-									<AuthSuperadminRoute>
-										<Products />
-									</AuthSuperadminRoute>
+									// <AuthSuperadminRoute>
+									<Products />
+									// </AuthSuperadminRoute>
 								}
 							/>
 							<Route
