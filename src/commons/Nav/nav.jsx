@@ -143,19 +143,29 @@ const Nav = () => {
 							className={({isActive}) =>
 								isActive ? 'item__detail item__active' : 'item__detail'
 							}
-							to='/lessons'>
+							to='/categories'>
 							<FaRegCalendarAlt className='material__icon' />
-							<span className='icon__text'>Clases</span>
+							<span className='icon__text'>Categorías</span>
 						</NavLink>
 					</li>
 					<li>
 						<NavLink
-							to='/students'
+							to='/products'
+							className={({isActive}) =>
+								isActive ? 'item__detail item__active' : 'item__detail'
+							}>
+							<FaBoxOpen className='material__icon' />
+							<span className='icon__text'>Productos</span>
+						</NavLink>
+					</li>
+					<li>
+						<NavLink
+							to='/users'
 							className={({isActive}) =>
 								isActive ? 'item__detail item__active' : 'item__detail'
 							}>
 							<FaUsers className='material__icon' />
-							<span className='icon__text'>Alumnos</span>
+							<span className='icon__text'>Usuarios</span>
 						</NavLink>
 					</li>
 				</ul>

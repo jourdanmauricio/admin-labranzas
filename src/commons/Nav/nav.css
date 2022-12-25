@@ -60,8 +60,8 @@
 	border-radius: 8px;
 }
 
-.icon__text {
-	display: none;
+.nav .icon__text {
+	display: inline-block;
 }
 
 .navbar__item .menu__active {
@@ -121,8 +121,8 @@
 	.mobile-menu {
 		display: none;
 	}
-	.icon__text {
-		display: inline-block;
+	.nav .icon__text {
+		display: none;
 	}
 }
 
