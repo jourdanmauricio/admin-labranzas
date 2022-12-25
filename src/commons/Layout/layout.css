@@ -18,6 +18,7 @@
 	left: 0;
 	background-color: var(--gray-80);
 	overflow-x: hidden;
+	overflow-y: auto;
 	transition: 0.5s;
 	padding-top: 20px;
 	white-space: nowrap;
