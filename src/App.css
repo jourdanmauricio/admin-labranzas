@@ -1,5 +1,5 @@
 hr {
-	margin: 2rem auto;
+	margin: 1em auto;
 }
 
 .mt {
@@ -12,6 +12,29 @@ hr {
 
 .fw {
 	width: 100%;
+}
+
+.grid__container {
+	background-color: #fff;
+	min-width: 300px;
+	margin-top: 20px;
+	padding: 15px 0;
+	border-radius: 5px;
+	box-shadow: rgba(0, 0, 0, 0.16) 0px 1px 4px;
+}
+
+.form__control label {
+	display: block;
+	font-weight: 600;
+	font-size: 14px;
+	margin-bottom: 3px;
+	color: var(--gray-80);
+	text-align: left;
+}
+
+.form__row {
+	margin-top: 15px;
+	align-items: center;
 }
 
 .container {
@@ -364,6 +387,7 @@ button.icon__button {
 
 .tabs__content {
 	flex-grow: 1;
+	background: white;
 }
 .tab__content {
 	background: white;
@@ -397,7 +421,7 @@ button.icon__button {
 
 	.formulario {
 		display: grid;
-		grid-template-columns: 1fr 1fr;
+		grid-template-columns: repeat(2, 1fr);
 		grid-template-rows: min-content;
 		align-items: start;
 		column-gap: 2.5em;

@@ -1,29 +1,34 @@
 import {useEffect, useMemo, useState} from 'react';
 import {
-	deleteLocalProduct,
 	getLocalProducts,
-	serviceImportMl,
-} from '../../services/api/products.api';
+	serviceImportMlProducts,
+	serviceCreateWebProduct,
+	deleteMlProduct,
+	deleteWebProduct,
+	serviceImportMlProduct,
+} from '@/services/api/products.api';
 import {useModal} from '@/hooks/useModal';
 import {useNotification} from '@/commons/Notifications/NotificationProvider';
-import {FaPlus, FaRegTrashAlt, FaEdit, FaDownload} from 'react-icons/fa';
+import {FaPlus, FaDownload} from 'react-icons/fa';
 import FilterComponent from '@/commons/Table/FilterTable';
-import {useSelector} from 'react-redux';
+import {useDispatch, useSelector} from 'react-redux';
+import {trad} from '@/helpers/helpTraduccion';
+import {
+	unsetProduct,
+	setAction,
+	setProduct,
+	setProdError,
+} from '@/store/product';
 import styles from './products.module.css';
-import {trad} from '../../helpers/helpTraduccion';
 
 const useProducts = () => {
 	const [loading, setLoading] = useState(true);
-	const [error, setError] = useState(false);
-	const [action, setAction] = useState('INITIAL');
 	const [data, setData] = useState([]);
 	const dispatchNotif = useNotification();
 	const [isOpenModal, openModal, closeModal] = useModal(false);
-	const [currentProd, setCurrentProd] = useState(null);
-	const [dataToEdit, setDataToEdit] = useState(null);
-	const [dataToDelete, setDataToDelete] = useState(null);
 	const [resetPaginationToggle, setResetPaginationToggle] = useState(false);
 	const [filterText, setFilterText] = useState('');
+	const dispatch = useDispatch();
 	const filteredItems = data.filter(
 		item =>
 			(item.title &&
@@ -36,6 +41,8 @@ const useProducts = () => {
 
 	const userMl = useSelector(state => state.userMl.userMl);
 	const settings = useSelector(state => state.settings.settings);
+	const product = useSelector(state => state.product.product);
+	const action = useSelector(state => state.product.action);
 
 	const fetchProducts = async () => {
 		setLoading(true);
@@ -44,7 +51,7 @@ const useProducts = () => {
 			setData(products);
 			console.log('Products', products);
 		} catch (error) {
-			setError(error);
+			setProdError({error, status: 'failed'});
 		} finally {
 			setLoading(false);
 		}
@@ -54,12 +61,65 @@ const useProducts = () => {
 		setLoading(true);
 		console.log('inicio download');
 		try {
-			await serviceImportMl(userMl.id, settings);
+			await serviceImportMlProducts(userMl.id, settings);
 		} catch (error) {
-			setError(error);
+			setProdError({error, status: 'failed'});
 		} finally {
 			setLoading(false);
 			await fetchProducts();
+		}
+	};
+
+	const migrateWeb = async () => {
+		let currentProd = Object.assign({}, product);
+		console.log('product', product);
+		try {
+			setLoading(true);
+			const newProdWeb = await serviceCreateWebProduct(currentProd, settings);
+			currentProd.prodWeb = newProdWeb;
+			let newData = data.map(el =>
+				el.id === currentProd.id ? currentProd : el
+			);
+			setData(newData);
+			dispatchNotif({
+				type: 'SUCCESS',
+				message: 'Producto migrado a la Web',
+			});
+		} catch (error) {
+			dispatchNotif({
+				type: 'ERROR',
+				message: 'Error migrando el producto',
+			});
+			setProdError({error, status: 'failed'});
+		} finally {
+			handleCancel();
+		}
+	};
+
+	const importMlProduct = async () => {
+		console.log('import Ml prod', product);
+		let currentProd = Object.assign({}, product);
+		try {
+			setLoading(true);
+			const mlProduct = await serviceImportMlProduct(userMl.id, currentProd);
+			currentProd.prodMl = mlProduct;
+
+			let newData = data.map(el =>
+				el.id === currentProd.id ? currentProd : el
+			);
+			setData(newData);
+			dispatchNotif({
+				type: 'SUCCESS',
+				message: 'Producto importado desde ML',
+			});
+		} catch (error) {
+			dispatchNotif({
+				type: 'ERROR',
+				message: 'Error importando el producto',
+			});
+			setProdError({error, status: 'failed'});
+		} finally {
+			handleCancel();
 		}
 	};
 
@@ -135,123 +195,126 @@ const useProducts = () => {
 				<button className='icon__button' onClick={importMlProducts}>
 					<FaDownload /> ML
 				</button>
-				<button className='icon__button' onClick={() => setAction('SEARCH')}>
+				<button className='icon__button'>
+					{/* onClick={() => setAction('INITIAL')} */}
 					<FaPlus />
 				</button>
 			</>
 		);
 	}, [filterText, resetPaginationToggle]);
 
-	const handleAction = (prod, action) => {
-		console.log('Action', action);
-		console.log('Prod', prod);
-		setAction(action);
-		setCurrentProd(prod);
-	};
-
 	useEffect(() => {
 		fetchProducts();
 	}, []);
 
+	useEffect(() => {
+		switch (action) {
+			case 'MIGRATE-WEB':
+				migrateWeb();
+				break;
+			case 'IMPORT-ML':
+				importMlProduct();
+				break;
+			case 'DELETE-WEB':
+			case 'DELETE-ML':
+				openModal();
+				break;
+			case 'UPDATE-PRODUCT':
+				updateProduct();
+				break;
+		}
+	}, [action]);
+
 	const closeMessage = () => {
-		setError(false);
+		setProdError({error: '', status: 'success'});
 	};
 
-	const editData = data => {
-		console.log('Edit: ', data);
-		// setDataToEdit(data);
-		// 	openModalEdit();
-		// 	setAction('EDIT');
-	};
-
-	const deleteData = data => {
-		setDataToDelete(data);
-		openModal();
-		setAction('DELETE');
-	};
-
-	const handleAddProduct = newProduct => {
-		setData([newProduct, ...data]);
-		dispatchNotif({
-			type: 'SUCCESS',
-			message: 'Categoría creada!',
-		});
-	};
-
-	// const handleEdit = async editData => {
-	// 	try {
-	// 		closeModalEdit();
-	// 		setLoading(true);
-	// 		const obj = {
-	// 			description_web: editData.description_web,
-	// 		};
-	// 		const res = await putCategory(editData.id, obj);
-	// 		dispatchNotif({
-	// 			type: 'SUCCESS',
-	// 			message: 'Categoría modificada!',
-	// 		});
-
-	// 		let newData = data.map(el => (el.id === res.id ? res : el));
-	// 		setData(newData);
-	// 	} catch (err) {
-	// 		dispatchNotif({
-	// 			type: 'ERROR',
-	// 			message: 'Error modificando la categoría',
-	// 		});
-	// 		setError(err);
-	// 	} finally {
-	// 		setLoading(false);
-	// 		setAction(null);
-	// 	}
-	// };
-
-	const handleDelete = async id => {
+	const handleConfirm = async () => {
+		console.log('handleConfirm', action, product);
+		let currentProd = Object.assign({}, product);
 		try {
 			setLoading(true);
-			await deleteLocalProduct(id);
-			dispatchNotif({
-				type: 'SUCCESS',
-				message: 'Producto eliminado!',
-			});
-			let newData = data.filter(el => el.id !== id);
-			setData(newData);
-			setDataToDelete(null);
-		} catch (err) {
+			let newData = [];
+			switch (action) {
+				case 'DELETE-WEB':
+					await deleteWebProduct(currentProd.prodWeb.id);
+					dispatchNotif({
+						type: 'SUCCESS',
+						message: 'Producto eliminado del canal Web',
+					});
+					currentProd.prodWeb = null;
+					newData = data.map(el =>
+						el.id === currentProd.id ? currentProd : el
+					);
+					setData(newData);
+					break;
+				case 'DELETE-ML':
+					await deleteMlProduct(currentProd.prodMl.id);
+					dispatchNotif({
+						type: 'SUCCESS',
+						message: 'Producto eliminado del canal Ml',
+					});
+					currentProd.prodMl = null;
+					newData = data.map(el =>
+						el.id === currentProd.id ? currentProd : el
+					);
+					setData(newData);
+					break;
+			}
+		} catch (error) {
 			dispatchNotif({
 				type: 'ERROR',
-				message: 'Error eliminando el producto',
+				message: 'Error migrando el producto',
 			});
-			setError(err);
+			setProdError({error, status: 'failed'});
 		} finally {
-			setLoading(false);
-			setAction(null);
-			closeModal();
+			handleCancel();
 		}
 	};
 
+	const updateProduct = () => {
+		console.log('Update ', product);
+		dispatchNotif({
+			type: 'SUCCESS',
+			message: 'Producto modifcado',
+		});
+
+		const newData = data.map(el => (el.id === product.id ? product : el));
+		setData(newData);
+		handleCancel();
+	};
+
 	const handleCancel = () => {
-		setDataToDelete(null);
+		console.log('handleCancel');
+		// dispatch(unsetProduct());
+		dispatch(setAction({action: null}));
 		closeModal();
-		setDataToEdit(null);
-		// closeModalEdit();
-		setAction(null);
+		setLoading(false);
+	};
+
+	const expandRow = (bool, row) => {
+		console.log('row', row);
+		if (bool === true) {
+			dispatch(setProduct({product: row}));
+			dispatch(setAction({action: 'EXPANDED'}));
+		} else {
+			dispatch(unsetProduct());
+		}
 	};
 
 	return {
+		data,
 		loading,
-		error,
 		PRODUCTS_COLUMNS,
 		filteredItems,
-		action,
-		currentProd,
 		resetPaginationToggle,
-		closeMessage,
-		handleCancel,
-		handleDelete,
-		handleAddProduct,
-		handleAction,
-		// importMlProducts,
+		isOpenModal,
+		closeModal,
 		subHeaderComponentMemo,
+		closeMessage,
+		handleConfirm,
+		handleCancel,
+		expandRow,
 	};
 };
 

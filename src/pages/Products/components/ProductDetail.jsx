@@ -1,15 +1,15 @@
 import {useEffect, useState} from 'react';
 import Loader from '@/commons/Loader-overlay/Loader-overlay';
 import Message from '@/commons/Message/Message';
-import {getLocalProduct} from '../../services/api/products.api';
+import {getLocalProduct} from '@/services/api/products.api';
 import {FaRegWindowClose, FaChevronLeft, FaChevronRight} from 'react-icons/fa';
-import styles from './products.module.css';
-import ProductSystems from './ProductSystems';
+import ProductSystems from './ProductSystems/ProductSystems';
 import ProductTerms from './ProductTerms';
 import ProductVariations from './ProductVariations';
 import ProductAttributes from './ProductAttributes';
+import styles from '../products.module.css';
 
-const ProductDetail = ({id, handleAction}) => {
+const ProductDetail = ({id, handleCancel}) => {
 	const [product, setProduct] = useState(null);
 	const [loading, setLoading] = useState(false);
 	const [error, setError] = useState(false);
@@ -54,9 +54,7 @@ const ProductDetail = ({id, handleAction}) => {
 	return (
 		<>
 			<div className={styles.view__container}>
-				<button
-					onClick={() => handleAction(null, 'INITIAL')}
-					className={styles.view__close}>
+				<button onClick={handleCancel} className={styles.view__close}>
 					<FaRegWindowClose />
 				</button>
 				<h1 className='title'>Detalle de producto</h1>
@@ -81,7 +79,7 @@ const ProductDetail = ({id, handleAction}) => {
 									className='form__input'
 									type='text'
 									name='ml-id'
-									value={product.prodMl.id}
+									value={product.prodMl?.id}
 									disabled
 								/>
 							</div>
@@ -192,7 +190,7 @@ const ProductDetail = ({id, handleAction}) => {
 							</div>
 
 							<div className='wide'>
-								<ProductSystems data={product} handleAction={null} />
+								<ProductSystems data={product} />
 							</div>
 							<div className='wide'>
 								<ProductTerms data={product} />
@@ -201,9 +199,7 @@ const ProductDetail = ({id, handleAction}) => {
 								<ProductVariations data={product} />
 							</div>
 						</div>
-						<button
-							onClick={() => handleAction(null, 'INITIAL')}
-							className='btn btn__primary'>
+						<button onClick={handleCancel} className='btn btn__primary'>
 							Cerrar
 						</button>
 					</div>

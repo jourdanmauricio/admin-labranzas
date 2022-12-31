@@ -17,6 +17,7 @@ const SearchCategory = ({handleAddCategory, handleCancel}) => {
 			setLoading(true);
 			const category = await getCategory(catSel.id);
 			console.log('category', category);
+			handleAddCategory(category);
 			handleCancel();
 		} catch (error) {
 			console.log('Error', error);

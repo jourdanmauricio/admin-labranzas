@@ -6,20 +6,19 @@ import storage from 'redux-persist/lib/storage';
 import userReducer from './user';
 import userMlReducer from './userMl';
 import settingsReducer from './settings';
-
-// import videosReducer from "./videos";
+import productReducer from './product';
 
 const reducer = combineReducers({
 	user: userReducer,
 	userMl: userMlReducer,
 	settings: settingsReducer,
-	//videos: videosReducer,
+	product: productReducer,
 });
 
 const persistConfig = {
 	key: 'root',
 	storage: storage,
-	whitelist: ['user', 'userMl', 'settings'],
+	whitelist: ['user', 'userMl', 'settings', 'product'],
 	blacklist: [],
 };
 

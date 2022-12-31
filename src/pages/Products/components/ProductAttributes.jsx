@@ -1,7 +1,6 @@
-import styles from './products.module.css';
+import styles from '../products.module.css';
 
 const ProductAttributes = ({data}) => {
-	console.log('attributes', data.attributes);
 	return (
 		<div className={`table__container ${styles.product_systems}`}>
 			<table className='table'>

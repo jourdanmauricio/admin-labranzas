@@ -11,6 +11,9 @@ import {persistor, store} from './store';
 import './App.css';
 import Login from './pages/auth/Login/Login';
 // import Loader from '@/commons/Loader-overlay/Loader-overlay';
+import {setConfiguration} from 'react-grid-system';
+
+setConfiguration({defaultScreenClass: 'lg', containerWidths: 1200});
 
 const ForgotPassword = React.lazy(() =>
 	import('./pages/auth/ForgotPassword/ForgotPassword')

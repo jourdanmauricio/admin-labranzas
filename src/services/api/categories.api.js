@@ -36,7 +36,7 @@ export const getAllCategories = async () => {
 export const getCategory = async catId => {
 	try {
 		const response = await axiosApi.get(`/categories/${catId}`);
-		return response;
+		return response.data;
 	} catch (error) {
 		let message = '';
 		message = error.response.data
@@ -110,24 +110,84 @@ export const getApiCategoriesMl = async mlCategoriesIds => {
 	try {
 		return await Promise.all(
 			mlCategoriesIds.map(async cat => {
-				let mlCategory = await axiosMlApi(`/categories/${cat}`);
-				let atribs = await getAtribsCat(cat);
+				const mlCategory = await axiosMlApi(`/categories/${cat}`);
+				const category = mlCategory.data;
 
+				// Category Settings
+				const settings = [
+					{
+						category: {
+							catalog_domain: category.settings.catalog_domain,
+							coverage_areas: category.settings.coverage_areas,
+							currencies: category.settings.currencies,
+							fragile: category.settings.fragile,
+							item_conditions: category.settings.item_conditions,
+							items_reviews_allowed: category.settings.items_reviews_allowed,
+							listing_allowed: category.settings.listing_allowed,
+							max_description_length: category.settings.max_description_length,
+							max_pictures_per_item: category.settings.max_pictures_per_item,
+							max_pictures_per_item_var:
+								category.settings.max_pictures_per_item_var,
+							max_title_length: category.settings.max_title_length,
+							max_variations_allowed: category.settings.max_variations_allowed,
+							maximum_price: category.settings.maximum_price,
+							minimum_price: category.settings.minimum_price,
+							price: category.settings.price,
+							reservation_allowed: category.settings.reservation_allowed,
+							restrictions: category.settings.restrictions,
+							stock: category.settings.stock,
+							tags: category.settings.tags,
+							status: category.settings.status,
+						},
+						shipping: {
+							seller_contact: category.settings.seller_contact,
+							show_contact_information:
+								category.settings.show_contact_information,
+							shipping_options: category.settings.shipping_options,
+							shipping_profile: category.settings.shipping_profile,
+							simple_shipping: category.settings.simple_shipping,
+						},
+					},
+				];
+
+				const attribs = await getAtribsCat(cat);
+
+				// Attributes Details
+				let attributes_details = [];
+				attribs[1].groups.forEach(group => {
+					group.components.forEach(component => {
+						component.attributes.forEach(attrib => {
+							const newAttrib = {
+								group_id: group.id,
+								group_label: group.label,
+								ui_config: component.ui_config,
+								id: attrib.id,
+								name: attrib.name,
+								value_type: attrib.value_type,
+								value_max_length: attrib.value_max_length,
+								tags: attrib.tags,
+							};
+							attributes_details.push(newAttrib);
+						});
+					});
+				});
+
+				// Catgory full name
 				let full_name = '';
-				mlCategory.data.path_from_root.forEach((parent, index) => {
+				category.path_from_root.forEach((parent, index) => {
 					full_name += index === 0 ? parent.name : ` / ${parent.name}`;
 				});
 
 				const newCategory = {
-					id: mlCategory.data.id,
-					name: mlCategory.data.name,
+					id: category.id,
+					name: category.name,
 					full_name: full_name,
-					path_from_root: mlCategory.data.path_from_root,
-					children_categories: mlCategory.data.children_categories,
-					settings: mlCategory.data.settings,
-					picture: mlCategory.data.picture,
-					attributes: atribs[0],
-					attributes_oblg: atribs[1],
+					path_from_root: category.path_from_root,
+					children_categories: category.children_categories,
+					settings: settings,
+					picture: category.picture,
+					attributes: attribs[0],
+					attributes_details: attributes_details,
 				};
 				return newCategory;
 			})

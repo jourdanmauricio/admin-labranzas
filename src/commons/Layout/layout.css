@@ -12,9 +12,12 @@
 	display: none;
 	height: 100%;
 	width: 48px;
-	position: absolute;
+	position: fixed;
 	z-index: 1;
 	top: 80;
+	/* bottom: 0; */
+	/* margin-bottom: -101%;
+	padding-bottom: 101%; */
 	left: 0;
 	background-color: var(--gray-80);
 	overflow-x: hidden;
@@ -89,7 +92,7 @@
 		margin-left: 48px;
 	}
 
-	.main__content--full {
+	.main__full {
 		margin-left: 170px;
 	}
 

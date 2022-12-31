@@ -1,4 +1,4 @@
-import styles from './products.module.css';
+import styles from '../products.module.css';
 
 const ProductTerms = ({data}) => {
 	return (

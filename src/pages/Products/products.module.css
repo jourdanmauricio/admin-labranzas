@@ -76,3 +76,42 @@ rdt_ExpanderRow */
 	object-fit: contain;
 	aspect-ratio: 1/1;
 }
+
+.flex {
+	display: flex;
+}
+
+.input__icons {
+	position: absolute;
+	right: 15px;
+	top: 5px;
+	padding: 2px;
+	min-width: 40px;
+	color: var(--green-60);
+	cursor: pointer;
+}
+
+.form__relative {
+	position: relative;
+}
+
+.attrib__NA {
+	width: 35px;
+	height: 35px;
+	margin-left: 10px;
+	border: none;
+	color: teal;
+	padding: 4px;
+	/* margin-left: auto;
+	margin-right: auto; */
+	border-radius: 50%;
+	font-size: 12px;
+	cursor: pointer;
+	transition-property: all;
+	transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+	transition-duration: 250ms;
+}
+
+.attrib__NA:hover {
+	background-color: var(--gray-30);
+}

@@ -54,3 +54,11 @@ export function descriptionVariation(variation) {
 	});
 	return [titleDesc, varDesc];
 }
+
+export function isChangeTitle(prod) {
+	return prod.sold_quantity > 0 ||
+		prod.prodMl?.sold_quantity > 0 ||
+		prod.prodWeb?.sold_quantity > 0
+		? false
+		: true;
+}

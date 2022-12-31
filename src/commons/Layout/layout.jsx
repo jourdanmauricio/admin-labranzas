@@ -90,8 +90,7 @@ const Layout = props => {
 						<span className='icon__text'>Productos</span>
 					</NavLink>
 				</div>
-				<section
-					className={`main__content ${minItems && 'main__content--full'}`}>
+				<section className={`main__content ${minItems && 'main__full'}`}>
 					{props.children}
 				</section>
 			</main>

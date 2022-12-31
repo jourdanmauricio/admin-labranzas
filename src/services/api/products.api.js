@@ -59,7 +59,7 @@ export const postLocalProducts = async newProducts => {
 					seller_custom_field: prod.seller_custom_field,
 					price: prod.price,
 					available_quantity: prod.available_quantity,
-					// sold_quantity: prod.sold_quantity,
+					sold_quantity: 0,
 					status: prod.status,
 					description: '',
 					pictures: prod.pictures,
@@ -88,6 +88,32 @@ export const postLocalProducts = async newProducts => {
 	}
 };
 
+export const putLocalProduct = async prod => {
+	const newProd = {
+		// id: prod.id,
+		ml_id: prod.mlId,
+		attributes: prod.attributes,
+		description: prod.description,
+		title: prod.title,
+		seller_custom_field: prod.seller_custom_field,
+		price: prod.price,
+		available_quantity: prod.available_quantity,
+		sold_quantity: prod.sold_quantity,
+		status: prod.status,
+		pictures: prod.pictures,
+		listing_type_id: prod.listing_type_id,
+		condition: prod.condition,
+		thumbnail: prod.thumbnail,
+		category_id: prod.category_id,
+		start_time: prod.start_time,
+		sale_terms: prod.sale_terms,
+		variations: prod.variations,
+	};
+
+	const res = await axiosApi.put(`/products/${prod.id}`, newProd);
+	return res;
+};
+
 export const putLocalDescProducts = async mlItems => {
 	try {
 		const results = await Promise.all(
@@ -112,41 +138,6 @@ export const putLocalDescProducts = async mlItems => {
 		throw message;
 	}
 };
-
-// export const patchLocalProduct = async prod => {
-// 	try {
-// 		const newProd = {
-// 			id: prod.id,
-// 			ml_id: prod.mlId,
-// 			attributes: prod.attributes,
-// 			description: prod.description,
-// 			title: prod.title,
-// 			seller_custom_field: prod.seller_custom_field,
-// 			price: prod.price,
-// 			available_quantity: prod.available_quantity,
-// 			sold_quantity: prod.sold_quantity,
-// 			status: prod.status,
-// 			pictures: prod.pictures,
-// 			listing_type_id: prod.listing_type_id,
-// 			condition: prod.condition,
-// 			thumbnail: prod.thumbnail,
-// 			category_id: prod.category_id,
-// 			start_time: prod.start_time,
-// 			sale_terms: prod.sale_terms,
-// 			variations: prod.variations,
-// 		};
-//
-// 		const res = await axiosApi.patch(`/products/${newProd.id}`, newProd);
-// 		return res;
-// 	} catch (error) {
-// 		console.log('ERRORRRR', error);
-// 		let message = '';
-// 		message = error.response.data
-// 			? `${error.response.data.statusCode}: ${error.response.data.message}`
-// 			: 'Error Creando categoría 😞';
-// 		throw message;
-// 	}
-// };
 
 export const deleteLocalProduct = async id => {
 	try {
@@ -185,13 +176,13 @@ export const deleteLocalProduct = async id => {
 // /*******************/
 
 export const getLocalMlProducts = async () => {
-	try {
-		const productsMl = await axiosApi.get('productsml');
-		return productsMl;
-	} catch (error) {
-		return error;
-	}
+	const productsMl = await axiosApi.get('productsml');
+	return productsMl;
 };
+
+// export const getLocalMlProduct = async id => {
+// 	return await axiosApi.get(`productsml/${id}`);
+// };
 
 export const postLocalMlProducts = async newProducts => {
 	try {
@@ -201,7 +192,7 @@ export const postLocalMlProducts = async newProducts => {
 					id: prod.id,
 					prod_id: prod.prod_id,
 					seller_custom_field: prod.seller_custom_field,
-					price: +prod.price.toFixed(2),
+					price: prod.price,
 					available_quantity: prod.available_quantity,
 					sold_quantity: prod.sold_quantity,
 					status: prod.status,
@@ -210,7 +201,8 @@ export const postLocalMlProducts = async newProducts => {
 					start_time: prod.start_time,
 					variations: prod.variations,
 				};
-				await axiosApi.post('/productsMl', newProd);
+				const prodMl = await axiosApi.post('/productsMl', newProd);
+				return prodMl.data;
 			})
 		);
 		return results;
@@ -224,30 +216,6 @@ export const postLocalMlProducts = async newProducts => {
 	}
 };
 
-// export const patchLocalMlProduct = async (prod) => {
-//   try {
-//     const newProd = {
-//       id: prod.id,
-//       prod_id: prod.prod_id,
-//       seller_custom_field: prod.seller_custom_field,
-//       price: prod.price,
-//       available_quantity: prod.available_quantity,
-//       status: prod.status,
-//       permalink: prod.permalink,
-//       start_time: prod.start_time,
-//       variations: prod.variations,
-//     };
-//     return await Api.patch(`/productsMl/${newProd.id}`, newProd);
-//   } catch (error) {
-//     console.log("ERRORRRR", error);
-//     let message = "";
-//     message = error.response.data
-//       ? `${error.response.data.statusCode}: ${error.response.data.message}`
-//       : "Error modificando producto ML 😞";
-//     throw message;
-//   }
-// };
-
 export const putLocalMlProducts = async mlItems => {
 	try {
 		const results = await Promise.all(
@@ -256,7 +224,6 @@ export const putLocalMlProducts = async mlItems => {
 					id: prod.id,
 					prod_id: prod.prod_id,
 					seller_custom_field: prod.seller_custom_field,
-					// price: +parseFloat(prod.price.toFixed(2)),
 					price: prod.price,
 					available_quantity: prod.available_quantity,
 					status: prod.status,
@@ -264,7 +231,8 @@ export const putLocalMlProducts = async mlItems => {
 					start_time: prod.start_time,
 					variations: prod.variations,
 				};
-				return await axiosApi.put(`/productsMl/${newProd.id}`, newProd);
+				const mlProd = await axiosApi.put(`/productsMl/${newProd.id}`, newProd);
+				return mlProd.data;
 			})
 		);
 		return results;
@@ -323,6 +291,18 @@ export const getMlItems = async id => {
 		// console.log("Error", error.response.data);
 		throw error;
 	}
+};
+
+export const getMlItemxSku = async (userMlId, sku) => {
+	const mlProduct = await axiosMlApi.get(
+		`/users/${userMlId}/items/search?sku=${sku}`
+	);
+	return mlProduct.data;
+};
+
+export const getMlProduct = async mlItemId => {
+	const mlProduct = await axiosMlApi.get(`/items/${mlItemId}`);
+	return mlProduct.data;
 };
 
 export const getMlDescProducts = async mlItems => {
@@ -401,94 +381,42 @@ export const getMlProducts = async mlItems => {
 	}
 };
 
-// export const getMlProducts = async mlItems => {
-// 	console.log('****************************************');
-// 	const detItems = [];
-// 	const req_items = [];
-// 	const mlItems2 = JSON.parse(JSON.stringify(mlItems));
-// 	const iteraciones = Math.ceil(mlItems2.length / 20);
-// 	for (let i = 0; i < iteraciones; i++) {
-// 		req_items[i] = mlItems2.splice(0, 20);
-// 	}
-
-// 	let urls = [];
-
-// const req = req_items.map(async items2 => {
-// 	console.log('items2', items2);
-// 	return axiosMlApi
-// 		.get(
-// 			'items?ids=' +
-// 				items2 +
-// 				'&attributes=id,attributes,title,price,category_id,title,thumbnail,listing_type_id,condition,available_quantity,sold_quantity,status,permalink,pictures,sale_terms,variations,start_time,seller_custom_field'
-// 		)
-// 		.then(res => {
-// 			res.data.map(
-// 				async element =>
-// 					await axiosMlApi
-// 						.get(`items/${element.body.id}/description`)
-// 						.then(resDesc => {
-// 							element.body.description = resDesc.plain_text;
-// 						})
-// 						.catch(err => {
-// 							if (err.response.status === 404) element.body.description = '';
-// 						})
-// 						.finally(() => {
-// 							detItems.push(element.body);
-// 						})
-// 			);
-// 		})
-// 		.catch(err => console.log(err));
-// });
-// await Promise.all(req).then(response => console.log('description', response));
-// return detItems;
-// };
+export const deleteMlProduct = async id => {
+	return await axiosApi.delete(`/productsml/${id}`);
+};
 
 // export const patchMlProducts = async (mlItems) => {
 //   try {
 //     const results = await Promise.all(
 //       mlItems.map(async (prod) => {
-//         let id = prod.id;
+// 	      let id = prod.id;
 //         delete prod.id;
 //         return await ApiMl.put(`items/${id}`, prod);
 //       })
 //     );
-//     return results;
-//   } catch (error) {
-//     console.log("ERR!!!!", error);
-//     let message = "";
-//     if (error.response.data) {
-//       message = `${error.response.status}: ${error.response.data.message}`;
-//       if (error.response.data.cause.length > 0) {
-//         error.response.data.cause.forEach((el) => {
-//           if (el.type === "error") message += `<br> ${el.message}`;
-//         });
-//       }
-//     }
-//     if (message === "") message = "Error modificando el producto 😞";
-//     throw message;
+//      return results;
+//    } catch (error) {
+//      console.log("ERR!!!!", error);
+//      let message = "";
+//      if (error.response.data) {
+//        message = `${error.response.status}: ${error.response.data.message}`;
+//        if (error.response.data.cause.length > 0) {
+//          error.response.data.cause.forEach((el) => {
+//            if (el.type === "error") message += `<br> ${el.message}`;
+//          });
+//        }
+//      }
+//      if (message === "") message = "Error modificando el producto 😞";
+//      throw message;
 //   }
 // };
 
-// export const patchMlProduct = async (mlItem) => {
-//   try {
-//     let id = mlItem.id;
-//     delete mlItem.id;
-//     return await ApiMl.put(`items/${id}`, mlItem);
-//   } catch (error) {
-//     console.log("ERR!!!!", error);
-//     let message = "";
-//     if (error.response.data) {
-//       message = `${error.response.status}: ${error.response.data.message}`;
-//       if (error.response.data.cause.length > 0) {
-//         error.response.data.cause.forEach((el) => {
-//           if (el.type === "error") message += `<br> ${el.message}`;
-//         });
-//       }
-//     }
-//     if (message === "") message = "Error modificando el producto 😞";
-//     throw message;
-//   }
-// };
+export const putMlProduct = async mlItem => {
+	let id = mlItem.id;
+	delete mlItem.id;
+	const respMl = await axiosMlApi.put(`items/${id}`, mlItem);
+	return respMl.data;
+};
 
 // export const patchMlDescription = async (descriptions) => {
 //   try {
@@ -542,26 +470,37 @@ export const getMlProducts = async mlItems => {
 // /***  Web  ***/
 // /**************/
 
-// export const postWebProduct = async (prod) => {
-//   try {
-//     return await Api.post(`productsweb`, prod);
-//   } catch (error) {
-//     throw error;
-//   }
-// };
-// export const deleteWebProduct = async (id) => {
-//   try {
-//     return await Api.delete(`/productsweb/${id}`);
-//   } catch (error) {
-//     throw error;
-//   }
-// };
+export const postWebProduct = async prod => {
+	const prodWeb = await axiosApi.post('productsweb', prod);
+	return prodWeb;
+};
+
+export const putWebProduct = async prod => {
+	let id = prod.id;
+	delete prod.id;
+
+	const prodWeb = await axiosApi.put(`productsweb/${id}`, prod);
+	return prodWeb;
+};
+
+export const deleteWebProduct = async id => {
+	try {
+		return await axiosApi.delete(`/productsweb/${id}`);
+	} catch (error) {
+		console.log('ERRORRRR', error);
+		let message = '';
+		message = error.response.data
+			? `${error.response.data.statusCode}: ${error.response.data.message}`
+			: 'Error Creando categoría 😞';
+		throw message;
+	}
+};
 
 // /********************/
 // /***   Service   ****/
 // /********************/
 
-export const serviceImportMl = async (id, settings) => {
+export const serviceImportMlProducts = async (id, settings) => {
 	try {
 		const mlApiItemsId = await getMlItems(id);
 		// console.log('mlApiItemsId', mlApiItemsId);
@@ -575,7 +514,9 @@ export const serviceImportMl = async (id, settings) => {
 		let newCategoriesId = [];
 		let newItems = [];
 		let updItems = [];
+
 		mlApiProducts.forEach(apiMlProd => {
+			// Verify new or updated item
 			const found = mlProducts.data.find(mlProd => mlProd.id === apiMlProd.id);
 			if (found) {
 				apiMlProd.prod_id = found.prod_id;
@@ -583,24 +524,22 @@ export const serviceImportMl = async (id, settings) => {
 			} else {
 				newItems.push(apiMlProd);
 			}
-			const index2 = allCategories.findIndex(
+			// Verify new category
+			const index = allCategories.findIndex(
 				cat => cat.id === apiMlProd.category_id
 			);
-
-			if (index2 === -1) {
-				if (!newCategoriesId.includes(apiMlProd.category_id))
-					newCategoriesId.push(apiMlProd.category_id);
-			}
+			if (index === -1 && !newCategoriesId.includes(apiMlProd.category_id))
+				newCategoriesId.push(apiMlProd.category_id);
 		});
 
+		// Create Category
 		if (newCategoriesId.length > 0) {
 			const newCategories = await getApiCategoriesMl(newCategoriesId);
 			await createCategories(newCategories);
 		}
+
 		// Copio newItems para modificar el precio
 		const newItemsPrice = JSON.parse(JSON.stringify(newItems));
-
-		// const user = get(credentials);
 
 		const percent = settings.price_percent_ml;
 		if (Object.prototype.hasOwnProperty.call(settings, 'price_percent_ml')) {
@@ -628,67 +567,148 @@ export const serviceImportMl = async (id, settings) => {
 
 		return newItems.concat(updItems);
 	} catch (error) {
-		console.log('ERRORRRR', error);
+		let message = '';
+		message = error.response.data
+			? `${error.response.data.statusCode}: ${error.response.data.message}`
+			: 'Error modificando el producto  😞';
+		throw message;
 	}
 };
 
-// export const serviceUpdProduct = async (body, apps, feature) => {
-//   console.log("apps", apps);
-//   console.log("feature", feature);
-//   try {
-//     const prod = get(product);
-//     switch (apps) {
-//       case "ML":
-//         body.id = prod.prodMl.id;
-//         const resApi = await patchMlProduct(body);
-//         console.log("resApi", resApi);
-//         resApi.prod_id = prod.id;
-//         const resMl = await patchLocalMlProduct(resApi);
-//         break;
-//       case "LOCAL":
-//         body.id = prod.id;
-//         const res = await patchLocalProduct(body);
-//         break;
-//       case "ML-LOCAL":
-//         if (feature === "PRODUCT") {
-//           body.id = prod.prodMl.id;
-//           console.log("ML");
-//           const resApi = await patchMlProduct(body);
-//           resApi.prod_id = prod.id;
-//           console.log("ML-LOCAL");
-//           const resMl = await patchLocalMlProduct(resApi);
-//           console.log("resMl", resMl);
-//           resApi.id = prod.id;
-//           delete resApi.status;
-//           delete resApi.available_quantity;
-//           delete resApi.price;
-//           delete resApi.sold_quantity;
-//           delete resApi.start_time;
-//           console.log("LOCAL");
-//           console.log("resApi", resApi);
-//           await patchLocalProduct(resApi);
-//           return;
-//         }
-//         if (feature === "DESCRIPTION") {
-//           body.id = prod.prodMl.id;
-//           const descriptionMl = await patchMlDescription([body]);
-//           const description = {
-//             id: prod.id,
-//             description: descriptionMl[0].plain_text,
-//           };
-//           await patchLocalProduct([description]);
-//           return;
-//         }
-//         break;
-//       case "WEB-LOCAL":
-//         break;
-//       case "ALL":
-//         break;
-//     }
-//   } catch (error) {
-//     throw error;
-//   }
-// };
+export const serviceImportMlProduct = async (userMlId, prod) => {
+	try {
+		const mlItem = await getMlItemxSku(userMlId, prod.seller_custom_field);
+		// console.log('mlItem', mlItem);
+
+		const mlProduct = await getMlProduct(mlItem.results[0]);
+		mlProduct.prod_id = prod.id;
+		// console.log('mlProduct', mlProduct);
+
+		let productMl;
+		if (prod.prodMl) {
+			productMl = await putLocalMlProducts([mlProduct]);
+		} else {
+			productMl = await postLocalMlProducts([mlProduct]);
+		}
+
+		return productMl[0];
+	} catch (error) {
+		console.log('ERRORRRR', error);
+		let message = '';
+		message = error.response.data
+			? `${error.response.data.status} ${error.response.data.error}: ${error.response.data.message}`
+			: 'Error Obteniendo usuario ML 😞';
+		console.log('Error', error.response.data);
+		throw message;
+	}
+};
+// TODO: Permalink. En base a la estructura web, configurar la url del producto.
+// TODO: listing_type_id. Nota: ver las opciones que definiremos en la web.
+// Se utilizará para mostrar el producto en diferentes secciones: nuevos, destacados, web
+export const serviceCreateWebProduct = async (prod, settings) => {
+	let variations = prod.variations;
+	let price = parseFloat(prod.price);
+	if (settings.price_percent_web) {
+		price = price + (price * settings.price_percent_web) / 100;
+		prod.variations.forEach(vari => {
+			vari.price = price;
+			variations.push(vari);
+		});
+	}
+	try {
+		let obj = {
+			prod_id: prod.id,
+			seller_custom_field: prod.seller_custom_field,
+			price: price,
+			available_quantity: prod.available_quantity,
+			status: prod.status,
+			sold_quantity: 0,
+			listing_type_id: 'web',
+			permalink: '',
+			start_time: Date.now(),
+			variations: variations,
+		};
+
+		const res = await postWebProduct(obj);
+		return res.data;
+	} catch (error) {
+		console.log('ERRORRRR', error);
+		let message = '';
+		message = error.response.data
+			? `${error.response.data.statusCode}: ${error.response.data.message}`
+			: 'Error migrando el producto 😞';
+		throw message;
+	}
+};
+
+export const serviceUpdProduct = async (
+	body,
+	prod,
+	apps,
+	feature = 'PRODUCT'
+) => {
+	try {
+		// console.log('apps', apps);
+		// console.log('feature', feature);
+
+		let resMl;
+		let resLocalMl;
+		let resLocal;
+		let resWeb;
+		switch (apps) {
+			case 'ML':
+				body.id = prod.prodMl.id;
+				resMl = await putMlProduct(body);
+				resMl.prod_id = prod.id;
+				resLocalMl = await putLocalMlProducts([resMl]);
+				return resLocalMl[0];
+			case 'LOCAL':
+				body.id = prod.id;
+				resLocal = await putLocalProduct(body);
+				return resLocal.data;
+			case 'WEB':
+				body.id = prod.prodWeb.id;
+				resWeb = await putWebProduct(body);
+				return resWeb.data;
+			case 'ML-LOCAL':
+				if (feature === 'PRODUCT') {
+					body.id = prod.prodMl.id;
+					const resMlApi = await putMlProduct(body);
+					resMlApi.prod_id = prod.id;
+					await putLocalMlProducts([resMlApi]);
+					resMlApi.id = prod.id;
+					delete resMlApi.status;
+					delete resMlApi.available_quantity;
+					delete resMlApi.price;
+					delete resMlApi.sold_quantity;
+					delete resMlApi.start_time;
+					const respLocal = await putLocalProduct(resMlApi);
+					return respLocal;
+				}
+				// if (feature === 'DESCRIPTION') {
+				// 	body.id = prod.prodMl.id;
+				// 	const descriptionMl = await patchMlDescription([body]);
+				// 	const description = {
+				// 		id: prod.id,
+				// 		description: descriptionMl[0].plain_text,
+				// 	};
+				// 	await patchLocalProduct([description]);
+				// 	return;
+				// }
+				break;
+			case 'WEB-LOCAL':
+				break;
+			case 'ALL':
+				break;
+		}
+	} catch (error) {
+		let message = '';
+		message = error.response.data
+			? `${error.response.data.statusCode}: ${error.response.data.message}`
+			: 'Error modificando el producto  😞';
+		throw message;
+	}
+};
 
 // export const serviceCreateProduct = async () => {
 //   try {
@@ -775,36 +795,6 @@ export const serviceImportMl = async (id, settings) => {
 //     prodMl.prod_id = prod_id;
 //     const localMlprod = await postLocalMlProducts([prodMl]);
 //     console.log("localMlprod", localMlprod);
-//   } catch (error) {
-//     console.log("ERRRROR CREATE", error);
-//   }
-// };
-
-// export const serviceCreateWebProduct = async (prod) => {
-//   let variations = [];
-//   let price = parseFloat(prod.price);
-//   const user = get(credentials);
-//   if (user.settings.price_percent_web) {
-//     price = price + (price * user.settings.price_percent_web) / 100;
-//     prod.variations.forEach((vari) => {
-//       vari.price = price;
-//       variations.push(vari);
-//     });
-//   }
-//   try {
-//     let obj = {
-//       prod_id: prod.id,
-//       seller_custom_field: prod.seller_custom_field,
-//       price: price,
-//       available_quantity: prod.available_quantity,
-//       status: prod.status,
-//       permalink: prod.permalink,
-//       start_time: Date.now(),
-//       variations: variations,
-//     };
-
-//     const res = await postWebProduct(obj);
-//     return res;
 //   } catch (error) {
 //     console.log("ERRRROR CREATE", error);
 //   }

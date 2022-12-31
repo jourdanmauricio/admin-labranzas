@@ -1,7 +1,7 @@
 import {useEffect, useState} from 'react';
 import {descriptionVariation} from '@/helpers/helpFunctions';
 import {FaChevronLeft, FaChevronRight} from 'react-icons/fa';
-import styles from './products.module.css';
+import styles from '../products.module.css';
 
 const ProductVariations = ({data}) => {
 	const [variations, setVariations] = useState(null);
