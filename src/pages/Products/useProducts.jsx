@@ -2,12 +2,7 @@ import {useEffect, useMemo, useState} from 'react';
 import {
 	getLocalProducts,
 	serviceImportMlProducts,
-	serviceCreateWebProduct,
-	deleteMlProduct,
-	deleteWebProduct,
-	serviceImportMlProduct,
 } from '@/services/api/products.api';
-import {useModal} from '@/hooks/useModal';
 import {useNotification} from '@/commons/Notifications/NotificationProvider';
 import {FaPlus, FaDownload} from 'react-icons/fa';
 import FilterComponent from '@/commons/Table/FilterTable';
@@ -18,14 +13,13 @@ import {
 	setAction,
 	setProduct,
 	setProdError,
+	setProdLoading,
 } from '@/store/product';
 import styles from './products.module.css';
 
 const useProducts = () => {
-	const [loading, setLoading] = useState(true);
 	const [data, setData] = useState([]);
 	const dispatchNotif = useNotification();
-	const [isOpenModal, openModal, closeModal] = useModal(false);
 	const [resetPaginationToggle, setResetPaginationToggle] = useState(false);
 	const [filterText, setFilterText] = useState('');
 	const dispatch = useDispatch();
@@ -45,81 +39,27 @@ const useProducts = () => {
 	const action = useSelector(state => state.product.action);
 
 	const fetchProducts = async () => {
-		setLoading(true);
+		dispatch(setProdLoading());
 		try {
 			const products = await getLocalProducts();
 			setData(products);
 			console.log('Products', products);
 		} catch (error) {
-			setProdError({error, status: 'failed'});
+			dispatch(setProdError({error}));
 		} finally {
-			setLoading(false);
+			dispatch(setAction({action: ''}));
 		}
 	};
 
 	const importMlProducts = async () => {
-		setLoading(true);
+		dispatch(setProdLoading());
 		console.log('inicio download');
 		try {
 			await serviceImportMlProducts(userMl.id, settings);
 		} catch (error) {
-			setProdError({error, status: 'failed'});
+			dispatch(setProdError({error}));
 		} finally {
-			setLoading(false);
 			await fetchProducts();
-		}
-	};
-
-	const migrateWeb = async () => {
-		let currentProd = Object.assign({}, product);
-		console.log('product', product);
-		try {
-			setLoading(true);
-			const newProdWeb = await serviceCreateWebProduct(currentProd, settings);
-			currentProd.prodWeb = newProdWeb;
-			let newData = data.map(el =>
-				el.id === currentProd.id ? currentProd : el
-			);
-			setData(newData);
-			dispatchNotif({
-				type: 'SUCCESS',
-				message: 'Producto migrado a la Web',
-			});
-		} catch (error) {
-			dispatchNotif({
-				type: 'ERROR',
-				message: 'Error migrando el producto',
-			});
-			setProdError({error, status: 'failed'});
-		} finally {
-			handleCancel();
-		}
-	};
-
-	const importMlProduct = async () => {
-		console.log('import Ml prod', product);
-		let currentProd = Object.assign({}, product);
-		try {
-			setLoading(true);
-			const mlProduct = await serviceImportMlProduct(userMl.id, currentProd);
-			currentProd.prodMl = mlProduct;
-
-			let newData = data.map(el =>
-				el.id === currentProd.id ? currentProd : el
-			);
-			setData(newData);
-			dispatchNotif({
-				type: 'SUCCESS',
-				message: 'Producto importado desde ML',
-			});
-		} catch (error) {
-			dispatchNotif({
-				type: 'ERROR',
-				message: 'Error importando el producto',
-			});
-			setProdError({error, status: 'failed'});
-		} finally {
-			handleCancel();
 		}
 	};
 
@@ -209,16 +149,6 @@ const useProducts = () => {
 
 	useEffect(() => {
 		switch (action) {
-			case 'MIGRATE-WEB':
-				migrateWeb();
-				break;
-			case 'IMPORT-ML':
-				importMlProduct();
-				break;
-			case 'DELETE-WEB':
-			case 'DELETE-ML':
-				openModal();
-				break;
 			case 'UPDATE-PRODUCT':
 				updateProduct();
 				break;
@@ -226,57 +156,14 @@ const useProducts = () => {
 	}, [action]);
 
 	const closeMessage = () => {
-		setProdError({error: '', status: 'success'});
-	};
-
-	const handleConfirm = async () => {
-		console.log('handleConfirm', action, product);
-		let currentProd = Object.assign({}, product);
-		try {
-			setLoading(true);
-			let newData = [];
-			switch (action) {
-				case 'DELETE-WEB':
-					await deleteWebProduct(currentProd.prodWeb.id);
-					dispatchNotif({
-						type: 'SUCCESS',
-						message: 'Producto eliminado del canal Web',
-					});
-					currentProd.prodWeb = null;
-					newData = data.map(el =>
-						el.id === currentProd.id ? currentProd : el
-					);
-					setData(newData);
-					break;
-				case 'DELETE-ML':
-					await deleteMlProduct(currentProd.prodMl.id);
-					dispatchNotif({
-						type: 'SUCCESS',
-						message: 'Producto eliminado del canal Ml',
-					});
-					currentProd.prodMl = null;
-					newData = data.map(el =>
-						el.id === currentProd.id ? currentProd : el
-					);
-					setData(newData);
-					break;
-			}
-		} catch (error) {
-			dispatchNotif({
-				type: 'ERROR',
-				message: 'Error migrando el producto',
-			});
-			setProdError({error, status: 'failed'});
-		} finally {
-			handleCancel();
-		}
+		setProdError({error: ''});
 	};
 
 	const updateProduct = () => {
 		console.log('Update ', product);
 		dispatchNotif({
 			type: 'SUCCESS',
-			message: 'Producto modifcado',
+			message: 'Producto modificado',
 		});
 
 		const newData = data.map(el => (el.id === product.id ? product : el));
@@ -288,8 +175,6 @@ const useProducts = () => {
 		console.log('handleCancel');
 		// dispatch(unsetProduct());
 		dispatch(setAction({action: null}));
-		closeModal();
-		setLoading(false);
 	};
 
 	const expandRow = (bool, row) => {
@@ -304,15 +189,11 @@ const useProducts = () => {
 
 	return {
 		data,
-		loading,
 		PRODUCTS_COLUMNS,
 		filteredItems,
 		resetPaginationToggle,
-		isOpenModal,
-		closeModal,
 		subHeaderComponentMemo,
 		closeMessage,
-		handleConfirm,
 		handleCancel,
 		expandRow,
 	};

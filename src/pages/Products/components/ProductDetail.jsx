@@ -5,7 +5,7 @@ import {getLocalProduct} from '@/services/api/products.api';
 import {FaRegWindowClose, FaChevronLeft, FaChevronRight} from 'react-icons/fa';
 import ProductSystems from './ProductSystems/ProductSystems';
 import ProductTerms from './ProductTerms';
-import ProductVariations from './ProductVariations';
+// import ProductVariations from './ProductVariations';
 import ProductAttributes from './ProductAttributes';
 import styles from '../products.module.css';
 
@@ -188,15 +188,12 @@ const ProductDetail = ({id, handleCancel}) => {
 							<div className='wide'>
 								<ProductAttributes data={product} />
 							</div>
-
-							<div className='wide'>
-								<ProductSystems data={product} />
-							</div>
 							<div className='wide'>
 								<ProductTerms data={product} />
 							</div>
+
 							<div className='wide'>
-								<ProductVariations data={product} />
+								<ProductSystems data={product} />
 							</div>
 						</div>
 						<button onClick={handleCancel} className='btn btn__primary'>

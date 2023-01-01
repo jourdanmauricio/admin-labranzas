@@ -21,6 +21,7 @@ const Variations = () => {
 			const quantityLocal = vari.available_quantity;
 			let quantityMl;
 			let quantityWeb;
+			console.log('VARI', vari);
 			const descVar = descriptionVariation(vari)[1];
 
 			const found = product.prodMl?.variations.find(

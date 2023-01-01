@@ -665,6 +665,7 @@ export const serviceUpdProduct = async (
 			case 'LOCAL':
 				body.id = prod.id;
 				resLocal = await putLocalProduct(body);
+				console.log('resLocal', resLocal);
 				return resLocal.data;
 			case 'WEB':
 				body.id = prod.prodWeb.id;

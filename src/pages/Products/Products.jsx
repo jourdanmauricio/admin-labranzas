@@ -6,8 +6,6 @@ import DataTable from 'react-data-table-component';
 import useProducts from './useProducts';
 import ProductSystems from './components/ProductSystems/ProductSystems';
 import ProductDetail from './components/ProductDetail';
-import {Modal} from '../../commons/Modal/Modal';
-import ProductDeleteConfirm from './components/ProductDeleteConfirm';
 import EditLocal from './components/EditLocal/EditLocal';
 import {useSelector} from 'react-redux';
 
@@ -17,23 +15,20 @@ const Products = () => {
 	const action = useSelector(state => state.product.action);
 	const error = useSelector(state => state.product.error);
 	const {
-		loading,
 		PRODUCTS_COLUMNS,
 		filteredItems,
 		resetPaginationToggle,
-		isOpenModal,
-		closeModal,
+		// action,
 		subHeaderComponentMemo,
 		closeMessage,
-		handleConfirm,
 		handleCancel,
 		expandRow,
 	} = useProducts();
 
 	return (
 		<Layout>
-			{(loading || status === 'loading') && <Loader />}
-			{status === 'falied' && (
+			{status === 'loading' && <Loader />}
+			{status === 'failed' && (
 				<Message msg={error} closeMessage={closeMessage} />
 			)}
 			<br />
@@ -41,30 +36,28 @@ const Products = () => {
 				<ProductDetail id={product.id} handleCancel={handleCancel} />
 			)}
 			{action === 'EDIT-LOCAL' && <EditLocal handleCancel={handleCancel} />}
-			{(!action || action === 'EXPANDED') && (
-				<DataTable
-					title='Productos'
-					columns={PRODUCTS_COLUMNS}
-					data={filteredItems}
-					dense
-					responsive
-					selectableRows
-					expandableRows
-					expandableRowExpanded={row => row === product}
-					onRowExpandToggled={(bool, row) => expandRow(bool, row)}
-					expandableRowsComponent={ProductSystems}
-					actions={subHeaderComponentMemo}
-					pagination
-					paginationComponentOptions={paginationComponentOptions}
-					paginationResetDefaultPage={resetPaginationToggle}
-				/>
-			)}
-			<Modal isOpenModal={isOpenModal} closeModal={closeModal}>
-				<ProductDeleteConfirm
-					handleConfirm={handleConfirm}
-					handleCancel={handleCancel}
-				/>
-			</Modal>
+			{/* {(!action ||
+				action === 'EXPANDED' ||
+				action === 'DELETE-WEB' ||
+				action === 'UPDATE-PRODUCT' ||
+			action === 'DELETE-ML') && ( */}
+			<DataTable
+				title='Productos'
+				columns={PRODUCTS_COLUMNS}
+				data={filteredItems}
+				dense
+				responsive
+				selectableRows
+				expandableRows
+				expandableRowExpanded={row => row === product}
+				onRowExpandToggled={(bool, row) => expandRow(bool, row)}
+				expandableRowsComponent={ProductSystems}
+				actions={subHeaderComponentMemo}
+				pagination
+				paginationComponentOptions={paginationComponentOptions}
+				paginationResetDefaultPage={resetPaginationToggle}
+			/>
+			{/* )} */}
 		</Layout>
 	);
 };

@@ -34,6 +34,7 @@ const useEditLocal = () => {
 	const handleSubmit = () => {
 		console.log('product', product);
 		console.log('changedFields', changedFields);
+		let system = '';
 
 		let body = {};
 		changedFields.forEach(field => {
@@ -52,11 +53,15 @@ const useEditLocal = () => {
 						}
 					});
 					body.attributes = attributes;
+					system = 'ML-LOCAL';
 					break;
+				case 'status':
+					body.status = product.status;
+					system = 'LOCAL';
 			}
 		});
 
-		const resUpdate = serviceUpdProduct(body, product, 'ML-LOCAL', 'PRODUCT');
+		const resUpdate = serviceUpdProduct(body, product, system, 'PRODUCT');
 
 		console.log('resUpdate', resUpdate);
 	};

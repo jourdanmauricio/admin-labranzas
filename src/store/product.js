@@ -59,6 +59,7 @@ let productSlice = createSlice({
 			state.error = '';
 		},
 		setProdError: (state, action) => {
+			console.log('Store error', action.payload.error);
 			state.error = action.payload.error;
 			state.status = action.payload.error.length > 0 ? 'failed' : 'success';
 		},
