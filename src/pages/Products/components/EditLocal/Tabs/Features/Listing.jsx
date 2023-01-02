@@ -1,17 +1,21 @@
-import {useSelector} from 'react-redux';
+import {useDispatch, useSelector} from 'react-redux';
+import {editField} from '@/store/product';
 
-const Listing = ({editFields}) => {
+const Listing = () => {
 	const product = useSelector(state => state.product.product);
+	const dispatch = useDispatch();
+
 	return (
 		<>
 			<label htmlFor='listing_type_id'>Tipo de publicación</label>
 			<select
-				onChange={e => editFields('condition', e.target.value)}
+				onChange={e =>
+					dispatch(editField({field: 'listing_type_id', value: e.target.value}))
+				}
 				name='listing_type_id'
 				className='form__input'
 				value={product.listing_type_id}>
-				<option value='gold_special'>Clásica</option>
-				<option value='gold_pro'>Premium</option>
+				<option value='local'>Local</option>
 			</select>
 		</>
 	);

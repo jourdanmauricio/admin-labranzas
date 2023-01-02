@@ -97,7 +97,6 @@ const Images = ({updated}) => {
 	};
 
 	const handleFiles = files => {
-		console.log('Files', files);
 		const newImages = Array.from(files).map(file => {
 			file.secure_url = URL.createObjectURL(file);
 			file.origen = 'new';

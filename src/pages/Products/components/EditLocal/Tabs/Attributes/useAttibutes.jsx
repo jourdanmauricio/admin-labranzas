@@ -1,12 +1,14 @@
 import {useEffect, useState} from 'react';
-import {useSelector} from 'react-redux';
+import {useDispatch, useSelector} from 'react-redux';
 import {useModal} from '@/hooks/useModal';
+import {editField} from '@/store/product';
 
-const useAttibutes = ({editFields}) => {
+const useAttibutes = () => {
 	const [attribNewVal, setAttribNewVal] = useState(null);
 	const [attribCategory, setAttribCategory] = useState([]);
 	const [attributes, setAttributes] = useState([]);
 	const [isOpenModal, openModal, closeModal] = useModal(false);
+	const dispatch = useDispatch();
 
 	const product = useSelector(state => state.product.product);
 
@@ -119,7 +121,6 @@ const useAttibutes = ({editFields}) => {
 	};
 
 	function handleChange(attribute, e, type = '') {
-		console.log('handleChange');
 		let found;
 		let newAttribute = Object.assign({}, attribute);
 		newAttribute.updated = true;
@@ -143,13 +144,11 @@ const useAttibutes = ({editFields}) => {
 				)[0].innerHTML;
 				break;
 			case 'string':
-				console.log('Change String', newAttribute, e);
 				if (!attribute.values) {
 					newAttribute.value_id = '';
 					newAttribute.value_name = e.target.value;
 				} else {
 					if (attribute.tags.multivalued) {
-						console.log('values', attribute.values);
 						let selected = Array.from(e.target.selectedOptions);
 						// let selected = Array.from(e.target.value);
 						// newAttribute.value_name = e.target.value;
@@ -176,7 +175,6 @@ const useAttibutes = ({editFields}) => {
 				newAttribute.value_id = found.id;
 				break;
 			case 'number_unit':
-				console.log('number_unit', newAttribute);
 				newAttribute.value_id = '';
 				if (!Object.prototype.hasOwnProperty.call(newAttribute, 'value_struct'))
 					newAttribute.value_struct = {unit: '', number: ''};
@@ -214,13 +212,11 @@ const useAttibutes = ({editFields}) => {
 			return el.id === newAttribute.id ? newAttribute : el;
 		});
 
-		console.log('newData', newData);
 		setAttributes(newData);
-		editFields('attributes', newData);
+		dispatch(editField({field: 'attributes', value: newData}));
 	}
 
 	const addOption = attribute => {
-		console.log('add', attribute);
 		setAttribNewVal(attribute);
 		openModal();
 	};
@@ -231,7 +227,6 @@ const useAttibutes = ({editFields}) => {
 			...attrib.values,
 			{id: newValueAttrib, name: newValueAttrib},
 		];
-		console.log('attrib.values', attrib.values);
 		// attribute.values.push({id: 'new', name: 'new'});
 		let newData = attributes.map(el => {
 			return el.id === attrib.id ? attrib : el;

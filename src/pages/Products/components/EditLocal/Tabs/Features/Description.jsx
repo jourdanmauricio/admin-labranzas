@@ -1,7 +1,10 @@
-import {useSelector} from 'react-redux';
+import {useDispatch, useSelector} from 'react-redux';
+import {editField} from '@/store/product';
 
-const Description = ({editFields}) => {
+const Description = () => {
 	const product = useSelector(state => state.product.product);
+	const dispatch = useDispatch();
+
 	return (
 		<>
 			<label htmlFor='description'>Descripción</label>
@@ -10,7 +13,9 @@ const Description = ({editFields}) => {
 				rows={6}
 				name='description'
 				value={product.description || ''}
-				onChange={e => editFields('description', e.target.value)}
+				onChange={e =>
+					dispatch(editField({field: 'description', value: e.target.value}))
+				}
 			/>
 		</>
 	);

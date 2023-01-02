@@ -22,7 +22,6 @@ const Images = ({dispatchNotif}) => {
 			}}
 			onSubmit={async (values, {setSubmitting}) => {
 				try {
-					console.log('VALUES', values);
 					dispatch(putSettings({images: {...values}}));
 
 					dispatchNotif({

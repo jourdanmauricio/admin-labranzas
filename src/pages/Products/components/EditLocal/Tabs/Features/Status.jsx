@@ -1,13 +1,17 @@
-import {useSelector} from 'react-redux';
+import {useDispatch, useSelector} from 'react-redux';
+import {editField} from '@/store/product';
 
-const Status = ({editFields}) => {
+const Status = () => {
 	const product = useSelector(state => state.product.product);
+	const dispatch = useDispatch();
 
 	return (
 		<>
 			<label htmlFor='status'>Estado</label>
 			<select
-				onChange={e => editFields('status', e.target.value)}
+				onChange={e =>
+					dispatch(editField({field: 'status', value: e.target.value}))
+				}
 				name='status'
 				className='form__input'
 				id='status'

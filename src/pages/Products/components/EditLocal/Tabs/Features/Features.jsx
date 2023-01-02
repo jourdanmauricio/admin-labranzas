@@ -10,53 +10,53 @@ import Video from './Video';
 import Description from './Description';
 import Warranty from './Warranty';
 
-const Features = ({editFields}) => {
+const Features = () => {
 	return (
 		<Container className='grid__container'>
 			<Row className='form__row'>
 				<Col md={6} className='form__control'>
-					<Status editFields={editFields} />
+					<Status />
 				</Col>
 				<Col md={6} className='form__control'>
-					<Price editFields={editFields} />
+					<Price />
 				</Col>
 			</Row>
 
 			<Row className='form__row'>
 				<Col md={6} className='form__control'>
-					<Quantity editFields={editFields} />
+					<Quantity />
 				</Col>
 				<Col md={6} className='form__control'>
-					<MaxPurchase editFields={editFields} />
-				</Col>
-			</Row>
-			<Row className='form__row'>
-				<Col md={6} className='form__control'>
-					<Condition editFields={editFields} />
-				</Col>
-				<Col md={6} className='form__control'>
-					<Listing editFields={editFields} />
+					<MaxPurchase />
 				</Col>
 			</Row>
 			<Row className='form__row'>
 				<Col md={6} className='form__control'>
-					<Manufacturing editFields={editFields} />
+					<Condition />
 				</Col>
 				<Col md={6} className='form__control'>
-					<Video editFields={editFields} />
+					<Listing />
+				</Col>
+			</Row>
+			<Row className='form__row'>
+				<Col md={6} className='form__control'>
+					<Manufacturing />
+				</Col>
+				<Col md={6} className='form__control'>
+					<Video />
 				</Col>
 			</Row>
 			<hr />
 			<Row className='form__row'>
 				<Col md={12} className='form__control'>
-					<Warranty editFields={editFields} />
+					<Warranty />
 				</Col>
 			</Row>
 			<hr />
 
 			<Row className='form__row'>
 				<Col md={12} className='form__control'>
-					<Description editFields={editFields} />
+					<Description />
 				</Col>
 			</Row>
 		</Container>

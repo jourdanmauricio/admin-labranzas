@@ -39,7 +39,6 @@ const CatTree = ({handleSelectCat}) => {
 		if (category.children_categories.length === 0) {
 			handleSelectCat(category);
 		}
-		console.log('HandleSelect');
 
 		const part = partialCat
 			? partialCat + ' / ' + category.name

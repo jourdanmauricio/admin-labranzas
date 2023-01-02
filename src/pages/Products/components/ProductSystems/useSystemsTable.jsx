@@ -9,7 +9,7 @@ import {useModal} from '@/hooks/useModal';
 import {useNotification} from '@/commons/Notifications/NotificationProvider';
 import {serviceCreateWebProduct} from '@/services/api/products.api';
 import {
-	deleteMlProduct,
+	delLocalMlProduct,
 	deleteWebProduct,
 	serviceImportMlProduct,
 } from '@/services/api/products.api';
@@ -85,7 +85,7 @@ const useSystemsTable = () => {
 					dispatch(setAction({action: 'UPDATE-PRODUCT'}));
 					break;
 				case 'DELETE-ML':
-					await deleteMlProduct(currentProd.prodMl.id);
+					await delLocalMlProduct(currentProd.prodMl.id);
 					currentProd.prodMl = null;
 					dispatch(editField({field: 'prodMl', value: currentProd.prodMl}));
 					dispatch(setAction({action: 'UPDATE-PRODUCT'}));

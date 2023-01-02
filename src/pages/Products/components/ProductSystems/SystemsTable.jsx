@@ -16,15 +16,14 @@ import useSystemsTable from './useSystemsTable';
 // import {useModal} from '@/hooks/useModal';
 import {Modal} from '@/commons/Modal/Modal';
 import ProductDeleteConfirm from '../ProductDeleteConfirm';
+import Listing from './Listing';
 
 const SystemsTable = () => {
 	const dispatch = useDispatch();
 	const product = useSelector(state => state.product.product);
 	const {
 		isOpenModal,
-		// openModal,
 		closeModal,
-		// handleDelete,
 		handleConfirm,
 		handleCancel,
 		migrateWeb,
@@ -35,7 +34,7 @@ const SystemsTable = () => {
 		<>
 			<div className={`table__container ${styles.product_systems}`}>
 				<table className='table'>
-					<caption>Canales de venta {isOpenModal.toString()} $</caption>
+					<caption>Canales de venta</caption>
 					<thead>
 						<tr>
 							<th>Característica</th>
@@ -87,7 +86,18 @@ const SystemsTable = () => {
 							<td data-titulo='Local'>{product.sold_quantity}</td>
 							<td data-titulo='Web'>{product.prodWeb?.sold_quantity}</td>
 						</tr>
-
+						<tr>
+							<td>Tipo de publicación</td>
+							<td data-titulo='ML'>
+								{product.prodMl && <Listing system={'ML'} />}
+							</td>
+							<td data-titulo='Local'>
+								<Listing system={'LOCAL'} />
+							</td>
+							<td data-titulo='Web'>
+								{product.prodWeb && <Listing system={'WEB'} />}
+							</td>
+						</tr>
 						<tr>
 							<td>Acciones</td>
 							{/* MERCADO LIBRE */}

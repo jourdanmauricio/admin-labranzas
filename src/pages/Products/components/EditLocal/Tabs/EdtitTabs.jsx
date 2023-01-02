@@ -9,10 +9,10 @@ import {
 import Variations from './Variations/Variations';
 import Attributes from './Attributes/Attributes';
 import Features from './Features/Features';
-import Images from './Images';
-import Terms from './Terms';
+import Images from './Images/Images';
+import Terms from './Terms/Terms';
 
-const EditTabs = ({editFields}) => {
+const EditTabs = () => {
 	const [toggleState, setToggleState] = useState(1);
 
 	const toggleTab = index => {
@@ -63,13 +63,13 @@ const EditTabs = ({editFields}) => {
 					className={
 						toggleState === 2 ? 'tab__content active__content' : 'tab__content'
 					}>
-					<Attributes editFields={editFields} />
+					<Attributes />
 				</div>
 				<div
 					className={
 						toggleState === 3 ? 'tab__content active__content' : 'tab__content'
 					}>
-					<Features editFields={editFields} />
+					<Features />
 				</div>
 				<div
 					className={

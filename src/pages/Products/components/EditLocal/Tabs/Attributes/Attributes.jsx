@@ -1,10 +1,10 @@
 import {FaPlus} from 'react-icons/fa';
-import styles from '../../products.module.css';
+import styles from '../../../../products.module.css';
 import useAttibutes from './useAttibutes';
-import {Modal} from '../../../../commons/Modal/Modal';
+import {Modal} from '@/commons/Modal/Modal';
 import ProductAddAtrib from './ProductAddAtrib';
 
-const Attributes = ({editFields}) => {
+const Attributes = () => {
 	const {
 		attributes,
 		isOpenModal,
@@ -22,7 +22,7 @@ const Attributes = ({editFields}) => {
 		isString,
 		isBoolean,
 		isNumber,
-	} = useAttibutes({editFields});
+	} = useAttibutes();
 
 	return (
 		<>

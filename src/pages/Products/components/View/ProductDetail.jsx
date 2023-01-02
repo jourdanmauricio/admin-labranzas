@@ -3,11 +3,14 @@ import Loader from '@/commons/Loader-overlay/Loader-overlay';
 import Message from '@/commons/Message/Message';
 import {getLocalProduct} from '@/services/api/products.api';
 import {FaRegWindowClose, FaChevronLeft, FaChevronRight} from 'react-icons/fa';
-import ProductSystems from './ProductSystems/ProductSystems';
-import ProductTerms from './ProductTerms';
+// import ProductSystems from '../ProductSystems/ProductSystems';
+import ProductTerms from '../ProductTerms';
 // import ProductVariations from './ProductVariations';
-import ProductAttributes from './ProductAttributes';
-import styles from '../products.module.css';
+import ProductAttributes from '../ProductAttributes';
+import styles from '../../products.module.css';
+import {trad} from '@/helpers/helpTraduccion';
+import Variations from './Variations';
+import SystemsTable from './SystemsTable';
 
 const ProductDetail = ({id, handleCancel}) => {
 	const [product, setProduct] = useState(null);
@@ -20,7 +23,6 @@ const ProductDetail = ({id, handleCancel}) => {
 			setLoading(true);
 			try {
 				const product = await getLocalProduct(id);
-				console.log('Product', product);
 				setProduct(product);
 			} catch (error) {
 				console.log(error);
@@ -139,7 +141,7 @@ const ProductDetail = ({id, handleCancel}) => {
 									className='form__input'
 									type='text'
 									name='condition'
-									value={product.condition}
+									value={trad(product.condition)}
 									disabled
 								/>
 							</div>
@@ -150,7 +152,7 @@ const ProductDetail = ({id, handleCancel}) => {
 									type='text'
 									rows={10}
 									name='description'
-									value={product.description}
+									value={product.description || ''}
 									disabled
 								/>
 							</div>
@@ -193,7 +195,11 @@ const ProductDetail = ({id, handleCancel}) => {
 							</div>
 
 							<div className='wide'>
-								<ProductSystems data={product} />
+								<SystemsTable />
+							</div>
+
+							<div className='wide'>
+								<Variations />
 							</div>
 						</div>
 						<button onClick={handleCancel} className='btn btn__primary'>

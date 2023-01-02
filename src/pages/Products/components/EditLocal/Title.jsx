@@ -1,9 +1,11 @@
-import {useSelector} from 'react-redux';
+import {useDispatch, useSelector} from 'react-redux';
 import {isChangeTitle} from '@/helpers/helpFunctions';
 import {useEffect, useState} from 'react';
+import {editField} from '@/store/product';
 
-const Title = ({editFields}) => {
+const Title = () => {
 	const [data, setData] = useState('');
+	const dispatch = useDispatch();
 	const product = useSelector(state => state.product.product);
 
 	useEffect(() => {
@@ -19,7 +21,9 @@ const Title = ({editFields}) => {
 				name='title'
 				value={data || ''}
 				onChange={e => setData(e.target.value)}
-				onBlur={e => editFields('title', e.target.value)}
+				onBlur={e =>
+					dispatch(editField({field: 'title', value: e.target.value}))
+				}
 				disabled={!isChangeTitle(product)}
 			/>
 		</>

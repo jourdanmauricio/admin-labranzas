@@ -50,7 +50,6 @@ const ForgotPassword = () => {
 			};
 			const response = await fetch(URL, options);
 			const resRecovery = await response.json();
-			console.log('recovery', resRecovery);
 			if (resRecovery.statusCode) throw resRecovery;
 			setMessageOk(
 				'Email enviado!. Sigue las instrucciones para generar la contraseña.'

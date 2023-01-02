@@ -18,7 +18,6 @@ const CatPredictor = ({handleSelectCat}) => {
 		try {
 			setLoading(true);
 			const cats = await searchPredictor(value);
-			console.log('cats', cats);
 			setCategories(cats);
 		} catch (err) {
 			dispatchNotif({

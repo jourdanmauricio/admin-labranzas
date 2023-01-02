@@ -23,7 +23,6 @@ const ListImages = ({images, setImages}) => {
 	};
 
 	const handleDelete = index => {
-		console.log('Delete', index);
 		let _images = [...images];
 		_images.splice(index, 1);
 		setImages(_images);

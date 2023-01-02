@@ -1,9 +1,11 @@
+import {useDispatch, useSelector} from 'react-redux';
+import {editField} from '@/store/product';
 import {useEffect, useState} from 'react';
-import {useSelector} from 'react-redux';
 
-const MaxPurchase = ({editFields}) => {
+const MaxPurchase = () => {
 	const [data, setData] = useState('');
 	const product = useSelector(state => state.product.product);
+	const dispatch = useDispatch();
 
 	useEffect(() => {
 		const maxPurchase = product.sale_terms.find(
@@ -31,7 +33,7 @@ const MaxPurchase = ({editFields}) => {
 			);
 		}
 
-		editFields('sale_terms', newData);
+		dispatch(editField({field: 'sale_terms', value: newData}));
 	};
 
 	return (

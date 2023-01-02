@@ -1,9 +1,11 @@
 import {useEffect, useState} from 'react';
-import {useSelector} from 'react-redux';
+import {useDispatch, useSelector} from 'react-redux';
+import {editField} from '@/store/product';
 
-const Manufacturing = ({editFields}) => {
+const Manufacturing = () => {
 	const [data, setData] = useState('');
 	const product = useSelector(state => state.product.product);
+	const dispatch = useDispatch();
 
 	useEffect(() => {
 		const manufacturing = product.sale_terms.find(
@@ -32,7 +34,7 @@ const Manufacturing = ({editFields}) => {
 			);
 		}
 
-		editFields('sale_terms', newData);
+		dispatch(editField({field: 'sale_terms', value: newData}));
 	};
 
 	return (

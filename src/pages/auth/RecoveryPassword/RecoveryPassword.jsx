@@ -23,8 +23,6 @@ const RecoveryPassword = () => {
 
 	const token = params.get('token');
 
-	console.log('token', token);
-
 	function handleChange(name, value) {
 		if (name === 'newPass') {
 			setNewPass(value);
@@ -58,7 +56,6 @@ const RecoveryPassword = () => {
 			};
 			const response = await fetch(URL, options);
 			const resRecovery = await response.json();
-			console.log('recovery', resRecovery);
 			if (resRecovery.statusCode) throw resRecovery;
 			dispatchNotif({
 				type: 'SUCCESS',

@@ -3,9 +3,9 @@ import {FaRegWindowClose, FaSearch} from 'react-icons/fa';
 import Loader from '@/commons/Loader-overlay/Loader-overlay';
 import Message from '@/commons/Message/Message';
 import SearchCategory from '@/commons/SearchCategory/SearchCategory';
-import EditTabs from '../EdtitTabs';
-import Title from '../Title';
-import SellerCustomField from '../SellerCustomField';
+import EditTabs from './Tabs/EdtitTabs';
+import Title from './Title';
+import SellerCustomField from './SellerCustomField';
 import styles from '../../products.module.css';
 import useEditLocal from './useEditLocal';
 import {useSelector} from 'react-redux';
@@ -18,7 +18,6 @@ const EditLocal = ({handleCancel}) => {
 		openCategory,
 		handleAddCategory,
 		handleCancelCat,
-		editFields,
 		closeMessage,
 		handleSubmit,
 		setOpenCategory,
@@ -59,10 +58,10 @@ const EditLocal = ({handleCancel}) => {
 							</Row>
 							<Row className='form__row'>
 								<Col md={9} className='form__control'>
-									<Title editFields={editFields} />
+									<Title />
 								</Col>
 								<Col md={3} className='form__control'>
-									<SellerCustomField editFields={editFields} />
+									<SellerCustomField />
 								</Col>
 							</Row>
 							<hr />
@@ -113,7 +112,7 @@ const EditLocal = ({handleCancel}) => {
 									handleCancel={handleCancelCat}
 								/>
 							)}
-							<EditTabs editFields={editFields} />
+							<EditTabs />
 						</Container>
 
 						<div className='delete__actions'>

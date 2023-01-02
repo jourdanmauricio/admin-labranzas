@@ -74,7 +74,7 @@ const Price = ({system}) => {
 					break;
 				case 'LOCAL':
 					res = await serviceUpdProduct(body, product, 'LOCAL');
-					console.log('RES', res);
+
 					dispatch(
 						editField({
 							field: 'price',

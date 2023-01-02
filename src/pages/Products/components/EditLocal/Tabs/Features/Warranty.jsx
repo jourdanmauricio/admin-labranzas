@@ -1,12 +1,13 @@
 import {useEffect, useState} from 'react';
 import {Row, Col} from 'react-grid-system';
-import {useSelector} from 'react-redux';
+import {useDispatch, useSelector} from 'react-redux';
+import {editField} from '@/store/product';
 
-const Warranty = ({editFields}) => {
+const Warranty = () => {
 	const [warrantyType, setWarrantyType] = useState('');
 	const [warrantyTime, setWarrantyTime] = useState('');
 	const [warrantyUnit, setWarrantyUnit] = useState('');
-
+	const dispatch = useDispatch();
 	const product = useSelector(state => state.product.product);
 
 	useEffect(() => {
@@ -111,7 +112,7 @@ const Warranty = ({editFields}) => {
 				);
 			}
 		}
-		editFields('sale_terms', newData);
+		dispatch(editField({field: 'sale_terms', value: newData}));
 	};
 
 	return (
@@ -123,9 +124,12 @@ const Warranty = ({editFields}) => {
 					name='warranty-type'
 					className='form__input'
 					value={warrantyType}>
-					<option value='2230279'>Garantía de fábrica</option>
+					{/* <option value='2230279'>Garantía de fábrica</option>
 					<option value='2230280'>Garantía del vendedor</option>
-					<option value='6150835'>Sin garantía</option>
+					<option value='6150835'>Sin garantía</option> */}
+					<option value='Garantía de fábrica'>Garantía de fábrica</option>
+					<option value='Garantía del vendedor'>Garantía del vendedor</option>
+					<option value='Sin garantía'>Sin garantía</option>
 				</select>
 			</Col>
 			<Col md={4} className='form__control'>

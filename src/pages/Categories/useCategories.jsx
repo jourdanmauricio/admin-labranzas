@@ -32,7 +32,6 @@ const useCategories = () => {
 			try {
 				const categories = await getAllCategories();
 				setData(categories);
-				console.log('Categories', categories);
 			} catch (error) {
 				setError(error);
 			} finally {

@@ -58,7 +58,6 @@ const Login = () => {
 
 	async function isMatch() {
 		// Login
-		console.log('Login');
 		await dispatch(
 			signIn({
 				email,
@@ -66,9 +65,7 @@ const Login = () => {
 			})
 		);
 		// UserMl
-		console.log('UserMl');
 		await dispatch(getUserMl());
-		console.log('Settings');
 		dispatch(getSettings());
 	}
 

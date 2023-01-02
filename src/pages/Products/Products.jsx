@@ -5,7 +5,7 @@ import {paginationComponentOptions} from '@/config/constants';
 import DataTable from 'react-data-table-component';
 import useProducts from './useProducts';
 import ProductSystems from './components/ProductSystems/ProductSystems';
-import ProductDetail from './components/ProductDetail';
+import ProductDetail from './components/View/ProductDetail';
 import EditLocal from './components/EditLocal/EditLocal';
 import {useSelector} from 'react-redux';
 
@@ -18,7 +18,6 @@ const Products = () => {
 		PRODUCTS_COLUMNS,
 		filteredItems,
 		resetPaginationToggle,
-		// action,
 		subHeaderComponentMemo,
 		closeMessage,
 		handleCancel,
@@ -41,23 +40,24 @@ const Products = () => {
 				action === 'DELETE-WEB' ||
 				action === 'UPDATE-PRODUCT' ||
 			action === 'DELETE-ML') && ( */}
-			<DataTable
-				title='Productos'
-				columns={PRODUCTS_COLUMNS}
-				data={filteredItems}
-				dense
-				responsive
-				selectableRows
-				expandableRows
-				expandableRowExpanded={row => row === product}
-				onRowExpandToggled={(bool, row) => expandRow(bool, row)}
-				expandableRowsComponent={ProductSystems}
-				actions={subHeaderComponentMemo}
-				pagination
-				paginationComponentOptions={paginationComponentOptions}
-				paginationResetDefaultPage={resetPaginationToggle}
-			/>
-			{/* )} */}
+			{action !== 'EDIT-LOCAL' && action !== 'VIEW' && (
+				<DataTable
+					title='Productos'
+					columns={PRODUCTS_COLUMNS}
+					data={filteredItems}
+					dense
+					responsive
+					selectableRows
+					expandableRows
+					expandableRowExpanded={row => row === product}
+					onRowExpandToggled={(bool, row) => expandRow(bool, row)}
+					expandableRowsComponent={ProductSystems}
+					actions={subHeaderComponentMemo}
+					pagination
+					paginationComponentOptions={paginationComponentOptions}
+					paginationResetDefaultPage={resetPaginationToggle}
+				/>
+			)}
 		</Layout>
 	);
 };

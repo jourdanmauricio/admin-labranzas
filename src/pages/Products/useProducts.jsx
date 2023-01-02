@@ -53,7 +53,6 @@ const useProducts = () => {
 
 	const importMlProducts = async () => {
 		dispatch(setProdLoading());
-		console.log('inicio download');
 		try {
 			await serviceImportMlProducts(userMl.id, settings);
 		} catch (error) {
@@ -69,7 +68,7 @@ const useProducts = () => {
 			id: 'title',
 			cell: row => (
 				<span>
-					{row.prodMl?.id} - {row.title}
+					{row.prodMl?.id} {row.title}
 				</span>
 			),
 			sortable: true,
@@ -160,7 +159,6 @@ const useProducts = () => {
 	};
 
 	const updateProduct = () => {
-		console.log('Update ', product);
 		dispatchNotif({
 			type: 'SUCCESS',
 			message: 'Producto modificado',
@@ -172,13 +170,11 @@ const useProducts = () => {
 	};
 
 	const handleCancel = () => {
-		console.log('handleCancel');
 		// dispatch(unsetProduct());
 		dispatch(setAction({action: null}));
 	};
 
 	const expandRow = (bool, row) => {
-		console.log('row', row);
 		if (bool === true) {
 			dispatch(setProduct({product: row}));
 			dispatch(setAction({action: 'EXPANDED'}));
