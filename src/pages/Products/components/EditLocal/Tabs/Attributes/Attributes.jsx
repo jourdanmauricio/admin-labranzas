@@ -1,6 +1,6 @@
 import {FaPlus} from 'react-icons/fa';
 import styles from '../../../../products.module.css';
-import useAttibutes from './useAttibutes';
+import useAttributes from './useAttributes';
 import {Modal} from '@/commons/Modal/Modal';
 import ProductAddAtrib from './ProductAddAtrib';
 
@@ -22,7 +22,7 @@ const Attributes = () => {
 		isString,
 		isBoolean,
 		isNumber,
-	} = useAttibutes();
+	} = useAttributes();
 
 	return (
 		<>

@@ -157,7 +157,7 @@ const ProductDetail = ({id, handleCancel}) => {
 								/>
 							</div>
 
-							<div className={product.variations.length > 0 && 'wide'}>
+							<div className={product.variations.length > 0 ? 'wide' : ''}>
 								<p>Imagen principal</p>
 								<img
 									className={styles.image__var}

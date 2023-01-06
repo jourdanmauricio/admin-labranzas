@@ -1,5 +1,11 @@
+import VariationsTable from './VariationsTable';
+
 const Variations = () => {
-	return <div>Variations</div>;
+	return (
+		<>
+			<VariationsTable />
+		</>
+	);
 };
 
 export default Variations;

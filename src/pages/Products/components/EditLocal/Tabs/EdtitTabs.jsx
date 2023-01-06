@@ -4,16 +4,16 @@ import {
 	FaRegListAlt,
 	FaDollarSign,
 	FaCameraRetro,
-	FaTruck,
 } from 'react-icons/fa';
 import Variations from './Variations/Variations';
 import Attributes from './Attributes/Attributes';
 import Features from './Features/Features';
 import Images from './Images/Images';
-import Terms from './Terms/Terms';
+import {useSelector} from 'react-redux';
 
 const EditTabs = () => {
 	const [toggleState, setToggleState] = useState(1);
+	let product = useSelector(state => state.product.product);
 
 	const toggleTab = index => {
 		setToggleState(index);
@@ -39,18 +39,14 @@ const EditTabs = () => {
 					<FaDollarSign color='purple' size={20} />
 					<span>Características</span>
 				</div>
-				<div
-					onClick={() => toggleTab(4)}
-					className={toggleState === 4 ? 'tabs active__tabs' : 'tabs'}>
-					<FaCameraRetro color='blue' size={20} />
-					<span>Imágenes</span>
-				</div>
-				<div
-					onClick={() => toggleTab(5)}
-					className={toggleState === 5 ? 'tabs active__tabs' : 'tabs'}>
-					<FaTruck color='black' size={20} />
-					<span>Términos</span>
-				</div>
+				{product.variations.length === 0 && (
+					<div
+						onClick={() => toggleTab(4)}
+						className={toggleState === 4 ? 'tabs active__tabs' : 'tabs'}>
+						<FaCameraRetro color='blueviolet' size={20} />
+						<span>Imágenes</span>
+					</div>
+				)}
 			</div>
 			<div className='tabs__content'>
 				<div
@@ -71,18 +67,16 @@ const EditTabs = () => {
 					}>
 					<Features />
 				</div>
-				<div
-					className={
-						toggleState === 4 ? 'tab__content active__content' : 'tab__content'
-					}>
-					<Images />
-				</div>
-				<div
-					className={
-						toggleState === 5 ? 'tab__content active__content' : 'tab__content'
-					}>
-					<Terms />
-				</div>
+				{product.variations.length === 0 && (
+					<div
+						className={
+							toggleState === 4
+								? 'tab__content active__content'
+								: 'tab__content'
+						}>
+						<Images />
+					</div>
+				)}
 			</div>
 		</div>
 	);

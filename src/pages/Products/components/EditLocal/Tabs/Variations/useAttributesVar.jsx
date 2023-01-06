@@ -1,12 +1,12 @@
 import {useEffect, useState} from 'react';
-import {useDispatch, useSelector} from 'react-redux';
 import {useModal} from '@/hooks/useModal';
+import {useDispatch, useSelector} from 'react-redux';
 import {editField} from '@/store/product';
 
-const useAttibutes = () => {
+const useAttributesVar = ({currentVar}) => {
+	const [attributes, setAttributes] = useState([]);
 	const [attribNewVal, setAttribNewVal] = useState(null);
 	const [attribCategory, setAttribCategory] = useState([]);
-	const [attributes, setAttributes] = useState([]);
 	const [isOpenModal, openModal, closeModal] = useModal(false);
 	const dispatch = useDispatch();
 
@@ -20,7 +20,7 @@ const useAttibutes = () => {
 					attribute.tags,
 					'allow_variations'
 				) &&
-				!Object.prototype.hasOwnProperty.call(
+				Object.prototype.hasOwnProperty.call(
 					attribute.tags,
 					'variation_attribute'
 				)
@@ -28,47 +28,42 @@ const useAttibutes = () => {
 		setAttribCategory(attribs);
 	}, []);
 
-	useEffect(
-		() => {
-			const attribs = attribCategory.map(atrib => {
-				let found2 = product.attributes.find(el => el.id === atrib.id);
-				if (found2 !== undefined) {
-					const found = Object.assign({}, found2);
-					found.value_type = atrib.value_type;
-					found.tags = atrib.tags;
+	useEffect(() => {
+		const attribs = attribCategory.map(atrib => {
+			let found2 = currentVar.attributes?.find(el => el.id === atrib.id);
+			if (found2 !== undefined) {
+				const found = Object.assign({}, found2);
+				found.value_type = atrib.value_type;
+				found.tags = atrib.tags;
 
-					const values = [];
-					if (found.values !== undefined) {
-						found.values.forEach(prodValue => {
-							const index = values.findIndex(
-								value => value.id === prodValue.id
-							);
-							if (index === -1) values.push(prodValue);
-						});
-					}
-					if (atrib.values !== undefined) {
-						atrib.values.forEach(catValue => {
-							const index = values.findIndex(value => value.id === catValue.id);
-							if (index === -1) values.push(catValue);
-						});
-					}
-
-					if (values.length > 1) {
-						found.values = values;
-					} else {
-						found.values = atrib.values;
-					}
-
-					found.allowed_units = atrib.allowed_units;
-					return found;
-				} else {
-					return atrib;
+				const values = [];
+				if (found.values !== undefined) {
+					found.values.forEach(prodValue => {
+						const index = values.findIndex(value => value.id === prodValue.id);
+						if (index === -1) values.push(prodValue);
+					});
 				}
-			});
-			setAttributes(attribs);
-		}, // [attribCategory]);
-		[attribCategory]
-	);
+				if (atrib.values !== undefined) {
+					atrib.values.forEach(catValue => {
+						const index = values.findIndex(value => value.id === catValue.id);
+						if (index === -1) values.push(catValue);
+					});
+				}
+
+				if (values.length > 1) {
+					found.values = values;
+				} else {
+					found.values = atrib.values;
+				}
+
+				found.allowed_units = atrib.allowed_units;
+				return found;
+			} else {
+				return atrib;
+			}
+		});
+		setAttributes(attribs);
+	}, [attribCategory]);
 
 	const isNotApply = attribute => {
 		return attribute.value_id === '-1' && attribute.value_name === null
@@ -121,6 +116,7 @@ const useAttibutes = () => {
 	};
 
 	function handleChange(attribute, e, type = '') {
+		console.log('CHANGE', attribute, e, type);
 		let found;
 		let newAttribute = Object.assign({}, attribute);
 		newAttribute.updated = true;
@@ -150,8 +146,6 @@ const useAttibutes = () => {
 				} else {
 					if (attribute.tags.multivalued) {
 						let selected = Array.from(e.target.selectedOptions);
-						// let selected = Array.from(e.target.value);
-						// newAttribute.value_name = e.target.value;
 						let values = '';
 						selected.forEach(
 							el =>
@@ -178,9 +172,6 @@ const useAttibutes = () => {
 				newAttribute.value_id = '';
 				if (!Object.prototype.hasOwnProperty.call(newAttribute, 'value_struct'))
 					newAttribute.value_struct = {unit: '', number: ''};
-				// Object.defineProperties(newAttribute, {
-				// 	value_struct: {unit: '', number: ''},
-				// });
 
 				newAttribute.value_struct = {
 					...newAttribute.value_struct,
@@ -213,7 +204,12 @@ const useAttibutes = () => {
 		});
 
 		setAttributes(newData);
-		dispatch(editField({field: 'attributes', value: newData}));
+		const variations = product.variations.map(prodVar =>
+			prodVar.id === currentVar.id
+				? {...currentVar, attributes: newData, action: 'UPDATE'}
+				: prodVar
+		);
+		dispatch(editField({field: 'variations', value: variations}));
 	}
 
 	const addOption = attribute => {
@@ -242,25 +238,23 @@ const useAttibutes = () => {
 	};
 
 	return {
-		attribCategory,
 		attributes,
-		isOpenModal,
-		closeModal,
-		openModal,
-		addOption,
-		handleAddAtrib,
 		handleCancel,
-		isNotApply,
-		isMultivalue,
-		haveOptions,
-		haveNumberUnit,
+		handleAddAtrib,
+		addOption,
 		handleChange,
 		isAllowedUnits,
 		isEnableNotApply,
 		isString,
 		isBoolean,
 		isNumber,
+		haveNumberUnit,
+		haveOptions,
+		isMultivalue,
+		isNotApply,
+		isOpenModal,
+		closeModal,
 	};
 };
 
-export default useAttibutes;
+export default useAttributesVar;

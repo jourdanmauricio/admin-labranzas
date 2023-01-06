@@ -222,7 +222,7 @@ export const postLocalMlProduct = async prod => {
 
 export const putLocalMlProduct = async prod => {
 	try {
-		const updProd = {
+		const updMlProd = {
 			id: prod.id,
 			prod_id: prod.prod_id,
 			seller_custom_field: prod.seller_custom_field,
@@ -235,8 +235,8 @@ export const putLocalMlProduct = async prod => {
 			variations: prod.variations,
 		};
 
-		console.log('updProds', updProd);
-		const prodMl = await axiosApi.put(`/productsMl/${prod.id}`, updProd);
+		console.log('updProds', updMlProd);
+		const prodMl = await axiosApi.put(`/productsMl/${prod.id}`, updMlProd);
 		console.log('prodMl', prodMl);
 		return prodMl.data;
 	} catch (error) {
@@ -663,7 +663,6 @@ export const serviceUpdProduct = async (
 				resMl.prod_id = prod.id;
 				resLocalMl = await putLocalMlProduct(resMl);
 				return resLocalMl;
-
 			case 'LOCAL':
 				body.id = prod.id;
 				resLocal = await putLocalProduct(body);
@@ -676,19 +675,21 @@ export const serviceUpdProduct = async (
 			case 'ML-LOCAL':
 				if (feature === 'PRODUCT') {
 					body.id = prod.prodMl.id;
-					const resMlApi = await putMlProduct(body);
-					resMlApi.prod_id = prod.id;
-					console.log('resMlApi', resMlApi);
-					await putLocalMlProduct(resMlApi);
-					resMlApi.id = prod.id;
-					delete resMlApi.status;
-					delete resMlApi.available_quantity;
-					delete resMlApi.price;
-					delete resMlApi.sold_quantity;
-					delete resMlApi.start_time;
-					const respLocal = await putLocalProduct(resMlApi);
-					console.log('respLocal', respLocal);
-					return respLocal;
+					console.log('prod.prodMl.id', prod.prodMl.id);
+					resMl = await putMlProduct(body);
+					resMl.prod_id = prod.id;
+					console.log('resMlApi', resMl);
+					await putLocalMlProduct(resMl);
+					resMl.id = prod.id;
+					delete resMl.status;
+					delete resMl.available_quantity;
+					delete resMl.price;
+					delete resMl.sold_quantity;
+					delete resMl.start_time;
+					resLocal = await putLocalProduct(resMl);
+					console.log('respLocal', resLocal);
+					resLocal.thumbnail = resMl.thumbnail;
+					return resLocal;
 				}
 				if (feature === 'DESCRIPTION') {
 					body.id = prod.prodMl.id;
@@ -704,7 +705,25 @@ export const serviceUpdProduct = async (
 			case 'WEB-LOCAL':
 				break;
 			case 'ALL':
-				break;
+				body.id = prod.prodMl.id;
+				resMl = await putMlProduct(body);
+				resMl.prod_id = prod.id;
+				console.log('resMl', resMl);
+				await putLocalMlProduct(resMl);
+				resMl.id = prod.id;
+				delete resMl.status;
+				delete resMl.available_quantity;
+				delete resMl.price;
+				delete resMl.sold_quantity;
+				delete resMl.start_time;
+				resLocal = await putLocalProduct(resMl);
+				console.log('resLocal', resLocal);
+				console.log('body', body);
+				body.id = prod.prodWeb.id;
+				resWeb = await putWebProduct(body);
+				console.log('resWeb', resWeb);
+
+				return resLocal;
 		}
 	} catch (error) {
 		let message = '';

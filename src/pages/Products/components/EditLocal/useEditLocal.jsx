@@ -37,9 +37,13 @@ const useEditLocal = () => {
 
 		try {
 			dispatch(setProdLoading());
+			let bodyAll = {};
 			let bodyMlDesc = {};
 			let bodyMl = {};
+			let bodyWeb = {};
+			let bodyLocal = {};
 			let body = {};
+			let copyVar;
 			changedFields.forEach(field => {
 				let attributes = [];
 				switch (field) {
@@ -93,6 +97,42 @@ const useEditLocal = () => {
 					case 'description':
 						bodyMlDesc = {plain_text: product.description};
 						break;
+					case 'pictures':
+						bodyMl.pictures = product.pictures.map(pic => ({id: pic.id}));
+						break;
+					case 'variations':
+						bodyMl.variations = [];
+						console.log('Change variations', product.variations);
+
+						copyVar = JSON.parse(JSON.stringify(product.variations));
+
+						bodyLocal.variations = copyVar.map(varLocal => {
+							if (Object.prototype.hasOwnProperty.call(varLocal, 'action')) {
+								console.log('varLocal', varLocal);
+								varLocal.action = undefined;
+							}
+							return varLocal;
+						});
+						bodyWeb.variations = [...bodyLocal.variations];
+
+						product.variations.forEach(vari => {
+							if (vari.action === 'UPDATE') {
+								console.log('Change UPDATE');
+								// delete vari.action;
+								let obj = {
+									id: vari.id,
+									attribute_combinations: vari.attribute_combinations,
+									arributes: vari.attributes,
+									// available_quantity: vari.available_quantity,
+									picture_ids: vari.picture_ids,
+									price: vari.price,
+								};
+								bodyMl.variations.push(obj);
+							} else {
+								bodyMl.variations.push({id: vari.id});
+							}
+						});
+						break;
 				}
 			});
 
@@ -114,6 +154,7 @@ const useEditLocal = () => {
 					'PRODUCT'
 				);
 				console.log('resUpdate', resUpdate);
+				dispatch(editField({field: 'thumbnail', value: resUpdate.thumbnail}));
 			}
 
 			if (Object.keys(bodyMlDesc).length > 0) {
@@ -122,6 +163,36 @@ const useEditLocal = () => {
 					product,
 					'ML-LOCAL',
 					'DESCRIPTION'
+				);
+				console.log('resUpdate', resUpdate);
+			}
+
+			if (Object.keys(bodyAll).length > 0) {
+				const resUpdate = await serviceUpdProduct(
+					bodyAll,
+					product,
+					'ALL',
+					'PRODUCT'
+				);
+				console.log('resUpdate', resUpdate);
+			}
+
+			if (Object.keys(bodyLocal).length > 0) {
+				const resUpdate = await serviceUpdProduct(
+					bodyLocal,
+					product,
+					'LOCAL',
+					'PRODUCT'
+				);
+				console.log('resUpdate', resUpdate);
+			}
+
+			if (Object.keys(bodyWeb).length > 0) {
+				const resUpdate = await serviceUpdProduct(
+					bodyWeb,
+					product,
+					'WEB',
+					'PRODUCT'
 				);
 				console.log('resUpdate', resUpdate);
 			}
