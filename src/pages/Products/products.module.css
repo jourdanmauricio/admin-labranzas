@@ -115,3 +115,18 @@ rdt_ExpanderRow */
 .attrib__NA:hover {
 	background-color: var(--gray-30);
 }
+
+/* EDIT WEB */
+
+.checkbox__container {
+	height: 30px;
+	text-align: start;
+}
+
+.input__checkbox {
+	color: teal;
+}
+
+.label__checkbox {
+	margin: 0.4rem;
+}

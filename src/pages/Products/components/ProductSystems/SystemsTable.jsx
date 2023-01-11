@@ -173,14 +173,15 @@ const SystemsTable = () => {
 											<FaRegEye />
 										</button>
 										<button
-											onClick={
-												() => dispatch(setAction({action: 'DELETE-WEB'}))
-												// handleDelete('DELETE-WEB')
+											onClick={() =>
+												dispatch(setAction({action: 'DELETE-WEB'}))
 											}
 											className='table__icon table__icon--delete'>
 											<FaRegTrashAlt />
 										</button>
-										<button className='table__icon table__icon--edit'>
+										<button
+											className='table__icon table__icon--edit'
+											onClick={() => dispatch(setAction({action: 'EDIT-WEB'}))}>
 											<FaEdit />
 										</button>
 									</>

@@ -7,18 +7,21 @@ import useProducts from './useProducts';
 import ProductSystems from './components/ProductSystems/ProductSystems';
 import ProductDetail from './components/View/ProductDetail';
 import EditLocal from './components/EditLocal/EditLocal';
-import {useSelector} from 'react-redux';
+import EditWeb from './components/EditWeb/EditWeb';
 
 const Products = () => {
-	const product = useSelector(state => state.product.product);
-	const status = useSelector(state => state.product.status);
-	const action = useSelector(state => state.product.action);
-	const error = useSelector(state => state.product.error);
 	const {
 		PRODUCTS_COLUMNS,
 		filteredItems,
 		resetPaginationToggle,
 		subHeaderComponentMemo,
+		error,
+		action,
+		status,
+		product,
+		contextActions,
+		// toggleCleared,
+		handleRowSelected,
 		closeMessage,
 		handleCancel,
 		expandRow,
@@ -35,29 +38,30 @@ const Products = () => {
 				<ProductDetail id={product.id} handleCancel={handleCancel} />
 			)}
 			{action === 'EDIT-LOCAL' && <EditLocal handleCancel={handleCancel} />}
-			{/* {(!action ||
-				action === 'EXPANDED' ||
-				action === 'DELETE-WEB' ||
-				action === 'UPDATE-PRODUCT' ||
-			action === 'DELETE-ML') && ( */}
-			{action !== 'EDIT-LOCAL' && action !== 'VIEW' && (
-				<DataTable
-					title='Productos'
-					columns={PRODUCTS_COLUMNS}
-					data={filteredItems}
-					dense
-					responsive
-					selectableRows
-					expandableRows
-					expandableRowExpanded={row => row === product}
-					onRowExpandToggled={(bool, row) => expandRow(bool, row)}
-					expandableRowsComponent={ProductSystems}
-					actions={subHeaderComponentMemo}
-					pagination
-					paginationComponentOptions={paginationComponentOptions}
-					paginationResetDefaultPage={resetPaginationToggle}
-				/>
-			)}
+			{action === 'EDIT-WEB' && <EditWeb handleCancel={handleCancel} />}
+			{action !== 'EDIT-LOCAL' &&
+				action !== 'EDIT-WEB' &&
+				action !== 'VIEW' && (
+					<DataTable
+						title='Productos'
+						columns={PRODUCTS_COLUMNS}
+						data={filteredItems}
+						dense
+						responsive
+						selectableRows
+						onSelectedRowsChange={handleRowSelected}
+						// clearSelectedRows={toggleCleared}
+						contextActions={contextActions}
+						expandableRows
+						expandableRowExpanded={row => row === product}
+						onRowExpandToggled={(bool, row) => expandRow(bool, row)}
+						expandableRowsComponent={ProductSystems}
+						actions={subHeaderComponentMemo}
+						pagination
+						paginationComponentOptions={paginationComponentOptions}
+						paginationResetDefaultPage={resetPaginationToggle}
+					/>
+				)}
 		</Layout>
 	);
 };

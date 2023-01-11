@@ -18,6 +18,9 @@ const Status = () => {
 				value={product.status}>
 				<option value='active'>Activo</option>
 				<option value='paused'>Pausado</option>
+				<option value='under_review' disabled>
+					En revisión
+				</option>
 			</select>
 		</>
 	);

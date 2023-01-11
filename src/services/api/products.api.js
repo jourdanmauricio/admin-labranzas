@@ -469,6 +469,8 @@ export const postWebProduct = async prod => {
 export const putWebProduct = async prod => {
 	let id = prod.id;
 	delete prod.id;
+	delete prod.created_at;
+	delete prod.updated_at;
 
 	const prodWeb = await axiosApi.put(`productsweb/${id}`, prod);
 	return prodWeb;

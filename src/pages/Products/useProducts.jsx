@@ -16,9 +16,12 @@ import {
 	setProdLoading,
 } from '@/store/product';
 import styles from './products.module.css';
+import EditMassive from './components/EditMassive/EditMassive';
 
 const useProducts = () => {
 	const [data, setData] = useState([]);
+	const [selectedRows, setSelectedRows] = useState(false);
+	// const [toggleCleared, setToggleCleared] = useState(false);
 	const dispatchNotif = useNotification();
 	const [resetPaginationToggle, setResetPaginationToggle] = useState(false);
 	const [filterText, setFilterText] = useState('');
@@ -37,6 +40,8 @@ const useProducts = () => {
 	const settings = useSelector(state => state.settings.settings);
 	const product = useSelector(state => state.product.product);
 	const action = useSelector(state => state.product.action);
+	const error = useSelector(state => state.product.error);
+	const status = useSelector(state => state.product.status);
 
 	const fetchProducts = async () => {
 		dispatch(setProdLoading());
@@ -130,12 +135,10 @@ const useProducts = () => {
 					onClear={handleClear}
 					filterText={filterText}
 				/>
-				{/* className='btn btn__primary'> */}
 				<button className='icon__button' onClick={importMlProducts}>
 					<FaDownload /> ML
 				</button>
 				<button className='icon__button'>
-					{/* onClick={() => setAction('INITIAL')} */}
 					<FaPlus />
 				</button>
 			</>
@@ -183,12 +186,28 @@ const useProducts = () => {
 		}
 	};
 
+	const handleRowSelected = ({selectedRows}) => {
+		setSelectedRows(selectedRows);
+	};
+
+	const contextActions = useMemo(
+		() => EditMassive(selectedRows),
+		[data, selectedRows]
+	);
+
 	return {
 		data,
 		PRODUCTS_COLUMNS,
 		filteredItems,
 		resetPaginationToggle,
 		subHeaderComponentMemo,
+		error,
+		action,
+		status,
+		product,
+		contextActions,
+		// toggleCleared,
+		handleRowSelected,
 		closeMessage,
 		handleCancel,
 		expandRow,
