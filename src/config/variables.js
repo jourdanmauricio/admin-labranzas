@@ -4,4 +4,5 @@ export const variables = {
 	mlAppId: import.meta.env.VITE_ML_APP_ID,
 	mlSecret: import.meta.env.VITE_ML_SECRET,
 	frontend: import.meta.env.VITE_FRONTEND,
+	webPage: import.meta.env.VITE_WEB_PAGE,
 };

@@ -870,3 +870,11 @@ export const serviceUpdProduct = async (
 //     throw message;
 //   }
 // };
+
+export const revalidateProdsWeb = async () => {
+	const revalidate = await axiosApi('productsweb/revalidateWeb');
+	console.log('revalidate', revalidate);
+
+	// const revalidate = await axios.get(url, config);
+	// return revalidate;
+};

@@ -1,7 +1,7 @@
 import axios from 'axios';
 import {useEffect, useState} from 'react';
 import {useDispatch, useSelector} from 'react-redux';
-import {putSettings} from '../../../../store/settings';
+import {putSettings} from '@/store/settings';
 import ListImages from './components/ListImages';
 import Loader from '@/commons/Loader-overlay/Loader-overlay';
 
@@ -12,12 +12,12 @@ const Images = ({updated}) => {
 	const [images, setImages] = useState([]);
 	const dispatch = useDispatch();
 	let {status} = useSelector(state => state.settings);
-	let settings = useSelector(state => state.settings.settings?.pictures);
+	let pictures = useSelector(state => state.settings.settings?.pictures);
 	let userMl = useSelector(state => state.userMl.userMl);
 
 	useEffect(() => {
-		setImages([...settings]);
-	}, [settings]);
+		if (pictures.length > 0) setImages([...pictures]);
+	}, [pictures]);
 
 	const handleDrag = function (e) {
 		e.preventDefault();
